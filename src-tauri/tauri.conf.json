@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "DeskMedic",
+  "version": "0.1.0",
+  "identifier": "app.deskmedic.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "DeskMedic",
+        "width": 1120,
+        "height": 740,
+        "minWidth": 860,
+        "minHeight": 560,
+        "dragDropEnabled": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "publisher": "Jagdeep Sandhu",
+    "copyright": "Copyright (c) 2026 Jagdeep Sandhu. MIT License.",
+    "category": "Utility",
+    "shortDescription": "Helpdesk disk utility for Windows",
+    "longDescription": "DeskMedic finds what fills a disk, clears temporary files safely, fixes common Disk Management problems and runs one-click fixes for helpdesk calls."
+  }
+}
