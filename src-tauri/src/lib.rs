@@ -2,7 +2,7 @@ mod commands;
 mod state;
 
 use state::AppState;
-use tauri::Manager;
+use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -21,6 +21,26 @@ pub fn run() {
                 tracing::warn!("log compaction failed: {e}");
             }
             app.manage(AppState::new(data_dir, settings));
+
+            // The window is built here rather than in tauri.conf.json so an
+            // elevated copy gets its own WebView2 folder: elevated and normal
+            // processes can't share one, and "Restart as administrator"
+            // briefly runs both.
+            let webview_dir =
+                app.path()
+                    .app_local_data_dir()?
+                    .join(if dm_core::sys::is_elevated() {
+                        "webview-admin"
+                    } else {
+                        "webview"
+                    });
+            WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+                .title("DeskMedic")
+                .inner_size(1120.0, 740.0)
+                .min_inner_size(860.0, 560.0)
+                .disable_drag_drop_handler()
+                .data_directory(webview_dir)
+                .build()?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
