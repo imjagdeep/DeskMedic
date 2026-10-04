@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AdminNotice, PageHeader } from "../components/Common";
 import { AlertIcon, CheckCircleIcon } from "../components/Icons";
+import { ExtendSheet, ResizeSheet } from "../components/ResizeSheets";
 import { api } from "../lib/api";
 import { humanSize } from "../lib/format";
 import { toast, toastError, useAppInfo } from "../lib/store";
@@ -34,11 +35,17 @@ function confirmWord(a: DiskAction): string {
 }
 
 type Pending = { action: DiskAction; title: string; explain: string };
+type ResizeTarget = { disk: number; partition: number; letter: string; current: number };
 
 export function Disks({ onOpenCleanup }: { onOpenCleanup: () => void }) {
   const info = useAppInfo();
   const [report, setReport] = useState<DiskReport | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
+  const [extendLetter, setExtendLetter] = useState<string | null>(null);
+  const [resizing, setResizing] = useState<ResizeTarget | null>(null);
+  // Stable callbacks: the sheets load data in effects that depend on them.
+  const closeExtend = useCallback(() => setExtendLetter(null), []);
+  const closeResize = useCallback(() => setResizing(null), []);
 
   const load = useCallback(() => {
     setReport(null);
@@ -83,17 +90,47 @@ export function Disks({ onOpenCleanup }: { onOpenCleanup: () => void }) {
             onFix={(f) => {
               if (!f.fix) return;
               if (f.fix.type === "open_cleanup") onOpenCleanup();
+              else if (f.fix.type === "extend_guide") setExtendLetter(f.fix.letter);
               else if (f.fix.type === "action") ask(f.fix.action, f.fix.label, f.title);
             }}
           />
           {report.disks.map((d) => (
-            <DiskCard key={d.disk.number} view={d} report={report} canFix={!!info?.elevated} ask={ask} />
+            <DiskCard
+              key={d.disk.number}
+              view={d}
+              report={report}
+              canFix={!!info?.elevated}
+              ask={ask}
+              onResize={setResizing}
+            />
           ))}
           <p className="muted small">
             Virtual Disk Service: {report.vds_status.toLowerCase()}, starts {report.vds_start.toLowerCase()}. DeskMedic
             never formats, initializes or deletes data partitions.
           </p>
         </>
+      )}
+
+      {extendLetter && (
+        <ExtendSheet
+          letter={extendLetter}
+          onClose={closeExtend}
+          onDone={() => {
+            setExtendLetter(null);
+            load();
+          }}
+        />
+      )}
+      {resizing && (
+        <ResizeSheet
+          {...resizing}
+          onClose={closeResize}
+          onDone={(msg) => {
+            setResizing(null);
+            toast(msg);
+            load();
+          }}
+        />
       )}
 
       {pending && (
@@ -141,6 +178,11 @@ function Findings({
             <div className="muted small">{f.detail}</div>
           </div>
           {f.fix?.type === "open_cleanup" && <button onClick={() => onFix(f)}>Open Cleanup</button>}
+          {f.fix?.type === "extend_guide" && (
+            <button className="primary" disabled={!canFix} onClick={() => onFix(f)}>
+              Extend…
+            </button>
+          )}
           {f.fix?.type === "action" && (
             <button className="primary" disabled={!canFix} onClick={() => onFix(f)}>
               {f.fix.label}
@@ -157,11 +199,13 @@ function DiskCard({
   report,
   canFix,
   ask,
+  onResize,
 }: {
   view: DiskView;
   report: DiskReport;
   canFix: boolean;
   ask: (a: DiskAction, title: string, explain: string) => void;
+  onResize: (t: ResizeTarget) => void;
 }) {
   const d = view.disk;
   const health = view.physical?.health || d.health;
@@ -194,7 +238,7 @@ function DiskCard({
       </div>
       <div className="seg-list">
         {view.segments.map((s, i) => (
-          <SegmentRow key={i} s={s} report={report} canFix={canFix} ask={ask} />
+          <SegmentRow key={i} s={s} report={report} canFix={canFix} ask={ask} onResize={onResize} />
         ))}
       </div>
     </div>
@@ -221,11 +265,13 @@ function SegmentRow({
   report,
   canFix,
   ask,
+  onResize,
 }: {
   s: Segment;
   report: DiskReport;
   canFix: boolean;
   ask: (a: DiskAction, title: string, explain: string) => void;
+  onResize: (t: ResizeTarget) => void;
 }) {
   if (s.type === "free") {
     return (
@@ -285,6 +331,15 @@ function SegmentRow({
             >
               Repair
             </button>
+            {s.kind === "basic" && (
+              <button
+                className="link"
+                disabled={!canFix}
+                onClick={() => onResize({ disk: p.disk, partition: p.number, letter, current: p.size })}
+              >
+                Resize
+              </button>
+            )}
           </>
         )}
         {s.kind === "basic" && v?.fs && !isWindows && !p.boot && !p.system && free.length > 0 && (

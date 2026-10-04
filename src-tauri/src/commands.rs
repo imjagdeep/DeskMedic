@@ -414,3 +414,128 @@ pub async fn disk_action(
     ));
     result
 }
+
+// ---------- extend / shrink ----------
+
+fn current_plan(letter: char) -> CmdResult<dm_core::disk::extend::Plan> {
+    let layout = dm_core::disk::read().map_err(|e| format!("Could not read the disks: {e}"))?;
+    let winre = if dm_core::sys::is_elevated() {
+        Some(dm_core::disk::extend::winre()?)
+    } else {
+        None
+    };
+    Ok(dm_core::disk::extend::plan(
+        &layout,
+        winre.as_ref(),
+        letter.to_ascii_uppercase(),
+        dm_core::disk::windows_letter(),
+    ))
+}
+
+#[tauri::command]
+pub async fn extend_plan(letter: char) -> CmdResult<dm_core::disk::extend::Plan> {
+    blocking(move || current_plan(letter)).await
+}
+
+/// Run the extend plan for `letter`. `expected_steps` is what the user saw;
+/// if the plan changed since, nothing runs.
+#[tauri::command]
+pub async fn extend_run(
+    app: AppHandle,
+    letter: char,
+    expected_steps: usize,
+    confirm: String,
+) -> CmdResult<Vec<String>> {
+    if !dm_core::sys::is_elevated() {
+        return Err("Extending needs administrator rights.".into());
+    }
+    if !confirm.trim().eq_ignore_ascii_case(&letter.to_string()) {
+        return Err(format!("Type {letter} to confirm."));
+    }
+    let app2 = app.clone();
+    blocking(move || {
+        let plan = current_plan(letter)?;
+        if plan.steps.len() != expected_steps {
+            return Err("The disk changed since the plan was shown. Look at it again.".into());
+        }
+        let state = app2.state::<AppState>();
+        dm_core::disk::extend::execute(&plan, |step, result| {
+            state.lock().record(&LogEntry::new(
+                Area::Disk,
+                &format!("Extend {letter}: {}", step.describe()),
+                result.is_ok(),
+                match result {
+                    Ok(m) => m.clone(),
+                    Err(e) => e.clone(),
+                },
+            ));
+        })
+    })
+    .await
+}
+
+#[tauri::command]
+pub async fn resize_info(disk: u32, partition: u32) -> CmdResult<(u64, u64)> {
+    if !dm_core::sys::is_elevated() {
+        return Err("Resizing needs administrator rights.".into());
+    }
+    blocking(move || dm_core::disk::extend::supported_size(disk, partition)).await
+}
+
+/// Grow or shrink a data partition to `size` bytes, within what Windows allows.
+#[tauri::command]
+pub async fn resize(
+    app: AppHandle,
+    disk: u32,
+    partition: u32,
+    size: u64,
+    confirm: String,
+) -> CmdResult<String> {
+    if !dm_core::sys::is_elevated() {
+        return Err("Resizing needs administrator rights.".into());
+    }
+    let result = blocking(move || {
+        let layout = dm_core::disk::read().map_err(|e| format!("Could not read the disks: {e}"))?;
+        let p = layout
+            .partitions
+            .iter()
+            .find(|p| p.disk == disk && p.number == partition)
+            .ok_or("That partition is gone.")?;
+        if p.kind() != dm_core::disk::model::PartKind::Basic || p.letter.is_empty() {
+            return Err("Only data partitions with a drive letter can be resized.".into());
+        }
+        if !confirm.trim().eq_ignore_ascii_case(&p.letter) {
+            return Err(format!("Type {} to confirm.", p.letter));
+        }
+        let (min, max) = dm_core::disk::extend::supported_size(disk, partition)?;
+        let size = size / (1024 * 1024) * (1024 * 1024);
+        if size < min || size > max {
+            return Err(format!(
+                "Pick a size between {:.1} and {:.1} GB.",
+                min as f64 / 1e9,
+                max as f64 / 1e9
+            ));
+        }
+        if size == p.size {
+            return Err("That is already its size.".into());
+        }
+        dm_core::disk::extend::run_step(&dm_core::disk::extend::Step::Extend {
+            disk,
+            partition,
+            size,
+        })
+        .map(|_| format!("{}: is now {:.1} GB.", p.letter, size as f64 / 1e9))
+    })
+    .await;
+    let state = app.state::<AppState>();
+    state.lock().record(&LogEntry::new(
+        Area::Disk,
+        &format!("Resize partition {partition} on disk {disk}"),
+        result.is_ok(),
+        match &result {
+            Ok(m) => m.clone(),
+            Err(e) => e.clone(),
+        },
+    ));
+    result
+}

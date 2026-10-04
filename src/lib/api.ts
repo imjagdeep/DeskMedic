@@ -7,6 +7,7 @@ import type {
   CleanupReport,
   DiskAction,
   DiskReport,
+  ExtendPlan,
   BigFile,
   Drive,
   Listing,
@@ -37,6 +38,12 @@ export const api = {
   cleanupRun: (ids: string[], allUsers: boolean) => invoke<CleanupReport>("cleanup_run", { ids, allUsers }),
   diskReport: () => invoke<DiskReport>("disk_report"),
   diskAction: (action: DiskAction, confirm: string) => invoke<string>("disk_action", { action, confirm }),
+  extendPlan: (letter: string) => invoke<ExtendPlan>("extend_plan", { letter }),
+  extendRun: (letter: string, expectedSteps: number, confirm: string) =>
+    invoke<string[]>("extend_run", { letter, expectedSteps, confirm }),
+  resizeInfo: (disk: number, partition: number) => invoke<[number, number]>("resize_info", { disk, partition }),
+  resize: (disk: number, partition: number, size: number, confirm: string) =>
+    invoke<string>("resize", { disk, partition, size, confirm }),
 };
 
 export function errorText(e: unknown): string {

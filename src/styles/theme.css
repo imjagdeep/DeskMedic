@@ -421,3 +421,9 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .seg-list .list-row { display: grid; grid-template-columns: minmax(0, 1fr) 220px 220px; }
 .seg-actions { display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
 .small-select { height: 24px !important; font-size: 12px; min-width: 0 !important; }
+
+.steps { margin: 6px 0 12px; padding-left: 20px; }
+.steps li { margin: 4px 0; }
+.notice-text { background: var(--orange-soft); border-radius: 8px; padding: 9px 12px; font-size: 12px; }
+.slider { width: 100%; accent-color: var(--accent); margin: 8px 0; }
+.row input[type="number"] { width: 110px; }

@@ -211,3 +211,19 @@ export interface DiskReport {
   vds_status: string;
   vds_start: string;
 }
+
+export type ExtendStep =
+  | { step: "disable_win_re" }
+  | { step: "delete_recovery"; disk: number; partition: number }
+  | { step: "extend"; disk: number; partition: number; size: number }
+  | { step: "create_recovery"; disk: number; offset: number; size: number; gpt: boolean }
+  | { step: "enable_win_re" };
+
+export interface ExtendPlan {
+  letter: string;
+  current_size: number;
+  new_size: number;
+  steps: ExtendStep[];
+  blocked: string | null;
+  moves_recovery: boolean;
+}

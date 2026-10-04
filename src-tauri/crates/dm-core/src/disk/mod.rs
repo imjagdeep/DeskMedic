@@ -2,6 +2,7 @@
 
 pub mod actions;
 pub mod diagnose;
+pub mod extend;
 pub mod model;
 
 pub use actions::Action;
