@@ -78,13 +78,37 @@ pub fn run(
     };
     Ok(Output {
         code: status.code(),
-        stdout: String::from_utf8_lossy(&out_t.join().unwrap_or_default())
-            .trim()
-            .to_string(),
-        stderr: String::from_utf8_lossy(&err_t.join().unwrap_or_default())
-            .trim()
-            .to_string(),
+        stdout: decode(&out_t.join().unwrap_or_default()),
+        stderr: decode(&err_t.join().unwrap_or_default()),
     })
+}
+
+/// Most tools write UTF-8/ANSI, but some (sfc) write UTF-16LE. Detect that
+/// by the zero bytes and decode accordingly.
+pub fn decode(bytes: &[u8]) -> String {
+    let sample = &bytes[..bytes.len().min(200)];
+    let zeros_at_odd = sample
+        .iter()
+        .skip(1)
+        .step_by(2)
+        .filter(|&&b| b == 0)
+        .count();
+    let text = if sample.len() >= 4 && zeros_at_odd * 3 >= sample.len() / 2 {
+        let units: Vec<u16> = bytes
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|c| u16::from_le_bytes(*c))
+            .collect();
+        String::from_utf16_lossy(&units)
+    } else {
+        String::from_utf8_lossy(bytes).into_owned()
+    };
+    text.replace('\0', "")
+        .replace("\r\n", "\n")
+        .replace('\r', "")
+        .trim()
+        .to_string()
 }
 
 #[cfg(all(test, windows))]
@@ -103,6 +127,16 @@ mod tests {
         assert_eq!(out.stdout, "hello");
         assert_eq!(out.code, Some(3));
         assert!(!out.success());
+    }
+
+    #[test]
+    fn decodes_utf16_and_utf8() {
+        let utf16: Vec<u8> = "\r\nYou must be an administrator\r\n"
+            .encode_utf16()
+            .flat_map(|u| u.to_le_bytes())
+            .collect();
+        assert_eq!(decode(&utf16), "You must be an administrator");
+        assert_eq!(decode(b"Done.\r\n"), "Done.");
     }
 
     #[test]

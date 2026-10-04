@@ -539,3 +539,54 @@ pub async fn resize(
     ));
     result
 }
+
+// ---------- fix-its ----------
+
+#[tauri::command]
+pub fn fix_list() -> Vec<dm_core::fixes::RecipeInfo> {
+    dm_core::fixes::list()
+}
+
+#[tauri::command]
+pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::FixResult> {
+    {
+        let state = app.state::<AppState>();
+        let mut g = state.lock();
+        if g.fixing {
+            return Err("Another fix is still running.".into());
+        }
+        g.fixing = true;
+    }
+    let result = blocking(move || dm_core::fixes::run_fix(&id, dm_core::sys::is_elevated())).await;
+    let state = app.state::<AppState>();
+    let mut g = state.lock();
+    g.fixing = false;
+    if let Ok(r) = &result {
+        g.record(
+            &LogEntry::new(
+                Area::Fix,
+                r.name,
+                r.ok,
+                if r.ok {
+                    format!("Done{}", if r.restart { "; restart needed" } else { "" })
+                } else {
+                    "Failed".into()
+                },
+            )
+            .with_details(
+                r.steps
+                    .iter()
+                    .map(|s| {
+                        format!(
+                            "{} {}: {}",
+                            if s.ok { "OK" } else { "--" },
+                            s.label,
+                            s.output.replace('\n', " / ")
+                        )
+                    })
+                    .collect(),
+            ),
+        );
+    }
+    result
+}

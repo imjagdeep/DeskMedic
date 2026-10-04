@@ -427,3 +427,11 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .notice-text { background: var(--orange-soft); border-radius: 8px; padding: 9px 12px; font-size: 12px; }
 .slider { width: 100%; accent-color: var(--accent); margin: 8px 0; }
 .row input[type="number"] { width: 110px; }
+
+.fix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 12px; }
+.fix-card { margin: 0; display: flex; flex-direction: column; }
+.fix-card p { margin: 2px 0 8px; }
+.fix-does { flex: 1; }
+.fix-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fix-step { margin: 8px 0; }
+.running-bar { position: sticky; bottom: 12px; margin-top: 14px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--window); box-shadow: var(--shadow-lg); }

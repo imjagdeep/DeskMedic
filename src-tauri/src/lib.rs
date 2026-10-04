@@ -47,6 +47,8 @@ pub fn run() {
             commands::extend_run,
             commands::resize_info,
             commands::resize,
+            commands::fix_list,
+            commands::fix_run,
         ])
         .run(tauri::generate_context!())
         .expect("error while running DeskMedic");

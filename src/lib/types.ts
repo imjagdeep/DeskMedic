@@ -227,3 +227,22 @@ export interface ExtendPlan {
   blocked: string | null;
   moves_recovery: boolean;
 }
+
+export interface FixRecipe {
+  id: string;
+  name: string;
+  when: string;
+  does: string;
+  admin: boolean;
+  restart: boolean;
+  takes: string;
+  steps: string[];
+}
+
+export interface FixResult {
+  id: string;
+  name: string;
+  ok: boolean;
+  restart: boolean;
+  steps: { label: string; ok: boolean; output: string }[];
+}

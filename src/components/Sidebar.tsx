@@ -1,8 +1,8 @@
 import logo from "../assets/logo.png";
 import { useAppInfo } from "../lib/store";
-import { BroomIcon, DiskIcon, LogIcon, MapIcon, OverviewIcon, SettingsIcon } from "./Icons";
+import { BroomIcon, DiskIcon, LogIcon, MapIcon, OverviewIcon, SettingsIcon, WrenchIcon } from "./Icons";
 
-export type Page = "overview" | "diskmap" | "cleanup" | "disks" | "log" | "settings";
+export type Page = "overview" | "diskmap" | "cleanup" | "disks" | "fixits" | "log" | "settings";
 
 type Item = { page: Page; label: string; Icon: (p: { size?: number }) => React.ReactElement };
 
@@ -14,6 +14,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
       { page: "diskmap", label: "Disk map", Icon: MapIcon },
       { page: "cleanup", label: "Cleanup", Icon: BroomIcon },
       { page: "disks", label: "Disks", Icon: DiskIcon },
+      { page: "fixits", label: "Fix-its", Icon: WrenchIcon },
     ],
   },
   {

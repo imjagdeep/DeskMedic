@@ -8,6 +8,8 @@ import type {
   DiskAction,
   DiskReport,
   ExtendPlan,
+  FixRecipe,
+  FixResult,
   BigFile,
   Drive,
   Listing,
@@ -44,6 +46,8 @@ export const api = {
   resizeInfo: (disk: number, partition: number) => invoke<[number, number]>("resize_info", { disk, partition }),
   resize: (disk: number, partition: number, size: number, confirm: string) =>
     invoke<string>("resize", { disk, partition, size, confirm }),
+  fixList: () => invoke<FixRecipe[]>("fix_list"),
+  fixRun: (id: string) => invoke<FixResult>("fix_run", { id }),
 };
 
 export function errorText(e: unknown): string {

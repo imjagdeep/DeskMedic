@@ -5,6 +5,7 @@ import { refreshAppInfo, useAppInfo } from "./lib/store";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
 import { Disks } from "./pages/Disks";
+import { FixIts } from "./pages/FixIts";
 import { Log } from "./pages/Log";
 import { Overview } from "./pages/Overview";
 import { SettingsPage } from "./pages/Settings";
@@ -31,6 +32,7 @@ export default function App() {
         {page === "diskmap" && <DiskMap />}
         {page === "cleanup" && <Cleanup />}
         {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
+        {page === "fixits" && <FixIts />}
         {page === "log" && <Log />}
         {page === "settings" && <SettingsPage />}
       </main>

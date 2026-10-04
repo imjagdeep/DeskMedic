@@ -15,6 +15,8 @@ pub struct Inner {
     pub tree: Option<Arc<Tree>>,
     /// The scan in progress, if any.
     pub scanning: Option<Arc<Progress>>,
+    /// A fix-it is running (one at a time).
+    pub fixing: bool,
 }
 
 impl AppState {
@@ -24,6 +26,7 @@ impl AppState {
             settings,
             tree: None,
             scanning: None,
+            fixing: false,
         }))
     }
 

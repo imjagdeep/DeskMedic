@@ -4,6 +4,7 @@
 pub mod cleanup;
 pub mod disk;
 pub mod drives;
+pub mod fixes;
 pub mod log;
 pub mod paths;
 pub mod procs;
