@@ -94,3 +94,10 @@ export const FolderIcon = (p: IconProps) => (
     <path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
   </Svg>
 );
+
+export const CheckCircleIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="m8.3 12.2 2.5 2.5 5-5" />
+  </Svg>
+);

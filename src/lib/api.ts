@@ -5,6 +5,8 @@ import type {
   AppInfo,
   CleanupEstimate,
   CleanupReport,
+  DiskAction,
+  DiskReport,
   BigFile,
   Drive,
   Listing,
@@ -33,6 +35,8 @@ export const api = {
   userProfiles: () => invoke<Profile[]>("user_profiles"),
   cleanupPreview: (allUsers: boolean) => invoke<CleanupEstimate[]>("cleanup_preview", { allUsers }),
   cleanupRun: (ids: string[], allUsers: boolean) => invoke<CleanupReport>("cleanup_run", { ids, allUsers }),
+  diskReport: () => invoke<DiskReport>("disk_report"),
+  diskAction: (action: DiskAction, confirm: string) => invoke<string>("disk_action", { action, confirm }),
 };
 
 export function errorText(e: unknown): string {

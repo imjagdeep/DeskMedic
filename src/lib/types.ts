@@ -125,3 +125,89 @@ export interface CleanupReport {
   free_before: number;
   free_after: number;
 }
+
+export interface Disk {
+  number: number;
+  name: string;
+  size: number;
+  style: string;
+  offline: boolean;
+  offline_reason: string;
+  read_only: boolean;
+  boot: boolean;
+  system: boolean;
+  bus: string;
+  health: string;
+  status: string;
+}
+
+export interface Partition {
+  disk: number;
+  number: number;
+  offset: number;
+  size: number;
+  letter: string;
+  type: string;
+  gpt_type: string;
+  mbr_type: number | null;
+  system: boolean;
+  boot: boolean;
+  hidden: boolean;
+  read_only: boolean;
+  offline: boolean;
+  paths: string[];
+}
+
+export interface Volume {
+  path: string;
+  letter: string;
+  label: string;
+  fs: string;
+  size: number;
+  free: number;
+  health: string;
+}
+
+export type PartKind = "efi" | "reserved" | "basic" | "recovery" | "linux" | "extended" | "other";
+
+export type Segment =
+  | { type: "partition"; partition: Partition; kind: PartKind; volume: Volume | null }
+  | { type: "free"; offset: number; size: number };
+
+export interface DiskView {
+  disk: Disk;
+  segments: Segment[];
+  physical: { id: string; media: string; health: string; status: string } | null;
+}
+
+export type DiskAction =
+  | { kind: "disk_online"; disk: number }
+  | { kind: "disk_writable"; disk: number }
+  | { kind: "partition_writable"; disk: number; partition: number }
+  | { kind: "set_letter"; disk: number; partition: number; letter: string }
+  | { kind: "check_volume"; letter: string }
+  | { kind: "fix_volume"; letter: string }
+  | { kind: "restart_vds" }
+  | { kind: "enable_vds" };
+
+export type Fix =
+  | { type: "action"; action: DiskAction; label: string }
+  | { type: "open_cleanup" }
+  | { type: "extend_guide"; letter: string };
+
+export interface Finding {
+  severity: "problem" | "warning" | "info";
+  title: string;
+  detail: string;
+  disk: number | null;
+  fix: Fix | null;
+}
+
+export interface DiskReport {
+  disks: DiskView[];
+  findings: Finding[];
+  letters_in_use: string[];
+  windows_letter: string;
+  vds_status: string;
+  vds_start: string;
+}

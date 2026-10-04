@@ -344,3 +344,73 @@ pub async fn cleanup_run(
     );
     Ok(report)
 }
+
+// ---------- disks ----------
+
+#[derive(Serialize)]
+pub struct DiskReport {
+    disks: Vec<dm_core::disk::DiskView>,
+    findings: Vec<dm_core::disk::Finding>,
+    letters_in_use: Vec<char>,
+    windows_letter: char,
+    vds_status: String,
+    vds_start: String,
+}
+
+#[tauri::command]
+pub async fn disk_report() -> CmdResult<DiskReport> {
+    blocking(|| {
+        let layout = dm_core::disk::read().map_err(|e| format!("Could not read the disks: {e}"))?;
+        let win = dm_core::disk::windows_letter();
+        let in_use = dm_core::disk::letters_in_use(&layout);
+        Ok(DiskReport {
+            findings: dm_core::disk::diagnose(&layout, win, &in_use),
+            disks: layout.views(),
+            letters_in_use: in_use,
+            windows_letter: win,
+            vds_status: layout.vds_status.clone(),
+            vds_start: layout.vds_start.clone(),
+        })
+    })
+    .await
+}
+
+/// Run one disk action. `confirm` must equal the action's confirm word
+/// (typed by the user); the layout is read again and re-checked first.
+#[tauri::command]
+pub async fn disk_action(
+    app: AppHandle,
+    action: dm_core::disk::Action,
+    confirm: String,
+) -> CmdResult<String> {
+    if !dm_core::sys::is_elevated() {
+        return Err("Disk changes need administrator rights.".into());
+    }
+    if !confirm.trim().eq_ignore_ascii_case(&action.confirm_word()) {
+        return Err(format!("Type {} to confirm.", action.confirm_word()));
+    }
+    let a = action.clone();
+    let result = blocking(move || {
+        let layout = dm_core::disk::read().map_err(|e| format!("Could not read the disks: {e}"))?;
+        let win = dm_core::disk::windows_letter();
+        dm_core::disk::actions::validate(
+            &a,
+            &layout,
+            win,
+            &dm_core::disk::letters_in_use(&layout),
+        )?;
+        dm_core::disk::actions::run(&a, win)
+    })
+    .await;
+    let state = app.state::<AppState>();
+    state.lock().record(&LogEntry::new(
+        Area::Disk,
+        &action.title(),
+        result.is_ok(),
+        match &result {
+            Ok(m) => m.clone(),
+            Err(e) => e.clone(),
+        },
+    ));
+    result
+}

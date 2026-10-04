@@ -4,6 +4,7 @@ import { Sidebar, type Page } from "./components/Sidebar";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
+import { Disks } from "./pages/Disks";
 import { Log } from "./pages/Log";
 import { Overview } from "./pages/Overview";
 import { SettingsPage } from "./pages/Settings";
@@ -29,6 +30,7 @@ export default function App() {
         {page === "overview" && <Overview />}
         {page === "diskmap" && <DiskMap />}
         {page === "cleanup" && <Cleanup />}
+        {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
         {page === "log" && <Log />}
         {page === "settings" && <SettingsPage />}
       </main>

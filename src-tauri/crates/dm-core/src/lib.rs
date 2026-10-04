@@ -2,6 +2,7 @@
 //! tested; the app crate only wires these functions to commands.
 
 pub mod cleanup;
+pub mod disk;
 pub mod drives;
 pub mod log;
 pub mod paths;

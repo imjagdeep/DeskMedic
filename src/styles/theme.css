@@ -400,3 +400,24 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .clean-foot { position: sticky; bottom: 0; background: var(--window); padding: 10px 0; border-top: 0.5px solid var(--sep); }
 .result-head { text-align: center; padding: 18px; }
 .result-head .stat-num { font-size: 30px; color: var(--green); }
+
+.finding { display: flex; align-items: center; gap: 12px; }
+.finding > svg { flex-shrink: 0; }
+.finding.problem { border-left: 3px solid var(--red); }
+.finding.problem > svg { color: var(--red); }
+.finding.warning { border-left: 3px solid var(--orange); }
+.finding.warning > svg { color: var(--orange); }
+.finding.info > svg, .finding.ok > svg { color: var(--green); }
+.disk-bar { display: flex; gap: 3px; height: 46px; margin: 8px 0 6px; }
+.seg { min-width: 34px; border-radius: 6px; display: flex; align-items: flex-end; padding: 4px 6px; color: #fff; font-size: 11px; font-weight: 600; overflow: hidden; white-space: nowrap; }
+.seg span { overflow: hidden; text-overflow: ellipsis; }
+.seg.basic, .seg-dot.basic { background: var(--accent); }
+.seg.efi, .seg-dot.efi, .seg.reserved, .seg-dot.reserved { background: #8e8e93; }
+.seg.recovery, .seg-dot.recovery { background: #af52de; }
+.seg.linux, .seg-dot.linux { background: #e08600; }
+.seg.other, .seg-dot.other, .seg.extended, .seg-dot.extended { background: #5ac8fa; }
+.seg.free, .seg-dot.free { background: repeating-linear-gradient(135deg, var(--hover), var(--hover) 6px, transparent 6px, transparent 12px); color: var(--text-2); box-shadow: inset 0 0 0 1px var(--sep); }
+.seg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 4px; vertical-align: baseline; }
+.seg-list .list-row { display: grid; grid-template-columns: minmax(0, 1fr) 220px 220px; }
+.seg-actions { display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+.small-select { height: 24px !important; font-size: 12px; min-width: 0 !important; }
