@@ -1,10 +1,7 @@
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { PageHeader } from "../components/Common";
 import { api } from "../lib/api";
 import { refreshAppInfo, toastError, useAppInfo } from "../lib/store";
 import type { Settings, Theme } from "../lib/types";
-
-const RELEASES = "https://github.com/imjagdeep/deskmedic/releases/latest";
 
 export function SettingsPage() {
   const info = useAppInfo();
@@ -66,7 +63,20 @@ export function SettingsPage() {
             </div>
             <div className="muted small">Open source, MIT licence. No account, no telemetry.</div>
           </div>
-          <button onClick={() => openUrl(RELEASES).catch(toastError)}>Check for a newer version</button>
+          <button onClick={() => api.openLink("releases").catch(toastError)}>Check for a newer version</button>
+        </div>
+        <div className="more-tools">
+          <div className="muted small">More free tools by the same developer</div>
+          <button className="tool-link" onClick={() => api.openLink("deskzero").catch(toastError)}>
+            <strong>DeskZero</strong>
+            <span className="muted small">Tiny offline app that keeps your folders organized. Windows, macOS and Linux.</span>
+          </button>
+          <div className="muted small made-by">
+            Made by Jagdeep Sandhu ·{" "}
+            <button className="link" onClick={() => api.openLink("developer").catch(toastError)}>
+              github.com/imjagdeep
+            </button>
+          </div>
         </div>
       </div>
     </div>

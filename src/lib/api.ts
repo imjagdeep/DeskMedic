@@ -25,6 +25,7 @@ export const api = {
   restartAsAdmin: () => invoke<void>("restart_as_admin"),
   saveSettings: (settings: Settings) => invoke<void>("save_settings", { settings }),
   openDataFolder: () => invoke<void>("open_data_folder"),
+  openLink: (id: "releases" | "developer" | "deskzero") => invoke<void>("open_link", { id }),
   listDrives: () => invoke<Drive[]>("list_drives"),
   readLog: () => invoke<LogEntry[]>("read_log"),
   exportLog: (path: string) => invoke<number>("export_log", { path }),

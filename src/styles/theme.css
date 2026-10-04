@@ -435,3 +435,10 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .fix-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .fix-step { margin: 8px 0; }
 .running-bar { position: sticky; bottom: 12px; margin-top: 14px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--window); box-shadow: var(--shadow-lg); }
+
+/* sister tools in About */
+.more-tools { border-top: 0.5px solid var(--sep); margin-top: 10px; padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.tool-link { height: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 8px 12px; text-align: left; white-space: normal; }
+.tool-link strong { color: var(--accent); }
+.made-by { margin-top: 2px; }
+.made-by .link { padding: 0; font-size: inherit; }

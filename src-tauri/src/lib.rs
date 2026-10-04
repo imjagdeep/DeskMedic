@@ -48,6 +48,7 @@ pub fn run() {
             commands::restart_as_admin,
             commands::save_settings,
             commands::open_data_folder,
+            commands::open_link,
             commands::list_drives,
             commands::read_log,
             commands::export_log,

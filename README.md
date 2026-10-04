@@ -50,6 +50,12 @@ Checks: `npm run typecheck`, and in `src-tauri`: `cargo fmt --all --check`, `car
 
 Set `DESKMEDIC_DATA_DIR` to keep settings and the log somewhere else while testing.
 
+## More tools
+
+- **[DeskZero](https://github.com/imjagdeep/deskzero)**: a tiny offline app that keeps your folders organized. Windows, macOS and Linux.
+
+Made by Jagdeep Sandhu · [github.com/imjagdeep](https://github.com/imjagdeep)
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

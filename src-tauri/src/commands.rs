@@ -78,6 +78,21 @@ pub fn open_data_folder(app: AppHandle, state: State<'_, AppState>) -> CmdResult
         .map_err(|e| format!("could not open {}: {e}", dir.display()))
 }
 
+/// Open one of a few fixed web pages (releases, developer, sister tools).
+/// Ids only, so the page can't be made to open arbitrary URLs.
+#[tauri::command]
+pub fn open_link(app: AppHandle, id: String) -> CmdResult<()> {
+    let url = match id.as_str() {
+        "releases" => "https://github.com/imjagdeep/DeskMedic/releases/latest",
+        "developer" => "https://github.com/imjagdeep",
+        "deskzero" => "https://github.com/imjagdeep/deskzero",
+        _ => return Err(format!("unknown link {id}")),
+    };
+    app.opener()
+        .open_url(url, None::<&str>)
+        .map_err(|e| e.to_string())
+}
+
 // ---------- drives ----------
 
 #[tauri::command]
