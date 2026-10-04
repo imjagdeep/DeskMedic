@@ -1,13 +1,19 @@
 import logo from "../assets/logo.png";
 import { useAppInfo } from "../lib/store";
-import { LogIcon, OverviewIcon, SettingsIcon } from "./Icons";
+import { LogIcon, MapIcon, OverviewIcon, SettingsIcon } from "./Icons";
 
-export type Page = "overview" | "log" | "settings";
+export type Page = "overview" | "diskmap" | "log" | "settings";
 
 type Item = { page: Page; label: string; Icon: (p: { size?: number }) => React.ReactElement };
 
 const GROUPS: { title: string; items: Item[] }[] = [
-  { title: "This PC", items: [{ page: "overview", label: "Overview", Icon: OverviewIcon }] },
+  {
+    title: "This PC",
+    items: [
+      { page: "overview", label: "Overview", Icon: OverviewIcon },
+      { page: "diskmap", label: "Disk map", Icon: MapIcon },
+    ],
+  },
   {
     title: "App",
     items: [

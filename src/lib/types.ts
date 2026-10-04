@@ -42,3 +42,59 @@ export interface LogEntry {
   computer: string;
   elevated: boolean;
 }
+
+export type ScanMethod = "mft" | "walk";
+
+export interface ScanSummary {
+  root: string;
+  method: ScanMethod;
+  files: number;
+  folders: number;
+  bytes: number;
+  millis: number;
+  skipped: number;
+}
+
+export interface ScanProgress {
+  files: number;
+  bytes: number;
+}
+
+export interface TreeItem {
+  id: number;
+  name: string;
+  size: number;
+  files: number;
+  is_dir: boolean;
+}
+
+export interface Listing {
+  id: number;
+  path: string;
+  trail: TreeItem[];
+  size: number;
+  files: number;
+  children: TreeItem[];
+  rest_count: number;
+  rest_size: number;
+}
+
+export interface BigFile {
+  id: number;
+  path: string;
+  size: number;
+}
+
+export interface TypeTotal {
+  ext: string;
+  size: number;
+  files: number;
+}
+
+export interface Profile {
+  path: string;
+  sid: string;
+  last_used: string;
+  loaded: boolean;
+  size: number | null;
+}

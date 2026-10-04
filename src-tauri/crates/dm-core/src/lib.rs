@@ -4,6 +4,9 @@
 pub mod drives;
 pub mod log;
 pub mod paths;
+pub mod profiles;
+pub mod ps;
+pub mod scan;
 pub mod settings;
 pub mod sys;
 

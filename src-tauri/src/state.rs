@@ -1,20 +1,30 @@
 //! App state shared by commands. One mutex: operations are short and the app
 //! has one user at a time.
 
+use dm_core::scan::{Progress, Tree};
 use dm_core::Settings;
 use std::path::PathBuf;
-use std::sync::{Mutex, MutexGuard};
+use std::sync::{Arc, Mutex, MutexGuard};
 
 pub struct AppState(Mutex<Inner>);
 
 pub struct Inner {
     pub data_dir: PathBuf,
     pub settings: Settings,
+    /// Last finished scan (the UI browses it).
+    pub tree: Option<Arc<Tree>>,
+    /// The scan in progress, if any.
+    pub scanning: Option<Arc<Progress>>,
 }
 
 impl AppState {
     pub fn new(data_dir: PathBuf, settings: Settings) -> Self {
-        AppState(Mutex::new(Inner { data_dir, settings }))
+        AppState(Mutex::new(Inner {
+            data_dir,
+            settings,
+            tree: None,
+            scanning: None,
+        }))
     }
 
     /// A panicked holder must not brick the app: recover the data.

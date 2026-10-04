@@ -1,7 +1,17 @@
 // Typed wrappers over the Rust commands. Errors arrive as plain strings.
 
 import { invoke } from "@tauri-apps/api/core";
-import type { AppInfo, Drive, LogEntry, Settings } from "./types";
+import type {
+  AppInfo,
+  BigFile,
+  Drive,
+  Listing,
+  LogEntry,
+  Profile,
+  ScanSummary,
+  Settings,
+  TypeTotal,
+} from "./types";
 
 export const api = {
   appInfo: () => invoke<AppInfo>("app_info"),
@@ -11,6 +21,14 @@ export const api = {
   listDrives: () => invoke<Drive[]>("list_drives"),
   readLog: () => invoke<LogEntry[]>("read_log"),
   exportLog: (path: string) => invoke<number>("export_log", { path }),
+  scanStart: (root: string) => invoke<void>("scan_start", { root }),
+  scanCancel: () => invoke<void>("scan_cancel"),
+  scanSummary: () => invoke<ScanSummary | null>("scan_summary"),
+  scanListing: (id: number | null, limit: number) => invoke<Listing>("scan_listing", { id, limit }),
+  scanTopFiles: (n: number) => invoke<BigFile[]>("scan_top_files", { n }),
+  scanTypes: (n: number) => invoke<TypeTotal[]>("scan_types", { n }),
+  revealNode: (id: number) => invoke<void>("reveal_node", { id }),
+  userProfiles: () => invoke<Profile[]>("user_profiles"),
 };
 
 export function errorText(e: unknown): string {

@@ -88,3 +88,9 @@ export const AlertIcon = (p: IconProps) => (
     <path d="M12 16.8h.01" />
   </Svg>
 );
+
+export const FolderIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3 7.5a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+  </Svg>
+);

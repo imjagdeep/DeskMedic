@@ -31,6 +31,14 @@ pub fn run() {
             commands::list_drives,
             commands::read_log,
             commands::export_log,
+            commands::scan_start,
+            commands::scan_cancel,
+            commands::scan_summary,
+            commands::scan_listing,
+            commands::scan_top_files,
+            commands::scan_types,
+            commands::reveal_node,
+            commands::user_profiles,
         ])
         .run(tauri::generate_context!())
         .expect("error while running DeskMedic");
