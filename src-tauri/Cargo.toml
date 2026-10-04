@@ -26,6 +26,14 @@ tracing = "0.1"
 members = ["crates/dm-core"]
 resolver = "2"
 
+# Keep debug builds small: line numbers for our own panics, no debug info
+# for dependencies (it made target/ grow past 10 GB).
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+
 [profile.release]
 codegen-units = 1
 lto = true
