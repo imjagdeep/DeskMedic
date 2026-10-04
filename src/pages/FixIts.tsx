@@ -1,30 +1,24 @@
 import { useEffect, useState } from "react";
 import { AdminNotice, PageHeader } from "../components/Common";
 import { api } from "../lib/api";
+import { clearFixResult, runFix, useFixJob } from "../lib/jobs";
 import { toastError, useAppInfo } from "../lib/store";
-import type { FixRecipe, FixResult } from "../lib/types";
+import type { FixRecipe } from "../lib/types";
 
 export function FixIts() {
   const info = useAppInfo();
   const [recipes, setRecipes] = useState<FixRecipe[]>([]);
   const [asking, setAsking] = useState<FixRecipe | null>(null);
-  const [running, setRunning] = useState<string | null>(null);
-  const [result, setResult] = useState<FixResult | null>(null);
+  // Kept outside the page so leaving it mid-fix loses nothing.
+  const { running, result } = useFixJob();
 
   useEffect(() => {
     api.fixList().then(setRecipes).catch(toastError);
   }, []);
 
-  const run = async (r: FixRecipe) => {
+  const run = (r: FixRecipe) => {
     setAsking(null);
-    setRunning(r.id);
-    try {
-      setResult(await api.fixRun(r.id));
-    } catch (e) {
-      toastError(e);
-    } finally {
-      setRunning(null);
-    }
+    void runFix(r.id);
   };
 
   return (
@@ -106,7 +100,7 @@ export function FixIts() {
             ))}
             {result.restart && <p className="notice-text">Restart the PC to finish.</p>}
             <div className="modal-actions">
-              <button className="primary" onClick={() => setResult(null)}>Close</button>
+              <button className="primary" onClick={clearFixResult}>Close</button>
             </div>
           </div>
         </div>

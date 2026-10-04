@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Toasts } from "./components/Common";
 import { Sidebar, type Page } from "./components/Sidebar";
+import { startJobs } from "./lib/jobs";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
@@ -12,10 +13,17 @@ import { SettingsPage } from "./pages/Settings";
 
 export default function App() {
   const [page, setPage] = useState<Page>("overview");
+  const content = useRef<HTMLElement>(null);
+
+  // Each page opens at the top, not where the last one was scrolled to.
+  useEffect(() => {
+    content.current?.scrollTo(0, 0);
+  }, [page]);
   const theme = useAppInfo()?.settings.theme ?? "system";
 
   useEffect(() => {
     void refreshAppInfo();
+    startJobs();
   }, []);
 
   // "system" leaves the attribute off so the CSS media query decides.
@@ -27,7 +35,7 @@ export default function App() {
   return (
     <div className="app">
       <Sidebar page={page} onNavigate={setPage} />
-      <main className="content">
+      <main className="content" ref={content}>
         {page === "overview" && <Overview />}
         {page === "diskmap" && <DiskMap />}
         {page === "cleanup" && <Cleanup />}

@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 import { api, errorText } from "./api";
 import type { AppInfo } from "./types";
 
-function createStore<T>(initial: T) {
+export function createStore<T>(initial: T) {
   let value = initial;
   const subs = new Set<() => void>();
   return {

@@ -373,9 +373,6 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .crumb-sep { color: var(--text-3); margin: 0 3px; }
 .treemap { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--group); border: 0.5px solid var(--group-border); }
 .tile { position: absolute; box-sizing: border-box; border: 1px solid var(--window); padding: 4px 6px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; font-size: 11.5px; }
-.tile.dir { background: hsl(var(--hue) 55% 48%); cursor: pointer; }
-.tile.dir:hover { filter: brightness(1.12); }
-.tile.file { background: hsl(var(--hue) 10% 55%); }
 .tile-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile-size { opacity: 0.85; }
 .card.list { padding: 4px 14px; }
@@ -442,3 +439,62 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .tool-link strong { color: var(--accent); }
 .made-by { margin-top: 2px; }
 .made-by .link { padding: 0; font-size: inherit; }
+
+/* ---------- polish: motion and details ---------- */
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } }
+@keyframes zoom-in { from { opacity: 0; transform: scale(0.97); } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes shimmer { from { background-position: -200px 0; } to { background-position: 200px 0; } }
+
+.page { animation: fade-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.fade-in { animation: fade-up 0.25s ease-out; }
+.stagger > .list-row { animation: fade-up 0.28s ease-out both; animation-delay: calc(var(--i, 0) * 18ms); }
+.tabular { font-variant-numeric: tabular-nums; }
+
+button { transition: background 0.12s, filter 0.12s, transform 0.08s, box-shadow 0.12s; }
+button:active:not(:disabled) { transform: scale(0.97); }
+button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: none; }
+.nav-item { transition: background 0.15s, color 0.15s; }
+.card { transition: box-shadow 0.2s, border-color 0.2s; }
+
+/* Bars grow into place instead of appearing at full width. */
+.usage-bar span, .small-bar span { transform-origin: left; animation: grow 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* Empty states */
+.empty-big { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 46px 24px; }
+.empty-big > svg { color: var(--accent); opacity: 0.85; margin-bottom: 4px; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--text); }
+
+/* Scan progress */
+.scan-card { display: flex; flex-direction: column; gap: 8px; animation: fade-up 0.25s ease-out; }
+.scan-card-head { display: flex; align-items: center; gap: 12px; }
+.progress { height: 8px; border-radius: 4px; background: var(--hover); overflow: hidden; }
+.progress span { display: block; height: 100%; border-radius: 4px; transition: width 0.4s ease;
+  background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #fff), var(--accent));
+  background-size: 200px 100%; animation: shimmer 1.4s linear infinite; }
+
+/* Breadcrumb "up" */
+.crumb-up { width: 26px; height: 24px; padding: 0; margin-right: 6px; font-size: 13px; }
+
+/* Treemap */
+.treemap { background: var(--group); padding: 0; }
+.treemap-inner { position: absolute; inset: 0; animation: zoom-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tile { border: 2px solid var(--window); border-radius: 7px; padding: 6px 8px; color: #fff;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c) 82%, #fff) 0%, var(--c) 55%, color-mix(in srgb, var(--c) 85%, #000) 100%);
+  transition: filter 0.15s, transform 0.15s, box-shadow 0.15s; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+.tile.dir { background-color: var(--c); cursor: pointer; }
+.tile.dir:hover { filter: brightness(1.1) saturate(1.05); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55); }
+.tile.file { background: linear-gradient(160deg, #a9b4c4, #8a96a8); }
+.tile-name { font-size: 12px; }
+.tile-size { font-size: 11px; opacity: 0.9; }
+.swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* Drive bars and disk segments */
+.drive { transition: transform 0.15s, box-shadow 0.15s; }
+.seg { transition: filter 0.15s, transform 0.15s; }
+.seg:hover { filter: brightness(1.08); }
+.finding { animation: fade-up 0.25s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

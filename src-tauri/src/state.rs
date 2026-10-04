@@ -8,13 +8,21 @@ use std::sync::{Arc, Mutex, MutexGuard};
 
 pub struct AppState(Mutex<Inner>);
 
+/// A running scan, so the page can pick it up again after you switch pages.
+pub struct Scanning {
+    pub root: String,
+    /// Used space on the drive, for a percentage while walking.
+    pub used: u64,
+    pub progress: Arc<Progress>,
+}
+
 pub struct Inner {
     pub data_dir: PathBuf,
     pub settings: Settings,
     /// Last finished scan (the UI browses it).
     pub tree: Option<Arc<Tree>>,
     /// The scan in progress, if any.
-    pub scanning: Option<Arc<Progress>>,
+    pub scanning: Option<Scanning>,
     /// A fix-it is running (one at a time).
     pub fixing: bool,
 }

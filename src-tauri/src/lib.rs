@@ -54,6 +54,7 @@ pub fn run() {
             commands::export_log,
             commands::scan_start,
             commands::scan_cancel,
+            commands::scan_state,
             commands::scan_summary,
             commands::scan_listing,
             commands::scan_top_files,

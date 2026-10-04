@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AdminNotice, PageHeader } from "../components/Common";
 import { api } from "../lib/api";
 import { humanSize } from "../lib/format";
+import { clearCleanupReport, runCleanup, useCleanupJob } from "../lib/jobs";
 import { toastError, useAppInfo } from "../lib/store";
 import type { CleanupEstimate, CleanupReport } from "../lib/types";
 
@@ -11,12 +12,12 @@ export function Cleanup() {
   const [items, setItems] = useState<CleanupEstimate[] | null>(null);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState(false);
-  const [running, setRunning] = useState(false);
-  const [report, setReport] = useState<CleanupReport | null>(null);
+  // Kept outside the page so leaving it mid-cleanup loses nothing.
+  const { running, report } = useCleanupJob();
 
   const measure = useCallback((everyone: boolean) => {
     setItems(null);
-    setReport(null);
+    clearCleanupReport();
     api
       .cleanupPreview(everyone)
       .then((list) => {
@@ -32,7 +33,11 @@ export function Cleanup() {
       });
   }, []);
 
-  useEffect(() => measure(false), [measure]);
+  // Measure on opening, unless a cleanup is running or its result is waiting.
+  useEffect(() => {
+    if (!running && !report) measure(false);
+    // Only on opening the page.
+  }, []);
 
   const selected = useMemo(() => (items ?? []).filter((e) => picked.has(e.id)), [items, picked]);
   const total = selected.reduce((s, e) => s + (e.bytes ?? 0), 0);
@@ -45,16 +50,9 @@ export function Cleanup() {
       return n;
     });
 
-  const run = async () => {
+  const run = () => {
     setConfirming(false);
-    setRunning(true);
-    try {
-      setReport(await api.cleanupRun([...picked], allUsers));
-    } catch (e) {
-      toastError(e);
-    } finally {
-      setRunning(false);
-    }
+    void runCleanup([...picked], allUsers);
   };
 
   return (

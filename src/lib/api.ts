@@ -31,6 +31,8 @@ export const api = {
   exportLog: (path: string) => invoke<number>("export_log", { path }),
   scanStart: (root: string) => invoke<void>("scan_start", { root }),
   scanCancel: () => invoke<void>("scan_cancel"),
+  scanState: () =>
+    invoke<{ root: string; used: number; files: number; bytes: number } | null>("scan_state"),
   scanSummary: () => invoke<ScanSummary | null>("scan_summary"),
   scanListing: (id: number | null, limit: number) => invoke<Listing>("scan_listing", { id, limit }),
   scanTopFiles: (n: number) => invoke<BigFile[]>("scan_top_files", { n }),

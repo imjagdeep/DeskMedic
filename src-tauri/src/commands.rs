@@ -1,7 +1,7 @@
 //! Tauri commands: thin adapters over dm-core. Anything slow runs on a
 //! blocking thread so the window never freezes.
 
-use crate::state::AppState;
+use crate::state::{AppState, Scanning};
 use dm_core::drives::{Drive, DriveKind};
 use dm_core::log::{Area, LogEntry};
 use dm_core::profiles::Profile;
@@ -144,7 +144,11 @@ pub fn scan_start(app: AppHandle, state: State<'_, AppState>, root: String) -> C
         if g.scanning.is_some() {
             return Err("A scan is already running.".into());
         }
-        g.scanning = Some(progress.clone());
+        g.scanning = Some(Scanning {
+            root: drive.root.clone(),
+            used: drive.used_bytes(),
+            progress: progress.clone(),
+        });
     }
     let allow_mft = dm_core::sys::is_elevated() && drive.file_system.eq_ignore_ascii_case("NTFS");
 
@@ -202,9 +206,33 @@ pub fn scan_start(app: AppHandle, state: State<'_, AppState>, root: String) -> C
 
 #[tauri::command]
 pub fn scan_cancel(state: State<'_, AppState>) {
-    if let Some(p) = &state.lock().scanning {
-        p.cancel.store(true, std::sync::atomic::Ordering::Relaxed);
+    if let Some(s) = &state.lock().scanning {
+        s.progress
+            .cancel
+            .store(true, std::sync::atomic::Ordering::Relaxed);
     }
+}
+
+#[derive(Serialize)]
+pub struct ScanState {
+    root: String,
+    used: u64,
+    files: u64,
+    bytes: u64,
+}
+
+/// The scan in progress, if any (the page asks when it opens).
+#[tauri::command]
+pub fn scan_state(state: State<'_, AppState>) -> Option<ScanState> {
+    state.lock().scanning.as_ref().map(|s| {
+        let p = s.progress.snapshot();
+        ScanState {
+            root: s.root.clone(),
+            used: s.used,
+            files: p.files,
+            bytes: p.bytes,
+        }
+    })
 }
 
 fn tree(state: &State<'_, AppState>) -> CmdResult<Arc<Tree>> {
