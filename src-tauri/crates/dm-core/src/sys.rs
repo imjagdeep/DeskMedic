@@ -76,3 +76,46 @@ pub fn relaunch_elevated() -> Result<(), String> {
 pub fn relaunch_elevated() -> Result<(), String> {
     Err("DeskMedic runs on Windows only.".into())
 }
+
+/// Size and item count of the current user's Recycle Bin on all drives.
+#[cfg(windows)]
+pub fn recycle_bin_size() -> Result<(u64, u64), String> {
+    use windows::core::PCWSTR;
+    use windows::Win32::UI::Shell::{SHQueryRecycleBinW, SHQUERYRBINFO};
+    let mut info = SHQUERYRBINFO {
+        cbSize: std::mem::size_of::<SHQUERYRBINFO>() as u32,
+        ..Default::default()
+    };
+    // SAFETY: a null root means "all drives"; the struct has its size set.
+    unsafe { SHQueryRecycleBinW(PCWSTR::null(), &mut info) }
+        .map_err(|e| format!("could not read the Recycle Bin: {e}"))?;
+    Ok((info.i64Size.max(0) as u64, info.i64NumItems.max(0) as u64))
+}
+
+/// Empty the current user's Recycle Bin on all drives, silently.
+#[cfg(windows)]
+pub fn empty_recycle_bin() -> Result<(), String> {
+    use windows::core::PCWSTR;
+    use windows::Win32::UI::Shell::{
+        SHEmptyRecycleBinW, SHERB_NOCONFIRMATION, SHERB_NOPROGRESSUI, SHERB_NOSOUND,
+    };
+    // SAFETY: no window, null root = all drives.
+    unsafe {
+        SHEmptyRecycleBinW(
+            None,
+            PCWSTR::null(),
+            SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND,
+        )
+    }
+    .map_err(|e| format!("could not empty the Recycle Bin: {e}"))
+}
+
+#[cfg(not(windows))]
+pub fn recycle_bin_size() -> Result<(u64, u64), String> {
+    Ok((0, 0))
+}
+
+#[cfg(not(windows))]
+pub fn empty_recycle_bin() -> Result<(), String> {
+    Err("DeskMedic runs on Windows only.".into())
+}

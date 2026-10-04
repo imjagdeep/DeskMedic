@@ -4,10 +4,9 @@
 //! `DM_ARG_*` environment variables and read with `$env:DM_ARG_X`, so user
 //! input is never pasted into script text. Each call has a timeout.
 
+use crate::run::{self, RunError};
 use serde::de::DeserializeOwned;
-use std::io::Read;
-use std::process::{Command, Stdio};
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 #[derive(Debug, thiserror::Error)]
 pub enum PsError {
@@ -25,71 +24,37 @@ pub enum PsError {
 pub fn run_text(script: &str, args: &[(&str, &str)], timeout: Duration) -> Result<String, PsError> {
     // Errors become a terminating error with a clean message on stderr.
     let wrapped = format!(
-        "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue'; \
-         [Console]::OutputEncoding = [Text.Encoding]::UTF8; \
-         try {{ {script} }} catch {{ [Console]::Error.WriteLine($_.Exception.Message); exit 1 }}"
+        "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';          [Console]::OutputEncoding = [Text.Encoding]::UTF8;          try {{ {script} }} catch {{ [Console]::Error.WriteLine($_.Exception.Message); exit 1 }}"
     );
-    let mut cmd = Command::new("powershell.exe");
-    cmd.args([
-        "-NoProfile",
-        "-NonInteractive",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-Command",
-        &wrapped,
-    ])
-    .stdin(Stdio::null())
-    .stdout(Stdio::piped())
-    .stderr(Stdio::piped());
-    for (k, v) in args {
-        cmd.env(format!("DM_ARG_{k}"), v);
-    }
-    #[cfg(windows)]
-    {
-        use std::os::windows::process::CommandExt;
-        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-        cmd.creation_flags(CREATE_NO_WINDOW);
-    }
-    let mut child = cmd.spawn().map_err(PsError::Start)?;
-    let mut stdout = child.stdout.take().expect("piped");
-    let mut stderr = child.stderr.take().expect("piped");
-    // Read both pipes on threads so a full pipe can't stall the child.
-    let out_t = std::thread::spawn(move || {
-        let mut s = Vec::new();
-        let _ = stdout.read_to_end(&mut s);
-        s
-    });
-    let err_t = std::thread::spawn(move || {
-        let mut s = Vec::new();
-        let _ = stderr.read_to_end(&mut s);
-        s
-    });
-    let start = Instant::now();
-    let status = loop {
-        if let Some(st) = child.try_wait().map_err(PsError::Start)? {
-            break st;
-        }
-        if start.elapsed() > timeout {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(PsError::Timeout(timeout.as_secs()));
-        }
-        std::thread::sleep(Duration::from_millis(50));
-    };
-    let out = String::from_utf8_lossy(&out_t.join().unwrap_or_default())
-        .trim()
-        .to_string();
-    let err = String::from_utf8_lossy(&err_t.join().unwrap_or_default())
-        .trim()
-        .to_string();
-    if !status.success() {
-        return Err(PsError::Script(if err.is_empty() {
-            format!("PowerShell exited with {status}")
+    let env: Vec<(String, String)> = args
+        .iter()
+        .map(|(k, v)| (format!("DM_ARG_{k}"), v.to_string()))
+        .collect();
+    let out = run::run(
+        "powershell.exe",
+        &[
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            &wrapped,
+        ],
+        &env,
+        timeout,
+    )
+    .map_err(|e| match e {
+        RunError::Start(_, io) => PsError::Start(io),
+        RunError::Timeout(_, secs) => PsError::Timeout(secs),
+    })?;
+    if !out.success() {
+        return Err(PsError::Script(if out.stderr.is_empty() {
+            format!("PowerShell exited with code {:?}", out.code)
         } else {
-            err
+            out.stderr
         }));
     }
-    Ok(out)
+    Ok(out.stdout)
 }
 
 /// Like [`run_text`], parsing stdout as JSON. Empty output parses as `null`.

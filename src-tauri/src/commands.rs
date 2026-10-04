@@ -252,3 +252,95 @@ pub async fn user_profiles(state: State<'_, AppState>) -> CmdResult<Vec<Profile>
     })
     .await
 }
+
+// ---------- cleanup ----------
+
+#[tauri::command]
+pub async fn cleanup_preview(all_users: bool) -> CmdResult<Vec<dm_core::cleanup::Estimate>> {
+    blocking(move || {
+        let ctx = dm_core::cleanup::Ctx::detect(all_users);
+        Ok(dm_core::cleanup::preview(
+            &ctx,
+            &std::sync::atomic::AtomicBool::new(false),
+        ))
+    })
+    .await
+}
+
+#[derive(Serialize)]
+pub struct CleanupReport {
+    outcomes: Vec<dm_core::cleanup::Outcome>,
+    free_before: u64,
+    free_after: u64,
+}
+
+fn system_free() -> u64 {
+    dm_core::drives::list()
+        .into_iter()
+        .find(|d| d.is_system)
+        .map(|d| d.free_bytes)
+        .unwrap_or(0)
+}
+
+#[tauri::command]
+pub async fn cleanup_run(
+    app: AppHandle,
+    ids: Vec<String>,
+    all_users: bool,
+) -> CmdResult<CleanupReport> {
+    if ids.is_empty() {
+        return Err("Nothing selected.".into());
+    }
+    let report = blocking(move || {
+        let ctx = dm_core::cleanup::Ctx::detect(all_users);
+        let free_before = system_free();
+        let outcomes =
+            dm_core::cleanup::run(&ids, &ctx, &std::sync::atomic::AtomicBool::new(false));
+        Ok(CleanupReport {
+            outcomes,
+            free_before,
+            free_after: system_free(),
+        })
+    })
+    .await?;
+
+    let gained = report.free_after.saturating_sub(report.free_before);
+    let details: Vec<String> = report
+        .outcomes
+        .iter()
+        .map(|o| {
+            let size = o
+                .freed
+                .map(|b| format!("{:.1} MB", b as f64 / 1e6))
+                .unwrap_or_else(|| "size n/a".into());
+            let mut line = format!(
+                "{} {}: {size}, {} files",
+                if o.ok { "OK" } else { "--" },
+                o.name,
+                o.files
+            );
+            if !o.note.is_empty() {
+                line.push_str(&format!(" ({})", o.note));
+            }
+            line
+        })
+        .collect();
+    let all_ok = report.outcomes.iter().all(|o| o.ok);
+    let state = app.state::<AppState>();
+    state.lock().record(
+        &LogEntry::new(
+            Area::Cleanup,
+            "Cleanup",
+            all_ok,
+            format!(
+                "C: free {:.1} GB -> {:.1} GB (+{:.2} GB){}",
+                report.free_before as f64 / 1e9,
+                report.free_after as f64 / 1e9,
+                gained as f64 / 1e9,
+                if all_users { ", all users" } else { "" }
+            ),
+        )
+        .with_details(details),
+    );
+    Ok(report)
+}

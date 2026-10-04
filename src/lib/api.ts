@@ -3,6 +3,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import type {
   AppInfo,
+  CleanupEstimate,
+  CleanupReport,
   BigFile,
   Drive,
   Listing,
@@ -29,6 +31,8 @@ export const api = {
   scanTypes: (n: number) => invoke<TypeTotal[]>("scan_types", { n }),
   revealNode: (id: number) => invoke<void>("reveal_node", { id }),
   userProfiles: () => invoke<Profile[]>("user_profiles"),
+  cleanupPreview: (allUsers: boolean) => invoke<CleanupEstimate[]>("cleanup_preview", { allUsers }),
+  cleanupRun: (ids: string[], allUsers: boolean) => invoke<CleanupReport>("cleanup_run", { ids, allUsers }),
 };
 
 export function errorText(e: unknown): string {

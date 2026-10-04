@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Toasts } from "./components/Common";
 import { Sidebar, type Page } from "./components/Sidebar";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
+import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
 import { Log } from "./pages/Log";
 import { Overview } from "./pages/Overview";
@@ -27,6 +28,7 @@ export default function App() {
       <main className="content">
         {page === "overview" && <Overview />}
         {page === "diskmap" && <DiskMap />}
+        {page === "cleanup" && <Cleanup />}
         {page === "log" && <Log />}
         {page === "settings" && <SettingsPage />}
       </main>

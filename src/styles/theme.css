@@ -390,3 +390,13 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .page-actions select { min-width: 220px; }
 .table.fixed { table-layout: fixed; }
 .table.fixed .path-cell { max-width: none; }
+
+.clean-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 0.5px solid var(--sep); }
+.clean-row:first-child { border-top: none; }
+.clean-row.blocked { opacity: 0.6; }
+.clean-name { font-weight: 500; }
+.clean-desc { display: block; margin-top: 1px; }
+.clean-size { display: flex; flex-direction: column; align-items: flex-end; min-width: 96px; font-variant-numeric: tabular-nums; }
+.clean-foot { position: sticky; bottom: 0; background: var(--window); padding: 10px 0; border-top: 0.5px solid var(--sep); }
+.result-head { text-align: center; padding: 18px; }
+.result-head .stat-num { font-size: 30px; color: var(--green); }

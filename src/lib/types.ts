@@ -98,3 +98,30 @@ export interface Profile {
   loaded: boolean;
   size: number | null;
 }
+
+export interface CleanupEstimate {
+  id: string;
+  name: string;
+  description: string;
+  recommended: boolean;
+  bytes: number | null;
+  files: number;
+  blocked: string | null;
+}
+
+export interface CleanupOutcome {
+  id: string;
+  name: string;
+  ok: boolean;
+  freed: number | null;
+  files: number;
+  skipped: number;
+  note: string;
+  errors: string[];
+}
+
+export interface CleanupReport {
+  outcomes: CleanupOutcome[];
+  free_before: number;
+  free_after: number;
+}
