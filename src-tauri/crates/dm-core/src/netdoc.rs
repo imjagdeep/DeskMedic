@@ -315,12 +315,7 @@ pub fn evaluate(f: &Facts) -> Report {
             format!("Names resolve ({:.0} ms).", f.dns_ms.unwrap_or(0.0)),
         )
     } else {
-        link(
-            "dns",
-            "DNS",
-            Status::Problem,
-            "Names don't resolve.".into(),
-        )
+        link("dns", "DNS", Status::Problem, "Names don't resolve.".into())
     });
     links.push(if web_ok {
         link(
@@ -447,8 +442,7 @@ fn offset_text(s: f64) -> String {
 }
 
 fn finish(links: Vec<Link>, verdict: Option<Verdict>) -> Report {
-    let (status, verdict, action) =
-        verdict.unwrap_or((Status::Unknown, "No result.".into(), None));
+    let (status, verdict, action) = verdict.unwrap_or((Status::Unknown, "No result.".into(), None));
     Report {
         links,
         verdict,
@@ -497,7 +491,11 @@ mod tests {
     fn all_good() {
         let r = evaluate(&working());
         assert_eq!(r.status, Status::Good);
-        assert!(r.links.iter().all(|l| l.status == Status::Good), "{:?}", r.links);
+        assert!(
+            r.links.iter().all(|l| l.status == Status::Good),
+            "{:?}",
+            r.links
+        );
         assert_eq!(r.links.len(), 6);
     }
 
@@ -543,7 +541,12 @@ mod tests {
         f.web_error = Some("timed out".into());
         f.clock_offset_s = None;
         let r = evaluate(&f);
-        assert!(r.verdict.contains("reaches the router but not the internet"), "{}", r.verdict);
+        assert!(
+            r.verdict
+                .contains("reaches the router but not the internet"),
+            "{}",
+            r.verdict
+        );
         f.gateway_replies = Some(0);
         assert!(evaluate(&f).verdict.contains("can't get past the router"));
     }

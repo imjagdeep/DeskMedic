@@ -520,17 +520,13 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
 /// Plain text for a ticket.
 pub fn to_text(r: &Report) -> String {
     let mut s = format!(
-        "Health check: {} problem(s), {} warning(s)
-
-",
+        "Health check: {} problem(s), {} warning(s)\n\n",
         r.problems, r.warnings
     );
     for c in &r.checks {
-        s.push_str(&format!("[{:?}] {}: {}
-", c.status, c.title, c.summary));
+        s.push_str(&format!("[{:?}] {}: {}\n", c.status, c.title, c.summary));
         if let Some(a) = &c.advice {
-            s.push_str(&format!("    {a}
-"));
+            s.push_str(&format!("    {a}\n"));
         }
     }
     s

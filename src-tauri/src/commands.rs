@@ -604,10 +604,9 @@ pub async fn fix_run(
         }
         g.fixing = true;
     }
-    let result = blocking(move || {
-        dm_core::fixes::run_fix(&id, dm_core::sys::is_elevated(), restore_point)
-    })
-    .await;
+    let result =
+        blocking(move || dm_core::fixes::run_fix(&id, dm_core::sys::is_elevated(), restore_point))
+            .await;
     let state = app.state::<AppState>();
     let mut g = state.lock();
     g.fixing = false;

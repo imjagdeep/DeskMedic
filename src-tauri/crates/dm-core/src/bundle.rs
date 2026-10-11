@@ -5,6 +5,7 @@
 
 use crate::ps;
 use std::path::Path;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Duration;
 
 const SYSINFO: &str = r#"
@@ -62,10 +63,14 @@ pub fn write_zip(files: &[(&str, String)], dest: &Path) -> Result<(), String> {
     {
         return Err("The bundle must be saved as a .zip file.".into());
     }
+    // Unique per call: two bundles in the same millisecond must not share
+    // (and then delete) one folder.
+    static SEQ: AtomicU64 = AtomicU64::new(0);
     let dir = std::env::temp_dir().join(format!(
-        "deskmedic-bundle-{}-{}",
+        "deskmedic-bundle-{}-{}-{}",
         std::process::id(),
-        chrono::Utc::now().timestamp_millis()
+        chrono::Utc::now().timestamp_millis(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
     ));
     std::fs::create_dir_all(&dir).map_err(|e| format!("could not make a temp folder: {e}"))?;
     let result = (|| {

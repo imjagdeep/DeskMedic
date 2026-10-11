@@ -501,8 +501,9 @@ pub fn run_fix(id: &str, elevated: bool, restore_point: bool) -> Result<FixResul
             label: "Create a restore point",
             ok: !failed,
             output: res.unwrap_or_else(|e| {
-                format!("{e}
-Nothing was changed. Run it again without a restore point if that is acceptable.")
+                format!(
+                    "{e}\nNothing was changed. Run it again without a restore point if that is acceptable."
+                )
             }),
         });
         if failed {
@@ -622,7 +623,10 @@ mod tests {
     /// Only admin recipes can make a restore point (Windows needs admin).
     #[test]
     fn restore_points_only_on_admin_recipes() {
-        assert!(recipes().iter().filter(|r| r.restore_point).all(|r| r.admin));
+        assert!(recipes()
+            .iter()
+            .filter(|r| r.restore_point)
+            .all(|r| r.admin));
         assert!(recipes().iter().any(|r| r.restore_point));
     }
 
