@@ -1,6 +1,6 @@
 [package]
 name = "deskmedic"
-version = "0.3.0"
+version = "0.4.0"
 description = "Windows helpdesk disk utility"
 license = "MIT"
 edition = "2021"
@@ -15,9 +15,13 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 dm-core = { path = "crates/dm-core" }
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-notification = "2"
+chrono = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tracing = "0.1"

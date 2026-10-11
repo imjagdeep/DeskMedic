@@ -1,7 +1,8 @@
+import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Toasts } from "./components/Common";
 import { Sidebar, type Page } from "./components/Sidebar";
-import { startJobs } from "./lib/jobs";
+import { runHealthCheck, startJobs } from "./lib/jobs";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
@@ -36,6 +37,16 @@ export default function App() {
   useEffect(() => {
     void refreshAppInfo();
     startJobs();
+    // Tray menu: "Run a health check", "Network doctor".
+    const un = listen<string>("navigate", (e) => {
+      if (e.payload === "health-run") {
+        setPage("health");
+        void runHealthCheck();
+      } else if (e.payload === "network") setPage("network");
+    });
+    return () => {
+      void un.then((f) => f());
+    };
   }, []);
 
   // "system" leaves the attribute off so the CSS media query decides.
@@ -48,7 +59,7 @@ export default function App() {
     <div className="app">
       <Sidebar page={page} onNavigate={setPage} />
       <main className="content" ref={content}>
-        {page === "overview" && <Overview />}
+        {page === "overview" && <Overview onNavigate={setPage} />}
         {page === "health" && <Health onAction={onHealthAction} />}
         {page === "network" && <Network onAction={onHealthAction} />}
         {page === "diskmap" && <DiskMap />}

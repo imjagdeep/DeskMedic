@@ -60,14 +60,34 @@ pub fn restart_as_admin(app: AppHandle) -> CmdResult<()> {
 }
 
 #[tauri::command]
-pub fn save_settings(state: State<'_, AppState>, settings: Settings) -> CmdResult<()> {
+pub fn save_settings(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    settings: Settings,
+) -> CmdResult<()> {
     settings.validate()?;
+    apply_autostart(&app, settings.start_with_windows)?;
     let mut g = state.lock();
     settings
         .save(&g.data_dir)
         .map_err(|e| format!("could not save settings: {e}"))?;
     g.settings = settings;
     Ok(())
+}
+
+/// Add or remove the sign-in entry to match the setting.
+pub fn apply_autostart(app: &AppHandle, wanted: bool) -> CmdResult<()> {
+    use tauri_plugin_autostart::ManagerExt;
+    let launcher = app.autolaunch();
+    if launcher.is_enabled().unwrap_or(false) == wanted {
+        return Ok(());
+    }
+    if wanted {
+        launcher.enable()
+    } else {
+        launcher.disable()
+    }
+    .map_err(|e| format!("could not change start with Windows: {e}"))
 }
 
 #[tauri::command]
@@ -646,6 +666,9 @@ pub async fn fix_run(
 #[tauri::command]
 pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
     let result = blocking(dm_core::health::run).await;
+    if let Ok(r) = &result {
+        crate::assistant::after_check(&app, r, false);
+    }
     let state = app.state::<AppState>();
     let g = state.lock();
     match &result {
@@ -746,4 +769,17 @@ pub async fn send_to_it(app: AppHandle, path: PathBuf) -> CmdResult<Vec<String>>
         },
     ));
     names
+}
+
+// ---------- home page ----------
+
+#[tauri::command]
+pub async fn pc_summary() -> CmdResult<dm_core::pc::Summary> {
+    blocking(dm_core::pc::summary).await
+}
+
+/// The last background check, for the home page before you run one.
+#[tauri::command]
+pub fn assistant_status(state: State<'_, AppState>) -> dm_core::monitor::Seen {
+    dm_core::monitor::Seen::load(&state.lock().data_dir)
 }

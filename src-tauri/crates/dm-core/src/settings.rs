@@ -14,6 +14,15 @@ pub struct Settings {
     pub theme: String,
     /// Log entries older than this are dropped on start.
     pub keep_log_days: u32,
+    /// Medic assistant: keep running in the tray, check health in the
+    /// background and pop up when something new looks wrong.
+    pub assistant: bool,
+    /// Minutes between background health checks.
+    pub check_every_min: u32,
+    /// Start (hidden, in the tray) when you sign in to Windows.
+    pub start_with_windows: bool,
+    /// The first-run default for start_with_windows has been applied.
+    pub start_default_applied: bool,
 }
 
 impl Default for Settings {
@@ -21,6 +30,10 @@ impl Default for Settings {
         Self {
             theme: "system".into(),
             keep_log_days: 180,
+            assistant: true,
+            check_every_min: 60,
+            start_with_windows: false,
+            start_default_applied: false,
         }
     }
 }
@@ -50,6 +63,9 @@ impl Settings {
         if !(7..=3650).contains(&self.keep_log_days) {
             return Err("keep the log for 7 to 3650 days".into());
         }
+        if !(15..=1440).contains(&self.check_every_min) {
+            return Err("check every 15 minutes to 24 hours".into());
+        }
         Ok(())
     }
 
@@ -74,6 +90,8 @@ mod tests {
         let s = Settings {
             theme: "dark".into(),
             keep_log_days: 30,
+            check_every_min: 120,
+            ..Settings::default()
         };
         s.save(dir.path()).unwrap();
         assert_eq!(Settings::load(dir.path()), s);

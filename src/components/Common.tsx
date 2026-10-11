@@ -13,10 +13,13 @@ export function Toasts() {
   );
 }
 
-export function PageHeader({ title, children }: { title: string; children?: React.ReactNode }) {
+export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: React.ReactNode }) {
   return (
     <header className="page-header">
-      <h1>{title}</h1>
+      <div className="page-title">
+        <h1>{title}</h1>
+        {subtitle && <div className="page-subtitle">{subtitle}</div>}
+      </div>
       <div className="page-actions">{children}</div>
     </header>
   );

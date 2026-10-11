@@ -1,4 +1,5 @@
 import logo from "../assets/logo.png";
+import { useHealthJob } from "../lib/jobs";
 import { useAppInfo } from "../lib/store";
 import { BroomIcon, DiskIcon, GlobeIcon, LogIcon, MapIcon, OverviewIcon, PulseIcon, SettingsIcon, WrenchIcon } from "./Icons";
 
@@ -30,6 +31,9 @@ const GROUPS: { title: string; items: Item[] }[] = [
 
 export function Sidebar({ page, onNavigate }: { page: Page; onNavigate: (p: Page) => void }) {
   const info = useAppInfo();
+  const { report } = useHealthJob();
+  // The last health result (this session or the assistant's), as a dot.
+  const tone = !report ? null : report.problems ? "problem" : report.warnings ? "warning" : "good";
   return (
     <nav className="sidebar">
       <div className="brand">
@@ -48,6 +52,7 @@ export function Sidebar({ page, onNavigate }: { page: Page; onNavigate: (p: Page
             >
               <Icon size={18} />
               <span className="nav-label">{label}</span>
+              {p === "health" && tone && <span className={`nav-dot ${tone}`} aria-label={`Health: ${tone}`} />}
             </button>
           ))}
         </div>

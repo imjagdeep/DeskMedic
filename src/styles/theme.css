@@ -529,3 +529,58 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .check-row { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 4px; cursor: pointer; }
 .check-row input { margin-top: 3px; }
 .block { display: block; }
+
+/* page title with an optional second line */
+.page-title { min-width: 0; }
+.page-subtitle { color: var(--text-2); font-size: 12.5px; margin-top: 2px; }
+.warn-text { color: var(--orange); font-weight: 500; }
+
+/* Home: health + this PC side by side, tool tiles, drives */
+.home-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 12px; margin-top: 14px; }
+.home-top > .card { margin: 0; }
+.home-health { display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; }
+.home-health::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--sep); }
+.home-health.good::before { background: var(--green); }
+.home-health.warning::before { background: var(--orange); }
+.home-health.problem::before { background: var(--red); }
+.home-health-head { display: flex; align-items: center; gap: 14px; }
+.home-health-head h2 { font-size: 17px; margin: 0 0 2px; letter-spacing: -0.01em; }
+.home-ring { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: none; color: var(--text-2); background: var(--hover); }
+.home-ring.good { color: var(--green); background: var(--green-soft); }
+.home-ring.warning { color: var(--orange); background: var(--orange-soft); }
+.home-ring.problem { color: var(--red); background: color-mix(in srgb, var(--red) 13%, transparent); }
+.home-health-actions { display: flex; gap: 8px; }
+.home-assistant { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 12px; border-top: 0.5px solid var(--sep); color: var(--text-2); }
+.home-assistant > span:nth-child(2) { flex: 1; }
+.home-pc h2 { margin-bottom: 10px; }
+.facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 16px; margin: 0; font-size: 12.5px; }
+.facts dt { color: var(--text-2); }
+.facts dd { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.home-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.home-tile { height: auto; display: flex; align-items: center; gap: 12px; padding: 12px 14px; text-align: left; white-space: normal; border-radius: var(--radius); background: var(--group); box-shadow: 0 0 0 0.5px var(--group-border); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; }
+.home-tile:hover:not(:disabled) { filter: none; transform: translateY(-1px); background: var(--window); box-shadow: var(--shadow-sm), 0 6px 16px rgba(0, 0, 0, 0.06); }
+.home-tile-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex: none; color: var(--accent); background: var(--accent-soft); }
+.home-tile-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.home-tile-text strong { font-size: 13px; font-weight: 600; }
+.home-drives { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+.home-drives .card { margin: 0; }
+@media (max-width: 980px) {
+  .home-top { grid-template-columns: minmax(0, 1fr); }
+  .home-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Remedies grouped by topic */
+.fix-group { margin-top: 18px; }
+.fix-group-title { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; }
+.fix-group-icon { width: 24px; height: 24px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; color: var(--accent); background: var(--accent-soft); }
+.fix-group .fix-grid { margin-top: 0; }
+.fix-card { transition: box-shadow 0.15s, transform 0.15s; }
+.fix-card:hover { box-shadow: var(--shadow-sm), 0 6px 16px rgba(0, 0, 0, 0.05); }
+.fix-card.running { box-shadow: 0 0 0 1.5px var(--accent); }
+.fix-meta { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
+
+/* Sidebar: health status dot */
+.nav-dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.nav-dot.good { background: var(--green); }
+.nav-dot.warning { background: var(--orange); }
+.nav-dot.problem { background: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 20%, transparent); }
