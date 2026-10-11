@@ -5,7 +5,7 @@
 A portable Windows toolkit for helpdesk technicians: see what fills a disk, clear temporary files safely, fix common Disk Management problems, check a PC's health in seconds, and run one-click remedies for everyday calls.
 <br clear="left">
 
-- **Portable.** One small `.exe`, no install. Run it from a USB stick or a network share; nothing is written next to it.
+- **Portable or installed.** One small `.exe` you can run from a USB stick or a network share, or an installer that puts it in the Start menu.
 - **Safe by design.** Everything that changes something is shown first, and every change goes in a log you can paste into a ticket. Documents, Desktop, Downloads, pictures and OneDrive are never touched. It never formats, initializes or deletes data partitions.
 - **Offline and private.** No account, no cloud, no telemetry. It only goes online when you click "Check for a newer version" or run the Network doctor (which asks first and sends nothing about the PC).
 
@@ -37,8 +37,12 @@ A portable Windows toolkit for helpdesk technicians: see what fills a disk, clea
 
 ## Download and run
 
-1. Download `DeskMedic-x.y.z.exe` from [Releases](../../releases). Check it if you like: `Get-FileHash .\DeskMedic-x.y.z.exe` should match the SHA-256 on the release page.
-2. Run it. It offers **Restart as administrator**; many remedies need that.
+Two downloads on [Releases](../../releases), same app:
+
+- **`DeskMedic-x.y.z-setup.exe`** (installer): adds DeskMedic to the Start menu and Windows Search, with an uninstaller in Settings › Apps. Installs for the current user, so it needs no administrator rights to install.
+- **`DeskMedic-x.y.z.exe`** (portable): no install. Run it from a USB stick or a network share; nothing is written next to it.
+
+Check a download if you like: `Get-FileHash .\<file>` should match `SHA256SUMS.txt` on the release page. Then run it; it offers **Restart as administrator**, which many remedies need.
 
 Needs Windows 10 or 11 with the Microsoft Edge WebView2 runtime (built into Windows 11 and up-to-date Windows 10).
 

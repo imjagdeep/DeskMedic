@@ -30,6 +30,15 @@
     "copyright": "Copyright (c) 2026 Jagdeep Sandhu. MIT License.",
     "category": "Utility",
     "shortDescription": "Helpdesk disk utility for Windows",
-    "longDescription": "DeskMedic finds what fills a disk, clears temporary files safely, fixes common Disk Management problems and runs one-click fixes for helpdesk calls."
+    "longDescription": "DeskMedic finds what fills a disk, clears temporary files safely, fixes common Disk Management problems and runs one-click fixes for helpdesk calls.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false
+      },
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
   }
 }
