@@ -38,6 +38,11 @@ pub fn is_elevated() -> bool {
     false
 }
 
+/// Command-line flag for the elevated copy: wait for this process id to
+/// exit first, so the single-instance check doesn't send it back to the
+/// copy that is closing.
+pub const AFTER_PID_FLAG: &str = "--after-pid";
+
 /// Start this exe again through the UAC prompt. `Err` when the user said no
 /// or Windows refused; the caller keeps running in that case.
 #[cfg(windows)]
@@ -53,13 +58,17 @@ pub fn relaunch_elevated() -> Result<(), String> {
         .encode_utf16()
         .chain(Some(0))
         .collect();
+    let params: Vec<u16> = format!("{AFTER_PID_FLAG} {}", std::process::id())
+        .encode_utf16()
+        .chain(Some(0))
+        .collect();
     // SAFETY: both strings are NUL-terminated and outlive the call.
     let result = unsafe {
         ShellExecuteW(
             None,
             w!("runas"),
             PCWSTR(wide.as_ptr()),
-            PCWSTR::null(),
+            PCWSTR(params.as_ptr()),
             PCWSTR::null(),
             SW_SHOWNORMAL,
         )
@@ -75,6 +84,32 @@ pub fn relaunch_elevated() -> Result<(), String> {
 #[cfg(not(windows))]
 pub fn relaunch_elevated() -> Result<(), String> {
     Err("DeskMedic runs on Windows only.".into())
+}
+
+/// Wait up to `timeout` for process `pid` to exit (it may already be gone).
+#[cfg(windows)]
+pub fn wait_for_exit(pid: u32, timeout: std::time::Duration) {
+    use windows::Win32::Foundation::CloseHandle;
+    use windows::Win32::System::Threading::{OpenProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE};
+    // SAFETY: the handle is checked and closed; waiting has a timeout.
+    unsafe {
+        if let Ok(h) = OpenProcess(PROCESS_SYNCHRONIZE, false, pid) {
+            let _ = WaitForSingleObject(h, timeout.as_millis().min(u32::MAX as u128) as u32);
+            let _ = CloseHandle(h);
+        }
+    }
+}
+
+#[cfg(not(windows))]
+pub fn wait_for_exit(_pid: u32, _timeout: std::time::Duration) {}
+
+/// The installer puts uninstall.exe next to the program; the portable exe
+/// has none. Only an installed copy should start with Windows by default.
+pub fn is_installed() -> bool {
+    std::env::current_exe()
+        .ok()
+        .and_then(|p| p.parent().map(|d| d.join("uninstall.exe").is_file()))
+        .unwrap_or(false)
 }
 
 /// Size and item count of the current user's Recycle Bin on all drives.

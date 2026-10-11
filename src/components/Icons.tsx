@@ -66,6 +66,37 @@ export const GlobeIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const PrinterIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M7 9V4h10v5" />
+    <rect x="3.5" y="9" width="17" height="8" rx="2" />
+    <path d="M7 14h10v6H7z" />
+  </Svg>
+);
+
+export const AppsIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="4" y="4" width="7" height="7" rx="1.6" />
+    <rect x="13" y="4" width="7" height="7" rx="1.6" />
+    <rect x="4" y="13" width="7" height="7" rx="1.6" />
+    <rect x="13" y="13" width="7" height="7" rx="1.6" />
+  </Svg>
+);
+
+export const WindowIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+    <path d="M3.5 8.5h17" />
+  </Svg>
+);
+
+export const LockIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="5" y="10.5" width="14" height="10" rx="2" />
+    <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+  </Svg>
+);
+
 export const WrenchIcon = (p: IconProps) => (
   <Svg {...p}>
     <path d="M14.7 6.3a4 4 0 0 0 5 5l-8.9 8.9a2 2 0 0 1-2.8-2.8l8.9-8.9a4 4 0 0 0-2.2-2.2Z" />

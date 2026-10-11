@@ -33,6 +33,55 @@ export function SettingsPage() {
       </div>
 
       <div className="card">
+        <h2>Medic assistant</h2>
+        <p className="muted small">
+          DeskMedic sits in the tray next to the clock, runs the read-only health check in the background and pops up
+          when something new looks wrong: low disk space, virus protection off, updates stuck, crashes or a failing
+          drive. It never changes anything by itself and never goes online.
+        </p>
+        <label className="check-row">
+          <input type="checkbox" checked={s.assistant} onChange={(e) => update({ ...s, assistant: e.target.checked })} />
+          <span>
+            Watch this PC and tell me when something looks wrong
+            <span className="muted small block">Closing the window keeps DeskMedic in the tray. Quit from the tray menu.</span>
+          </span>
+        </label>
+        <label className="field">
+          <span>Check every</span>
+          <select
+            value={s.check_every_min}
+            disabled={!s.assistant}
+            onChange={(e) => update({ ...s, check_every_min: Number(e.target.value) })}
+          >
+            {[
+              [30, "30 minutes"],
+              [60, "1 hour"],
+              [120, "2 hours"],
+              [240, "4 hours"],
+              [720, "12 hours"],
+            ].map(([m, label]) => (
+              <option key={m} value={m}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="check-row">
+          <input
+            type="checkbox"
+            checked={s.start_with_windows}
+            onChange={(e) => update({ ...s, start_with_windows: e.target.checked })}
+          />
+          <span>
+            Start with Windows (in the tray)
+            <span className="muted small block">
+              On for the installed version. For the portable exe, only turn this on if it stays in the same folder.
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <div className="card">
         <h2>Log</h2>
         <label className="field">
           <span>Keep entries for</span>

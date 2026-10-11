@@ -58,6 +58,10 @@ export function startJobs() {
     scanStore.set(null);
     toastError(e.payload);
   });
+  // Background checks by the Medic assistant (and checks run from the tray).
+  void listen<HealthReport>("health-updated", (e) => {
+    healthStore.set({ running: healthStore.get().running, report: e.payload, at: Date.now() });
+  });
   // A scan started before the window reloaded.
   api
     .scanState()

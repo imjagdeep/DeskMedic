@@ -5,6 +5,11 @@ export type Theme = "system" | "light" | "dark";
 export interface Settings {
   theme: Theme;
   keep_log_days: number;
+  /** Medic assistant: tray icon, background checks, popups. */
+  assistant: boolean;
+  check_every_min: number;
+  start_with_windows: boolean;
+  start_default_applied: boolean;
 }
 
 export interface AppInfo {
@@ -280,4 +285,26 @@ export interface NetReport {
   verdict: string;
   status: HealthStatus;
   action: HealthAction | null;
+}
+
+export interface PcSummary {
+  maker: string | null;
+  model: string | null;
+  memory_gb: number | null;
+  domain: string | null;
+  windows: string | null;
+  version: string | null;
+  build: string | null;
+  uptime_days: number | null;
+  cpu: string | null;
+  cores: number | null;
+  network: string | null;
+  ip: string | null;
+}
+
+/** The Medic assistant's last background check (monitor.json). */
+export interface AssistantStatus {
+  last_check: string | null;
+  last_problems: number;
+  last_warnings: number;
 }

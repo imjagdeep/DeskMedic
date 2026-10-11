@@ -12,6 +12,8 @@ import type {
   FixResult,
   HealthReport,
   NetReport,
+  PcSummary,
+  AssistantStatus,
   BigFile,
   Drive,
   Listing,
@@ -56,6 +58,8 @@ export const api = {
   healthRun: () => invoke<HealthReport>("health_run"),
   networkRun: () => invoke<NetReport>("network_run"),
   sendToIt: (path: string) => invoke<string[]>("send_to_it", { path }),
+  pcSummary: () => invoke<PcSummary>("pc_summary"),
+  assistantStatus: () => invoke<AssistantStatus>("assistant_status"),
 };
 
 export function errorText(e: unknown): string {
