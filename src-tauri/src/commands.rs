@@ -35,6 +35,8 @@ pub struct AppInfo {
     computer: String,
     data_dir: PathBuf,
     settings: Settings,
+    /// Installed with the installer (can update itself), not the portable exe.
+    installed: bool,
 }
 
 #[tauri::command]
@@ -47,6 +49,7 @@ pub fn app_info(app: AppHandle, state: State<'_, AppState>) -> AppInfo {
         computer: std::env::var("COMPUTERNAME").unwrap_or_default(),
         data_dir: g.data_dir.clone(),
         settings: g.settings.clone(),
+        installed: dm_core::sys::is_installed(),
     }
 }
 
@@ -782,4 +785,14 @@ pub async fn pc_summary() -> CmdResult<dm_core::pc::Summary> {
 #[tauri::command]
 pub fn assistant_status(state: State<'_, AppState>) -> dm_core::monitor::Seen {
     dm_core::monitor::Seen::load(&state.lock().data_dir)
+}
+
+/// A downloaded update is ready: tell someone who only has the tray icon.
+#[tauri::command]
+pub fn notify_update(app: AppHandle, version: String) {
+    crate::assistant::notify(
+        &app,
+        &format!("DeskMedic {version} is ready"),
+        "Open DeskMedic and choose Restart to update. It takes a few seconds.",
+    );
 }

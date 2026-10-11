@@ -25,6 +25,8 @@ pub fn run() {
             Some(vec![BACKGROUND_FLAG]),
         ))
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
@@ -139,6 +141,7 @@ pub fn run() {
             commands::send_to_it,
             commands::pc_summary,
             commands::assistant_status,
+            commands::notify_update,
         ])
         .run(tauri::generate_context!())
         .expect("error while running DeskMedic");

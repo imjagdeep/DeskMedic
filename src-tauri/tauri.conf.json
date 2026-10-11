@@ -41,6 +41,18 @@
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
       }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVCMzA1OTY3OUEyRUNCNzUKUldSMXl5NmFaMWt3Njl0UkViUHl4d1dGM2tXZktqYkpmMjdtSG45bU83bitNSWpNWW00MGpMcysK",
+      "endpoints": [
+        "https://github.com/imjagdeep/DeskMedic/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }

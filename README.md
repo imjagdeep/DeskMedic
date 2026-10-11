@@ -7,7 +7,8 @@ A portable Windows toolkit for helpdesk technicians: see what fills a disk, clea
 
 - **Portable or installed.** One small `.exe` you can run from a USB stick or a network share, or an installer that puts it in the Start menu.
 - **Safe by design.** Everything that changes something is shown first, and every change goes in a log you can paste into a ticket. Documents, Desktop, Downloads, pictures and OneDrive are never touched. It never formats, initializes or deletes data partitions.
-- **Offline and private.** No account, no cloud, no telemetry. It only goes online when you click "Check for a newer version" or run the Network doctor (which asks first and sends nothing about the PC).
+- **Offline and private.** No account, no cloud, no telemetry. It only goes online to run the Network doctor (which asks first and sends nothing about the PC) and, in the installed version, to look for updates once a day (Settings › About to switch that off).
+- **Updates itself.** The installed version downloads new versions in the background, checks their signature, and asks you to restart: one click.
 
 ![Disk map](docs/screenshot-diskmap.png)
 
