@@ -52,6 +52,13 @@ export const DiskIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const PulseIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M20.2 12.6A5 5 0 0 0 12 6.6a5 5 0 0 0-8.2 6l8.2 7.7 3-2.8" />
+    <path d="M14 13h2l1.2-2.5 1.6 5 1.2-2.5h2" />
+  </Svg>
+);
+
 export const WrenchIcon = (p: IconProps) => (
   <Svg {...p}>
     <path d="M14.7 6.3a4 4 0 0 0 5 5l-8.9 8.9a2 2 0 0 1-2.8-2.8l8.9-8.9a4 4 0 0 0-2.2-2.2Z" />

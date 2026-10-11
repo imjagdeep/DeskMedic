@@ -42,7 +42,7 @@ export function Log() {
       <p className="muted">Everything DeskMedic changed on this PC, who ran it and what happened.</p>
       {entries === null && <div className="empty">Loading…</div>}
       {entries?.length === 0 && (
-        <div className="empty">Nothing yet. Cleanups, disk actions and fix-its will show up here.</div>
+        <div className="empty">Nothing yet. Cleanups, disk actions, remedies and health checks will show up here.</div>
       )}
       {entries && entries.length > 0 && (
         <table className="table">

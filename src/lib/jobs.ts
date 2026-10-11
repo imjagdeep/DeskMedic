@@ -1,11 +1,11 @@
-// Long-running jobs (scan, cleanup, fix-it) live here instead of in the
+// Long-running jobs (scan, cleanup, remedy, health check) live here instead of in the
 // pages, so switching pages mid-job doesn't lose the progress or the result.
 
 import { listen } from "@tauri-apps/api/event";
 import { useSyncExternalStore } from "react";
 import { api } from "./api";
 import { createStore, toastError } from "./store";
-import type { CleanupReport, FixResult, ScanProgress, ScanSummary } from "./types";
+import type { CleanupReport, FixResult, HealthReport, ScanProgress, ScanSummary } from "./types";
 
 export interface ScanJob {
   root: string;
@@ -22,10 +22,17 @@ const scanDoneStore = createStore<{ summary: ScanSummary | null; seq: number }>(
 const cleanupStore = createStore<{ running: boolean; report: CleanupReport | null }>({ running: false, report: null });
 const fixStore = createStore<{ running: string | null; result: FixResult | null }>({ running: null, result: null });
 
+const healthStore = createStore<{ running: boolean; report: HealthReport | null; at: number | null }>({
+  running: false,
+  report: null,
+  at: null,
+});
+
 export const useScanJob = () => useSyncExternalStore(scanStore.subscribe, scanStore.get);
 export const useScanDone = () => useSyncExternalStore(scanDoneStore.subscribe, scanDoneStore.get);
 export const useCleanupJob = () => useSyncExternalStore(cleanupStore.subscribe, cleanupStore.get);
 export const useFixJob = () => useSyncExternalStore(fixStore.subscribe, fixStore.get);
+export const useHealthJob = () => useSyncExternalStore(healthStore.subscribe, healthStore.get);
 
 let started = false;
 /** Follow backend job events for the whole session. Call once at start. */
@@ -84,3 +91,14 @@ export async function runFix(id: string) {
 }
 
 export const clearFixResult = () => fixStore.set({ running: fixStore.get().running, result: null });
+
+export async function runHealthCheck() {
+  if (healthStore.get().running) return;
+  healthStore.set({ ...healthStore.get(), running: true });
+  try {
+    healthStore.set({ running: false, report: await api.healthRun(), at: Date.now() });
+  } catch (e) {
+    healthStore.set({ ...healthStore.get(), running: false });
+    toastError(e);
+  }
+}

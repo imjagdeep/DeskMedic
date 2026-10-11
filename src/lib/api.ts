@@ -10,6 +10,7 @@ import type {
   ExtendPlan,
   FixRecipe,
   FixResult,
+  HealthReport,
   BigFile,
   Drive,
   Listing,
@@ -51,6 +52,7 @@ export const api = {
     invoke<string>("resize", { disk, partition, size, confirm }),
   fixList: () => invoke<FixRecipe[]>("fix_list"),
   fixRun: (id: string) => invoke<FixResult>("fix_run", { id }),
+  healthRun: () => invoke<HealthReport>("health_run"),
 };
 
 export function errorText(e: unknown): string {
