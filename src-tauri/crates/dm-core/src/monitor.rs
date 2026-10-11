@@ -7,6 +7,7 @@
 //! when they appear; the same problem repeats at most once a day; anything
 //! that recovers is forgotten, so it pops up again if it comes back.
 
+use crate::cleanup::Estimate;
 use crate::health::{Check, Report, Status};
 use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
@@ -22,6 +23,15 @@ const ALERT_WARNINGS: &[&str] = &["disk-space", "antivirus", "updates", "crashes
 
 const REPEAT_AFTER_HOURS: i64 = 24;
 
+/// Key in `shown` for the temporary files reminder.
+pub const TEMP_ID: &str = "temp-files";
+/// Still over the limit: remind again after this long.
+const TEMP_REPEAT_DAYS: i64 = 3;
+/// Cleanup categories that are not "temporary files" for the reminder: the
+/// Recycle Bin holds things you chose to delete, and the component store
+/// can't be measured in advance.
+const NOT_TEMP: &[&str] = &["recycle-bin", "component-store"];
+
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Seen {
     /// check id -> when it was last shown in a popup, and at what level.
@@ -34,6 +44,9 @@ pub struct Seen {
     pub last_problems: usize,
     #[serde(default)]
     pub last_warnings: usize,
+    /// Cleanable temporary files at the last background check.
+    #[serde(default)]
+    pub last_temp_bytes: Option<u64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -95,6 +108,48 @@ pub fn alerts(seen: &mut Seen, report: &Report, now: DateTime<Utc>) -> Vec<Alert
     seen.last_problems = report.problems;
     seen.last_warnings = report.warnings;
     out
+}
+
+/// Bytes of temporary files Cleanup could clear now (sizes it can't know
+/// without admin count as zero).
+pub fn temp_bytes(estimates: &[Estimate]) -> u64 {
+    estimates
+        .iter()
+        .filter(|e| !NOT_TEMP.contains(&e.id))
+        .filter_map(|e| e.bytes)
+        .sum()
+}
+
+/// The reminder for temporary files over `limit_gb`, updating `seen`:
+/// once when it passes the limit, then every few days while it stays over.
+pub fn temp_alert(seen: &mut Seen, bytes: u64, limit_gb: u32, now: DateTime<Utc>) -> Option<Alert> {
+    seen.last_temp_bytes = Some(bytes);
+    let limit = u64::from(limit_gb) * 1_000_000_000;
+    if bytes < limit {
+        seen.shown.remove(TEMP_ID);
+        return None;
+    }
+    let due = seen
+        .shown
+        .get(TEMP_ID)
+        .is_none_or(|s| now - s.at >= Duration::days(TEMP_REPEAT_DAYS));
+    if !due {
+        return None;
+    }
+    seen.shown.insert(
+        TEMP_ID.to_string(),
+        Shown {
+            at: now,
+            problem: false,
+        },
+    );
+    Some(Alert {
+        id: TEMP_ID.to_string(),
+        title: format!("{:.1} GB of temporary files", bytes as f64 / 1e9),
+        body: format!(
+            "That's past your {limit_gb} GB reminder. Open DeskMedic and go to Cleanup to clear them safely; your documents are never touched."
+        ),
+    })
 }
 
 /// One popup or a summary when several things went wrong at once.
@@ -200,6 +255,52 @@ mod tests {
         assert_eq!(title, "2 things need attention");
         assert!(body.starts_with("Free space, Virus protection."));
         assert!(summarize(&[]).is_none());
+    }
+
+    fn est(id: &'static str, bytes: Option<u64>) -> Estimate {
+        Estimate {
+            id,
+            name: id,
+            description: "",
+            recommended: true,
+            bytes,
+            files: 0,
+            blocked: None,
+        }
+    }
+
+    #[test]
+    fn temp_bytes_skips_recycle_bin_and_unknown() {
+        let e = [
+            est("user-temp", Some(4_000_000_000)),
+            est("chrome-cache", Some(1_500_000_000)),
+            est("recycle-bin", Some(9_000_000_000)),
+            est("windows-temp", None),
+        ];
+        assert_eq!(temp_bytes(&e), 5_500_000_000);
+    }
+
+    #[test]
+    fn temp_reminder_once_then_every_three_days() {
+        let mut seen = Seen::default();
+        assert!(temp_alert(&mut seen, 4_900_000_000, 5, t(0)).is_none());
+        let a = temp_alert(&mut seen, 7_900_000_000, 5, t(1)).unwrap();
+        assert_eq!(a.title, "7.9 GB of temporary files");
+        assert!(a.body.contains("5 GB"));
+        assert!(temp_alert(&mut seen, 8_000_000_000, 5, t(24)).is_none());
+        assert!(temp_alert(&mut seen, 8_000_000_000, 5, t(73)).is_some());
+        // Cleaned up: forgotten, so it pops up again next time it passes.
+        assert!(temp_alert(&mut seen, 1_000_000_000, 5, t(74)).is_none());
+        assert!(temp_alert(&mut seen, 6_000_000_000, 5, t(75)).is_some());
+        assert_eq!(seen.last_temp_bytes, Some(6_000_000_000));
+    }
+
+    #[test]
+    fn health_checks_dont_clear_the_temp_reminder() {
+        let mut seen = Seen::default();
+        temp_alert(&mut seen, 9_000_000_000, 5, t(0)).unwrap();
+        alerts(&mut seen, &report(vec![check("disk-space", Status::Good)]), t(1));
+        assert!(seen.shown.contains_key(TEMP_ID));
     }
 
     #[test]

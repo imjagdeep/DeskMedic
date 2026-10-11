@@ -43,6 +43,7 @@ export default function App() {
         setPage("health");
         void runHealthCheck();
       } else if (e.payload === "network") setPage("network");
+      else if (e.payload === "cleanup") setPage("cleanup");
     });
     return () => {
       void un.then((f) => f());

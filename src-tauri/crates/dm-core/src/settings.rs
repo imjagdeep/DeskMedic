@@ -23,6 +23,9 @@ pub struct Settings {
     pub start_with_windows: bool,
     /// The first-run default for start_with_windows has been applied.
     pub start_default_applied: bool,
+    /// Pop up when cleanable temporary files pass temp_reminder_gb.
+    pub temp_reminder: bool,
+    pub temp_reminder_gb: u32,
 }
 
 impl Default for Settings {
@@ -34,6 +37,8 @@ impl Default for Settings {
             check_every_min: 60,
             start_with_windows: false,
             start_default_applied: false,
+            temp_reminder: true,
+            temp_reminder_gb: 5,
         }
     }
 }
@@ -65,6 +70,9 @@ impl Settings {
         }
         if !(15..=1440).contains(&self.check_every_min) {
             return Err("check every 15 minutes to 24 hours".into());
+        }
+        if !(1..=500).contains(&self.temp_reminder_gb) {
+            return Err("the temporary files reminder takes 1 to 500 GB".into());
         }
         Ok(())
     }
