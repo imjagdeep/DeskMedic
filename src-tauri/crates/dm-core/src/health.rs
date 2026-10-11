@@ -121,7 +121,9 @@ pub enum Status {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Action {
     /// Open the confirm dialog of a remedy (see `fixes`).
-    Remedy { id: &'static str },
+    Remedy {
+        id: &'static str,
+    },
     OpenCleanup,
 }
 
@@ -185,7 +187,12 @@ impl Check {
 }
 
 fn unknown(id: &'static str, title: &'static str) -> Check {
-    check(id, title, Status::Unknown, "Windows didn't report this.".into())
+    check(
+        id,
+        title,
+        Status::Unknown,
+        "Windows didn't report this.".into(),
+    )
 }
 
 fn plural(n: u32, one: &str, many: &str) -> String {
@@ -203,11 +210,13 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
             let pct = free / total * 100.0;
             let drive = f.sys_drive.as_deref().unwrap_or("C:");
             let summary = format!("{:.1} GB free on {drive} ({pct:.0}%).", free / GB);
-            if free < 5.0 * GB || pct < 5.0 {
+            // Absolute amounts matter most; the percentage only catches
+            // small drives.
+            if free < 5.0 * GB || pct < 2.0 {
                 check("disk-space", "Free space", Status::Problem, summary)
                     .advice("Windows needs room for updates and temporary files. Clean up now.")
                     .action(Action::OpenCleanup)
-            } else if free < 15.0 * GB || pct < 10.0 {
+            } else if free < 15.0 * GB || pct < 5.0 {
                 check("disk-space", "Free space", Status::Warning, summary)
                     .advice("Running low. A cleanup usually wins back several GB.")
                     .action(Action::OpenCleanup)
@@ -292,7 +301,9 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
                     Status::Problem,
                     "Virus protection is turned off.".into(),
                 )
-                .advice("Open Windows Security › Virus & threat protection and turn it on, or ask IT."),
+                .advice(
+                    "Open Windows Security › Virus & threat protection and turn it on, or ask IT.",
+                ),
                 Some(a) if !a.current => check(
                     "antivirus",
                     "Virus protection",
@@ -359,11 +370,17 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
                     "disk-health",
                     "Drive health",
                     Status::Good,
-                    plural(disks.len() as u32, "drive reports healthy.", "drives report healthy."),
+                    plural(
+                        disks.len() as u32,
+                        "drive reports healthy.",
+                        "drives report healthy.",
+                    ),
                 )
             } else {
-                let names: Vec<String> =
-                    bad.iter().map(|d| format!("{} ({})", d.name, d.health)).collect();
+                let names: Vec<String> = bad
+                    .iter()
+                    .map(|d| format!("{} ({})", d.name, d.health))
+                    .collect();
                 check(
                     "disk-health",
                     "Drive health",
@@ -449,10 +466,7 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
     out.push(match (f.mem_total_kb, f.mem_free_kb) {
         (Some(t), Some(free)) if t > 0.0 => {
             let used = (1.0 - free / t) * 100.0;
-            let summary = format!(
-                "{used:.0}% of {:.0} GB in use right now.",
-                t * 1024.0 / GB
-            );
+            let summary = format!("{used:.0}% of {:.0} GB in use right now.", t * 1024.0 / GB);
             if used >= 90.0 {
                 check("memory", "Memory", Status::Warning, summary)
                     .advice("Close apps and browser tabs you aren't using, or restart.")
@@ -641,7 +655,9 @@ mod tests {
         let c = evaluate(&f);
         let x = find(&c, "crashes");
         assert_eq!(x.status, Status::Problem);
-        assert!(x.summary.contains("1 blue screen and 2 unexpected shutdowns"));
+        assert!(x
+            .summary
+            .contains("1 blue screen and 2 unexpected shutdowns"));
         assert_eq!(x.action, Some(Action::Remedy { id: "sfc" }));
         f.disks.as_mut().unwrap()[0].health = "Warning".into();
         assert_eq!(find(&evaluate(&f), "disk-health").status, Status::Problem);
@@ -673,7 +689,12 @@ mod tests {
     #[test]
     fn actions_point_at_real_remedies() {
         let ids: Vec<&str> = crate::fixes::recipes().iter().map(|r| r.id).collect();
-        for id in ["repair-windows-update", "reset-network", "sfc", "reset-teams"] {
+        for id in [
+            "repair-windows-update",
+            "reset-network",
+            "sfc",
+            "reset-teams",
+        ] {
             assert!(ids.contains(&id), "{id}");
         }
     }

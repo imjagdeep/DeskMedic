@@ -641,7 +641,7 @@ pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::Fi
 pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
     let result = blocking(dm_core::health::run).await;
     let state = app.state::<AppState>();
-    let mut g = state.lock();
+    let g = state.lock();
     match &result {
         Ok(r) => g.record(
             &LogEntry::new(
@@ -657,7 +657,12 @@ pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
                     .collect(),
             ),
         ),
-        Err(e) => g.record(&LogEntry::new(Area::Health, "Health check", false, e.clone())),
+        Err(e) => g.record(&LogEntry::new(
+            Area::Health,
+            "Health check",
+            false,
+            e.clone(),
+        )),
     }
     result
 }
