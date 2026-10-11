@@ -1,9 +1,12 @@
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Toasts } from "./components/Common";
+import { UpdateBanner } from "./components/UpdateBanner";
 import { Sidebar, type Page } from "./components/Sidebar";
+import { api } from "./lib/api";
 import { runHealthCheck, startJobs } from "./lib/jobs";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
+import { checkAndDownload, dailyCheckDue } from "./lib/updates";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
 import { Health } from "./pages/Health";
@@ -32,7 +35,28 @@ export default function App() {
   useEffect(() => {
     content.current?.scrollTo(0, 0);
   }, [page]);
-  const theme = useAppInfo()?.settings.theme ?? "system";
+  const info = useAppInfo();
+  const theme = info?.settings.theme ?? "system";
+  const autoUpdate = !!info?.installed && !!info?.settings.auto_update;
+
+  // Automatic updates (installed copy): soon after start, then daily while
+  // DeskMedic keeps running in the tray. Downloads quietly, then the banner
+  // (and a popup, for when only the tray icon is showing) offers a restart.
+  useEffect(() => {
+    if (!autoUpdate) return;
+    const run = () => {
+      if (!dailyCheckDue()) return;
+      void checkAndDownload(false).then((v) => {
+        if (v) void api.notifyUpdate(v).catch(() => undefined);
+      });
+    };
+    const first = window.setTimeout(run, 30_000);
+    const every = window.setInterval(run, 3 * 3600 * 1000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(every);
+    };
+  }, [autoUpdate]);
 
   useEffect(() => {
     void refreshAppInfo();
@@ -70,6 +94,7 @@ export default function App() {
         {page === "log" && <Log />}
         {page === "settings" && <SettingsPage />}
       </main>
+      <UpdateBanner app="DeskMedic" />
       <Toasts />
     </div>
   );

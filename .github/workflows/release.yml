@@ -34,6 +34,10 @@ jobs:
         run: cargo test -p dm-core
 
       - name: Build the exe and the installer
+        env:
+          # Signs the installer for in-app updates; the public key is in tauri.conf.json.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
         run: npm run tauri build
 
       - name: Name them and hash them
@@ -46,6 +50,19 @@ jobs:
           $nsis = @(Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe)
           if ($nsis.Count -ne 1) { throw "expected one NSIS installer, found $($nsis.Count)" }
           Copy-Item $nsis[0].FullName $setup
+          # The update feed the app checks: the signed installer of this release.
+          $sigFile = "$($nsis[0].FullName).sig"
+          if (-not (Test-Path $sigFile)) { throw "no updater signature next to the installer" }
+          $sig = (Get-Content $sigFile -Raw).Trim()
+          $url = "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$setup"
+          $entry = [ordered]@{ signature = $sig; url = $url }
+          $feed = [ordered]@{
+            version = $v
+            notes = ""
+            pub_date = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.000Z")
+            platforms = [ordered]@{ "windows-x86_64" = $entry; "windows-x86_64-nsis" = $entry }
+          }
+          $feed | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 latest.json
           $lines = foreach ($f in $setup, $exe) { "$((Get-FileHash $f -Algorithm SHA256).Hash.ToLower())  $f" }
           $lines | Out-File -Encoding ascii SHA256SUMS.txt
           "EXE=$exe" >> $env:GITHUB_ENV
@@ -59,5 +76,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $notes = "For Windows 10/11.`n`n- **$env:SETUP**: installer. Adds DeskMedic to the Start menu with an uninstaller; installs for the current user, no administrator rights needed.`n- **$env:EXE**: portable. No install: run it from a USB stick or a network share.`n`nNot code-signed yet: SmartScreen asks once (More info, Run anyway).`n`nSHA-256`n- $env:SETUP: ``$env:HASH_SETUP```n- $env:EXE: ``$env:HASH_EXE``"
-          gh release create "${{ github.ref_name }}" $env:SETUP $env:EXE SHA256SUMS.txt --title "DeskMedic ${{ github.ref_name }}" --notes $notes --draft
+          gh release create "${{ github.ref_name }}" $env:SETUP $env:EXE SHA256SUMS.txt latest.json --title "DeskMedic ${{ github.ref_name }}" --notes $notes --draft
           gh release edit "${{ github.ref_name }}" --draft=false

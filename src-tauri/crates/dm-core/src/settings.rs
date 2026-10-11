@@ -26,6 +26,9 @@ pub struct Settings {
     /// Pop up when cleanable temporary files pass temp_reminder_gb.
     pub temp_reminder: bool,
     pub temp_reminder_gb: u32,
+    /// Check daily, download in the background, then ask to restart
+    /// (installed copies only; the portable exe can't update itself).
+    pub auto_update: bool,
 }
 
 impl Default for Settings {
@@ -39,6 +42,7 @@ impl Default for Settings {
             start_default_applied: false,
             temp_reminder: true,
             temp_reminder_gb: 5,
+            auto_update: true,
         }
     }
 }

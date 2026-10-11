@@ -12,6 +12,7 @@ export interface Settings {
   start_default_applied: boolean;
   temp_reminder: boolean;
   temp_reminder_gb: number;
+  auto_update: boolean;
 }
 
 export interface AppInfo {
@@ -21,6 +22,8 @@ export interface AppInfo {
   computer: string;
   data_dir: string;
   settings: Settings;
+  /** Installed copy (can update itself), not the portable exe. */
+  installed: boolean;
 }
 
 export type DriveKind = "fixed" | "removable" | "network" | "optical" | "ram_disk" | "unknown";

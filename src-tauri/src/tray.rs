@@ -59,8 +59,15 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
                 show_main(tray.app_handle());
             }
         });
-    if let Some(icon) = app.default_window_icon() {
-        builder = builder.icon(icon.clone());
+    // The taskbar-tuned 32 px, not the 256 px app icon shrunk by Windows.
+    match tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png")) {
+        Ok(icon) => builder = builder.icon(icon),
+        Err(e) => {
+            tracing::warn!("tray icon: {e}");
+            if let Some(icon) = app.default_window_icon() {
+                builder = builder.icon(icon.clone());
+            }
+        }
     }
     builder.build(app)?;
     app.manage(TrayStatus(status));

@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "DeskMedic",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "identifier": "app.deskmedic.desktop",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -34,10 +34,24 @@
     "windows": {
       "nsis": {
         "installMode": "currentUser",
-        "displayLanguageSelector": false
+        "displayLanguageSelector": false,
+        "installerHooks": "./windows/hooks.nsh",
+        "installerIcon": "icons/icon.ico"
       },
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
+      }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVCMzA1OTY3OUEyRUNCNzUKUldSMXl5NmFaMWt3Njl0UkViUHl4d1dGM2tXZktqYkpmMjdtSG45bU83bitNSWpNWW00MGpMcysK",
+      "endpoints": [
+        "https://github.com/imjagdeep/DeskMedic/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
       }
     }
   }

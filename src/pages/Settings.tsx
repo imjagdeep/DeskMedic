@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { PageHeader } from "../components/Common";
 import { api } from "../lib/api";
 import { refreshAppInfo, toastError, useAppInfo } from "../lib/store";
+import { checkAndDownload, installNow, useUpdate } from "../lib/updates";
 import type { Settings, Theme } from "../lib/types";
 
 /** A GB box that saves when you leave it (or press Enter), not per keystroke. */
@@ -33,6 +34,52 @@ function GbInput({ value, disabled, onSave }: { value: number; disabled: boolean
       />
       <span className="muted">GB</span>
     </span>
+  );
+}
+
+function UpdateLine() {
+  const st = useUpdate();
+  const info = useAppInfo();
+  if (!info) return null;
+  if (!info.installed) {
+    return (
+      <>
+        <div className="muted small">Portable copy: get new versions from GitHub (the installed version updates itself).</div>
+      </>
+    );
+  }
+  return (
+    <div className="muted small">
+      {st.kind === "idle" && (info.settings.auto_update ? "Updates download automatically." : "Automatic updates are off.")}
+      {st.kind === "checking" && "Checking GitHub for a newer version…"}
+      {st.kind === "latest" && "You have the latest version."}
+      {st.kind === "downloading" && `Downloading ${st.version}${st.pct != null ? ` (${st.pct}%)` : ""}…`}
+      {st.kind === "ready" && `Version ${st.version} is downloaded and ready.`}
+      {st.kind === "installing" && `Installing ${st.version}… DeskMedic restarts by itself.`}
+      {st.kind === "error" && <span className="error-text">Couldn't update: {st.message}</span>}
+    </div>
+  );
+}
+
+function UpdateButton() {
+  const st = useUpdate();
+  const info = useAppInfo();
+  if (!info) return null;
+  if (!info.installed) {
+    return <button onClick={() => api.openLink("releases").catch(toastError)}>Download page</button>;
+  }
+  if (st.kind === "ready") {
+    return (
+      <button className="primary" onClick={() => void installNow()}>
+        Restart to update
+      </button>
+    );
+  }
+  const busy = st.kind === "checking" || st.kind === "downloading" || st.kind === "installing";
+  return (
+    <button disabled={busy} onClick={() => void checkAndDownload(true)}>
+      Check for updates
+    </button>
   );
 }
 
@@ -165,9 +212,26 @@ export function SettingsPage() {
               DeskMedic <span className="muted">{info.version}</span>
             </div>
             <div className="muted small">Open source, MIT licence. No account, no telemetry.</div>
+            <UpdateLine />
           </div>
-          <button onClick={() => api.openLink("releases").catch(toastError)}>Check for a newer version</button>
+          <UpdateButton />
         </div>
+        {info.installed && (
+          <label className="check-row">
+            <input
+              type="checkbox"
+              checked={s.auto_update}
+              onChange={(e) => update({ ...s, auto_update: e.target.checked })}
+            />
+            <span>
+              Download updates automatically
+              <span className="muted small block">
+                Checks GitHub once a day, downloads new versions in the background (signature-checked) and asks you to
+                restart. Nothing else is sent.
+              </span>
+            </span>
+          </label>
+        )}
         <div className="more-tools">
           <div className="muted small">More free tools by the same developer</div>
           <button className="tool-link" onClick={() => api.openLink("deskzero").catch(toastError)}>

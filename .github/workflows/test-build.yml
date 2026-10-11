@@ -27,6 +27,10 @@ jobs:
       - run: npm ci
 
       - name: Build the exe and the installer
+        env:
+          # The config asks for signed updater files; same key as releases.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
         run: npm run tauri build
 
       - uses: actions/upload-artifact@v4

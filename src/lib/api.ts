@@ -60,6 +60,7 @@ export const api = {
   sendToIt: (path: string) => invoke<string[]>("send_to_it", { path }),
   pcSummary: () => invoke<PcSummary>("pc_summary"),
   assistantStatus: () => invoke<AssistantStatus>("assistant_status"),
+  notifyUpdate: (version: string) => invoke<void>("notify_update", { version }),
 };
 
 export function errorText(e: unknown): string {
