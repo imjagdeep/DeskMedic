@@ -1,7 +1,40 @@
+import { useEffect, useState } from "react";
 import { PageHeader } from "../components/Common";
 import { api } from "../lib/api";
 import { refreshAppInfo, toastError, useAppInfo } from "../lib/store";
 import type { Settings, Theme } from "../lib/types";
+
+/** A GB box that saves when you leave it (or press Enter), not per keystroke. */
+function GbInput({ value, disabled, onSave }: { value: number; disabled: boolean; onSave: (gb: number) => void }) {
+  const [text, setText] = useState(String(value));
+  useEffect(() => setText(String(value)), [value]);
+  const commit = () => {
+    const n = Math.round(Number(text));
+    if (Number.isFinite(n) && n >= 1 && n <= 500) {
+      if (n !== value) onSave(n);
+    } else {
+      setText(String(value));
+      toastError("Enter a size from 1 to 500 GB.");
+    }
+  };
+  return (
+    <span className="gb-input">
+      <input
+        type="number"
+        min={1}
+        max={500}
+        step={1}
+        value={text}
+        disabled={disabled}
+        aria-label="Reminder size in GB"
+        onChange={(e) => setText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
+      />
+      <span className="muted">GB</span>
+    </span>
+  );
+}
 
 export function SettingsPage() {
   const info = useAppInfo();
@@ -66,6 +99,27 @@ export function SettingsPage() {
             ))}
           </select>
         </label>
+        <div className="check-row">
+          <input
+            type="checkbox"
+            id="temp-reminder"
+            checked={s.temp_reminder}
+            disabled={!s.assistant}
+            onChange={(e) => update({ ...s, temp_reminder: e.target.checked })}
+          />
+          <span>
+            <label htmlFor="temp-reminder">Remind me when temporary files pass</label>{" "}
+            <GbInput
+              value={s.temp_reminder_gb}
+              disabled={!s.assistant || !s.temp_reminder}
+              onSave={(gb) => update({ ...s, temp_reminder_gb: gb })}
+            />
+            <span className="muted small block">
+              Temp files, update leftovers, crash dumps and browser caches: what Cleanup can clear. The Recycle Bin
+              doesn't count. Reminds you again every 3 days while they stay over.
+            </span>
+          </span>
+        </div>
         <label className="check-row">
           <input
             type="checkbox"

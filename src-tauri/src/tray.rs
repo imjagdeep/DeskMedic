@@ -12,6 +12,7 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
     let status = MenuItem::with_id(app, "status", "Not checked yet", false, None::<&str>)?;
     let health = MenuItem::with_id(app, "health", "Run a health check", true, None::<&str>)?;
     let network = MenuItem::with_id(app, "network", "Network doctor", true, None::<&str>)?;
+    let cleanup = MenuItem::with_id(app, "cleanup", "Clean up temporary files", true, None::<&str>)?;
     let open = MenuItem::with_id(app, "open", "Open DeskMedic", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, "quit", "Quit DeskMedic", true, None::<&str>)?;
     let menu = Menu::with_items(
@@ -21,6 +22,7 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
             &PredefinedMenuItem::separator(app)?,
             &health,
             &network,
+            &cleanup,
             &PredefinedMenuItem::separator(app)?,
             &open,
             &quit,
@@ -38,6 +40,10 @@ pub fn build(app: &AppHandle) -> tauri::Result<()> {
             "network" => {
                 show_main(app);
                 let _ = app.emit("navigate", "network");
+            }
+            "cleanup" => {
+                show_main(app);
+                let _ = app.emit("navigate", "cleanup");
             }
             "open" => show_main(app),
             "quit" => app.exit(0),

@@ -584,3 +584,9 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .nav-dot.good { background: var(--green); }
 .nav-dot.warning { background: var(--orange); }
 .nav-dot.problem { background: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 20%, transparent); }
+
+/* temporary files line on the home page, and the GB box in Settings */
+.home-temp { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; padding: 8px 10px; border-radius: 8px; background: var(--hover); }
+.home-temp.over { background: var(--orange-soft); }
+.gb-input { display: inline-flex; align-items: center; gap: 6px; }
+.gb-input input { width: 64px; height: 24px; }

@@ -10,6 +10,8 @@ export interface Settings {
   check_every_min: number;
   start_with_windows: boolean;
   start_default_applied: boolean;
+  temp_reminder: boolean;
+  temp_reminder_gb: number;
 }
 
 export interface AppInfo {
@@ -307,4 +309,5 @@ export interface AssistantStatus {
   last_check: string | null;
   last_problems: number;
   last_warnings: number;
+  last_temp_bytes: number | null;
 }

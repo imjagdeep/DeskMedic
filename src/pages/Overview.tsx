@@ -95,6 +95,17 @@ export function Overview({ onNavigate }: { onNavigate: (p: Page) => void }) {
               </div>
             </div>
           </div>
+          {assistant?.last_temp_bytes != null && s?.temp_reminder && (
+            <div className={assistant.last_temp_bytes >= s.temp_reminder_gb * 1e9 ? "home-temp over" : "home-temp"}>
+              <span>
+                Temporary files: <strong>{humanSize(assistant.last_temp_bytes)}</strong>
+                <span className="muted"> · reminder at {s.temp_reminder_gb} GB</span>
+              </span>
+              <button className="link" onClick={() => onNavigate("cleanup")}>
+                Clean up
+              </button>
+            </div>
+          )}
           <div className="home-health-actions">
             <button className="primary" disabled={health.running} onClick={() => void runHealthCheck().then(() => onNavigate("health"))}>
               {health.running ? "Checking…" : "Run health check"}
