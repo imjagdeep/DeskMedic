@@ -28,6 +28,15 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
+            // As administrator, open the shared folder up for standard
+            // users first, so this copy and the tray copy share one place.
+            if dm_core::sys::is_elevated() && std::env::var_os("DESKMEDIC_DATA_DIR").is_none() {
+                if let Some(dir) = dm_core::paths::shared_dir() {
+                    if let Err(e) = dm_core::paths::share_with_users(&dir) {
+                        tracing::warn!("could not share {}: {e}", dir.display());
+                    }
+                }
+            }
             let data_dir = dm_core::paths::data_dir().ok_or(
                 "no writable folder for settings (ProgramData and LocalAppData both failed)",
             )?;

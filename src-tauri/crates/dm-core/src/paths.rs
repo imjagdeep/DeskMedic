@@ -8,6 +8,7 @@
 
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 pub const APP_DIR: &str = "DeskMedic";
 
@@ -20,6 +21,34 @@ pub fn data_dir() -> Option<PathBuf> {
         .filter_map(std::env::var_os)
         .map(|base| PathBuf::from(base).join(APP_DIR))
         .find(|dir| writable(dir))
+}
+
+/// The shared folder in ProgramData, whether or not it is usable right now.
+pub fn shared_dir() -> Option<PathBuf> {
+    std::env::var_os("ProgramData").map(|p| PathBuf::from(p).join(APP_DIR))
+}
+
+/// Run as administrator: let standard users change files in the shared
+/// folder (Users: Modify, inherited), so the tray copy, which runs without
+/// admin, and admin sessions keep one settings file and one log. Without
+/// this, files an admin created there are read-only for everyone else.
+/// `dir` is a path we built ourselves, passed as one argument.
+pub fn share_with_users(dir: &Path) -> Result<(), String> {
+    fs::create_dir_all(dir).map_err(|e| format!("could not create {}: {e}", dir.display()))?;
+    let d = dir.to_string_lossy();
+    // *S-1-5-32-545 is the Users group in any language.
+    let out = crate::run::run(
+        "icacls.exe",
+        &[&d, "/grant", "*S-1-5-32-545:(OI)(CI)M", "/T", "/C", "/Q"],
+        &[],
+        Duration::from_secs(60),
+    )
+    .map_err(|e| e.to_string())?;
+    if out.success() {
+        Ok(())
+    } else {
+        Err(format!("icacls failed: {} {}", out.stdout, out.stderr))
+    }
 }
 
 /// Creates `dir` if needed and proves a file can be written in it.
@@ -51,5 +80,17 @@ mod tests {
         assert!(target.is_dir());
         // The probe file is cleaned up.
         assert_eq!(fs::read_dir(&target).unwrap().count(), 0);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn share_with_users_grants_and_keeps_files() {
+        let dir = tempfile::tempdir().unwrap();
+        let target = dir.path().join("shared");
+        fs::create_dir_all(&target).unwrap();
+        fs::write(target.join("settings.json"), b"{}").unwrap();
+        share_with_users(&target).unwrap();
+        assert!(writable(&target));
+        assert!(target.join("settings.json").is_file());
     }
 }
