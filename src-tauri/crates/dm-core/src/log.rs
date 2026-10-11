@@ -1,6 +1,6 @@
 //! Audit log: append-only JSON lines, one action per line.
 //!
-//! Every change DeskMedic makes (cleanup, disk action, fix-it) is written
+//! Every change DeskMedic makes (cleanup, disk action, remedy) is written
 //! here with who ran it and what happened, so a technician can paste it into
 //! a ticket. Same crash-safety as DeskZero's history: one flushed line per
 //! entry, a torn last line is ignored, compaction writes then renames.
@@ -23,6 +23,7 @@ pub enum Area {
     Cleanup,
     Disk,
     Fix,
+    Health,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

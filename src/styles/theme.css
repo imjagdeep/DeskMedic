@@ -498,3 +498,21 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Health check */
+.health-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; margin: 12px 0; border-radius: var(--radius); }
+.health-summary.good { background: var(--green-soft); }
+.health-summary.warning { background: var(--orange-soft); }
+.health-summary.problem { background: color-mix(in srgb, var(--red) 12%, transparent); }
+.health-list { display: flex; flex-direction: column; gap: 8px; }
+.health-row { margin: 0; display: flex; align-items: center; gap: 14px; }
+.health-row h2 { margin: 0; }
+.health-row p { margin: 3px 0 0; }
+.health-head { display: flex; align-items: center; gap: 8px; }
+.health-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--sep); }
+.health-dot.good, .health-tag.good { --c: var(--green); }
+.health-dot.warning, .health-tag.warning { --c: var(--orange); }
+.health-dot.problem, .health-tag.problem { --c: var(--red); }
+.health-dot.good, .health-dot.warning, .health-dot.problem { background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 18%, transparent); }
+.health-tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 9px; color: var(--c, var(--text)); background: color-mix(in srgb, var(--c, var(--text)) 12%, transparent); }
+.health-row > button { flex: none; }

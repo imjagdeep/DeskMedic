@@ -28,7 +28,7 @@ export interface Drive {
   is_system: boolean;
 }
 
-export type LogArea = "app" | "scan" | "cleanup" | "disk" | "fix";
+export type LogArea = "app" | "scan" | "cleanup" | "disk" | "fix" | "health";
 
 export interface LogEntry {
   id: string;
@@ -245,4 +245,23 @@ export interface FixResult {
   ok: boolean;
   restart: boolean;
   steps: { label: string; ok: boolean; output: string }[];
+}
+
+export type HealthStatus = "good" | "warning" | "problem" | "unknown";
+
+export type HealthAction = { type: "remedy"; id: string } | { type: "open_cleanup" };
+
+export interface HealthCheck {
+  id: string;
+  title: string;
+  status: HealthStatus;
+  summary: string;
+  advice: string | null;
+  action: HealthAction | null;
+}
+
+export interface HealthReport {
+  checks: HealthCheck[];
+  problems: number;
+  warnings: number;
 }

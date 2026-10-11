@@ -2,7 +2,7 @@
 
 # DeskMedic
 
-A portable Windows toolkit for helpdesk technicians: see what fills a disk, clear temporary files safely, fix common Disk Management problems, and run one-click fixes for everyday calls.
+A portable Windows toolkit for helpdesk technicians: see what fills a disk, clear temporary files safely, fix common Disk Management problems, check a PC's health in seconds, and run one-click remedies for everyday calls.
 <br clear="left">
 
 - **Portable.** One small `.exe`, no install. Run it from a USB stick or a network share; nothing is written next to it.
@@ -15,9 +15,9 @@ A portable Windows toolkit for helpdesk technicians: see what fills a disk, clea
 |---|---|---|
 | ![Cleanup](docs/screenshot-cleanup.png) | ![Disks](docs/screenshot-disks.png) | ![Extend guide](docs/screenshot-extend.png) |
 
-| Fix-its | Largest files | Log for the ticket |
+| Remedies | Largest files | Log for the ticket |
 |---|---|---|
-| ![Fix-its](docs/screenshot-fixits.png) | ![Largest files](docs/screenshot-largest.png) | ![Log](docs/screenshot-log.png) |
+| ![Remedies](docs/screenshot-fixits.png) | ![Largest files](docs/screenshot-largest.png) | ![Log](docs/screenshot-log.png) |
 
 <sub>Screenshots use a made-up demo PC.</sub>
 
@@ -25,17 +25,18 @@ A portable Windows toolkit for helpdesk technicians: see what fills a disk, clea
 
 | | |
 |---|---|
+| **Health check** | One read-only look at what usually sits behind a call: free space, pending or overdue restart, Windows Update, virus protection, internet (as Windows sees it), drive health, blue screens and unexpected shutdowns, apps that keep crashing, memory, startup apps and laptop battery wear. Each item is rated good / warning / problem with a plain-English next step, and a **Fix it** button where a remedy or Cleanup helps. Nothing is changed and nothing goes online. |
 | **Disk map** | Scan a drive and see which folders and files take the space: a treemap you can click into, folder sizes, the largest files, totals by file type, and user profiles (oldest first) with their sizes. As administrator, NTFS drives are read straight from the master file table, like WizTree: a whole drive in seconds. Without admin rights it walks folder by folder. |
 | **Cleanup** | Measures first, then clears temp files, Windows Update downloads, the Delivery Optimization cache, crash dumps, the thumbnail cache, the Recycle Bin, browser caches, the Teams cache, Outlook's temporary attachments, and old Windows components (DISM). Shows the drive's free space before and after. |
 | **Disks** | Every disk drawn like Disk Management, with plain-English findings and a fix for each: offline disks (including cloned disks), read-only disks and partitions, volumes without a drive letter, file-system errors, nearly full drives, failing drives, and a stuck or disabled Virtual Disk Service. |
 | **Extend / shrink** | Resize a data partition within the limits Windows reports. Fixes the classic *Extend Volume is greyed out* case where the recovery partition sits between C: and the free space. |
-| **Fix-its** | Ten one-click fixes for common calls: DNS, network stack, print queue, Explorer, Group Policy, Teams, Windows Update, SFC, DISM, clock. |
+| **Remedies** | Fifteen one-click fixes for common calls: DNS, network stack, print queue, Explorer, Group Policy, Teams, Windows Update, SFC, DISM, clock, no sound, Microsoft Store, blank icons, Windows search, OneDrive sync. |
 | **Log** | Who ran what, on which PC, with what result. **Export for ticket** saves it as plain text. |
 
 ## Download and run
 
 1. Download `DeskMedic-x.y.z.exe` from [Releases](../../releases). Check it if you like: `Get-FileHash .\DeskMedic-x.y.z.exe` should match the SHA-256 on the release page.
-2. Run it. It offers **Restart as administrator**; most fixes need that.
+2. Run it. It offers **Restart as administrator**; many remedies need that.
 
 Needs Windows 10 or 11 with the Microsoft Edge WebView2 runtime (built into Windows 11 and up-to-date Windows 10).
 
@@ -48,9 +49,11 @@ Needs Windows 10 or 11 with the Microsoft Edge WebView2 runtime (built into Wind
 | Disk map (folder-by-folder scan) | Fast NTFS scan, and folders the user can't open |
 | Cleanup of the user's own temp files, crash dumps, thumbnails, Recycle Bin, browser, Teams and Outlook caches | Windows temp, Windows Update, Delivery Optimization, system crash dumps, component cleanup, other users' profiles |
 | Looking at disks and findings | Every disk change |
-| Flush DNS, restart Explorer, reset Teams | All other fix-its |
+| Health check; flush DNS, restart Explorer, reset Teams, Store, icons, OneDrive | All other remedies |
 
 ## Getting started
+
+**"Something is wrong with my PC."** Open **Health check** and press **Run health check**. Problems and warnings come first, each with what to do; **Fix it** opens the matching remedy.
 
 **"My C: drive is full."** Open **Disk map**, pick C: and press **Scan**. Click the big blocks to drill in, check **Largest files** and **User profiles** (old profiles on shared PCs are a common culprit). Then go to **Cleanup**, look at the measured sizes, untick anything you want to keep, and press **Clean up…**. The result shows how much free space you gained.
 
@@ -105,9 +108,9 @@ Common after growing a virtual machine's disk or cloning to a bigger drive. Desk
 
 Each step is checked against the disk right before it runs, and it stops at the first problem. Open it again and it continues from where it stopped. It refuses to touch a recovery partition Windows isn't using (it may be the PC maker's factory restore), or any other kind of partition in the way.
 
-## Fix-its
+## Remedies
 
-| Fix | Use it when | What runs | Admin | Restart |
+| Remedy | Use it when | What runs | Admin | Restart |
 |---|---|---|---|---|
 | Flush DNS cache | A site or server moved and the PC still goes to the old address | `ipconfig /flushdns` | | |
 | Reset network stack | Connected but nothing loads; network errors after VPN or malware cleanup | `netsh winsock reset`, `netsh int ip reset` | ✓ | ✓ |
@@ -119,8 +122,13 @@ Each step is checked against the disk right before it runs, and it stops at the 
 | Check system files | Crashes, corrupt-file errors | `sfc /scannow` | ✓ | |
 | Repair the Windows image | SFC couldn't fix everything | `DISM /Online /Cleanup-Image /RestoreHealth` | ✓ | |
 | Sync the clock | Wrong time, certificate or sign-in errors | Start Windows Time if needed, `w32tm /resync` | ✓ | |
+| Fix no sound | No sound, red X on the speaker, "No audio output device" | Restart the Windows Audio services | ✓ | |
+| Fix the Microsoft Store | Store won't open, downloads stuck, apps won't install | `wsreset` (clears the Store cache, then opens the Store) | | |
+| Fix blank icons and thumbnails | Blank or wrong icons, wrong picture previews | Close Explorer, delete this user's icon and thumbnail caches, start Explorer | | |
+| Fix Windows search | Start or Outlook search finds nothing | Reset the search index (same as Indexing Options › Rebuild); re-indexes in the background | ✓ | |
+| Fix OneDrive sync | Stuck on "Processing changes", sync errors | `OneDrive.exe /reset`, then start OneDrive; nothing is deleted. Run without admin rights | | |
 
-Each fix shows what it will run before it runs, and its output goes in the Log.
+Each remedy shows what it will run before it runs, and its output goes in the Log.
 
 ## Safety
 

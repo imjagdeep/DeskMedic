@@ -1,8 +1,8 @@
 import logo from "../assets/logo.png";
 import { useAppInfo } from "../lib/store";
-import { BroomIcon, DiskIcon, LogIcon, MapIcon, OverviewIcon, SettingsIcon, WrenchIcon } from "./Icons";
+import { BroomIcon, DiskIcon, LogIcon, MapIcon, OverviewIcon, PulseIcon, SettingsIcon, WrenchIcon } from "./Icons";
 
-export type Page = "overview" | "diskmap" | "cleanup" | "disks" | "fixits" | "log" | "settings";
+export type Page = "overview" | "health" | "diskmap" | "cleanup" | "disks" | "remedies" | "log" | "settings";
 
 type Item = { page: Page; label: string; Icon: (p: { size?: number }) => React.ReactElement };
 
@@ -11,10 +11,11 @@ const GROUPS: { title: string; items: Item[] }[] = [
     title: "This PC",
     items: [
       { page: "overview", label: "Overview", Icon: OverviewIcon },
+      { page: "health", label: "Health check", Icon: PulseIcon },
       { page: "diskmap", label: "Disk map", Icon: MapIcon },
       { page: "cleanup", label: "Cleanup", Icon: BroomIcon },
       { page: "disks", label: "Disks", Icon: DiskIcon },
-      { page: "fixits", label: "Fix-its", Icon: WrenchIcon },
+      { page: "remedies", label: "Remedies", Icon: WrenchIcon },
     ],
   },
   {

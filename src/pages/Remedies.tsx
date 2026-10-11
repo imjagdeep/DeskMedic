@@ -5,7 +5,8 @@ import { clearFixResult, runFix, useFixJob } from "../lib/jobs";
 import { toastError, useAppInfo } from "../lib/store";
 import type { FixRecipe } from "../lib/types";
 
-export function FixIts() {
+/** `ask`: a remedy to open straight away (from the Health check). */
+export function Remedies({ ask, onAsked }: { ask?: string | null; onAsked?: () => void }) {
   const info = useAppInfo();
   const [recipes, setRecipes] = useState<FixRecipe[]>([]);
   const [asking, setAsking] = useState<FixRecipe | null>(null);
@@ -16,6 +17,13 @@ export function FixIts() {
     api.fixList().then(setRecipes).catch(toastError);
   }, []);
 
+  useEffect(() => {
+    if (!ask || recipes.length === 0) return;
+    const r = recipes.find((x) => x.id === ask);
+    if (r && !(r.admin && !info?.elevated)) setAsking(r);
+    onAsked?.();
+  }, [ask, recipes, info, onAsked]);
+
   const run = (r: FixRecipe) => {
     setAsking(null);
     void runFix(r.id);
@@ -23,9 +31,9 @@ export function FixIts() {
 
   return (
     <div className="page wide">
-      <PageHeader title="Fix-its" />
-      <p className="muted">One-click fixes for common calls. Each shows exactly what it runs first, and every run goes in the Log.</p>
-      <AdminNotice need="Most fixes change system settings and need administrator rights." />
+      <PageHeader title="Remedies" />
+      <p className="muted">One-click remedies for common problems. Each shows exactly what it runs first, and every run goes in the Log.</p>
+      <AdminNotice need="Many remedies change system settings and need administrator rights." />
       <div className="fix-grid">
         {recipes.map((r) => {
           const blocked = r.admin && !info?.elevated;

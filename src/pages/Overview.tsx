@@ -37,7 +37,7 @@ export function Overview() {
         Signed in as {info?.user || "…"}
         {info && (info.elevated ? " · running as administrator" : " · standard user")}
       </p>
-      <AdminNotice need="Fast scans, cleaning other users' files, disk tools and fix-its need administrator rights." />
+      <AdminNotice need="Fast scans, cleaning other users' files, disk tools and most remedies need administrator rights." />
 
       <h3>Drives</h3>
       {drives === null && <div className="empty">Reading drives…</div>}

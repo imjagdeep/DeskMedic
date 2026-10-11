@@ -1,18 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Toasts } from "./components/Common";
 import { Sidebar, type Page } from "./components/Sidebar";
 import { startJobs } from "./lib/jobs";
 import { refreshAppInfo, useAppInfo } from "./lib/store";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
+import { Health } from "./pages/Health";
 import { Disks } from "./pages/Disks";
-import { FixIts } from "./pages/FixIts";
 import { Log } from "./pages/Log";
 import { Overview } from "./pages/Overview";
+import { Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
+import type { HealthAction } from "./lib/types";
 
 export default function App() {
   const [page, setPage] = useState<Page>("overview");
+  // A remedy the Health check asked to open on the Remedies page.
+  const [askRemedy, setAskRemedy] = useState<string | null>(null);
+  const clearAsk = useCallback(() => setAskRemedy(null), []);
+  const onHealthAction = (a: HealthAction) => {
+    if (a.type === "remedy") setAskRemedy(a.id);
+    setPage(a.type === "remedy" ? "remedies" : "cleanup");
+  };
   const content = useRef<HTMLElement>(null);
 
   // Each page opens at the top, not where the last one was scrolled to.
@@ -37,10 +46,11 @@ export default function App() {
       <Sidebar page={page} onNavigate={setPage} />
       <main className="content" ref={content}>
         {page === "overview" && <Overview />}
+        {page === "health" && <Health onAction={onHealthAction} />}
         {page === "diskmap" && <DiskMap />}
         {page === "cleanup" && <Cleanup />}
         {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
-        {page === "fixits" && <FixIts />}
+        {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} />}
         {page === "log" && <Log />}
         {page === "settings" && <SettingsPage />}
       </main>

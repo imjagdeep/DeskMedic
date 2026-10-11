@@ -583,7 +583,7 @@ pub async fn resize(
     result
 }
 
-// ---------- fix-its ----------
+// ---------- remedies ----------
 
 #[tauri::command]
 pub fn fix_list() -> Vec<dm_core::fixes::RecipeInfo> {
@@ -596,7 +596,7 @@ pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::Fi
         let state = app.state::<AppState>();
         let mut g = state.lock();
         if g.fixing {
-            return Err("Another fix is still running.".into());
+            return Err("Another remedy is still running.".into());
         }
         g.fixing = true;
     }
@@ -630,6 +630,34 @@ pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::Fi
                     .collect(),
             ),
         );
+    }
+    result
+}
+
+// ---------- health check ----------
+
+/// Read-only; logged so the result can go into a ticket.
+#[tauri::command]
+pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
+    let result = blocking(dm_core::health::run).await;
+    let state = app.state::<AppState>();
+    let mut g = state.lock();
+    match &result {
+        Ok(r) => g.record(
+            &LogEntry::new(
+                Area::Health,
+                "Health check",
+                true,
+                format!("{} problem(s), {} warning(s)", r.problems, r.warnings),
+            )
+            .with_details(
+                r.checks
+                    .iter()
+                    .map(|c| format!("{:?} {}: {}", c.status, c.title, c.summary))
+                    .collect(),
+            ),
+        ),
+        Err(e) => g.record(&LogEntry::new(Area::Health, "Health check", false, e.clone())),
     }
     result
 }

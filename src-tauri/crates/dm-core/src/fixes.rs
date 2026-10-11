@@ -1,4 +1,4 @@
-//! One-click fixes for common helpdesk calls. Each recipe is data: fixed
+//! Remedies: one-click fixes for common helpdesk calls. Each recipe is data: fixed
 //! programs with fixed argument lists, or a constant PowerShell script. No
 //! user input is ever part of a command.
 
@@ -85,6 +85,59 @@ if ($s.Status -ne 'Running') { Start-Service -Name w32time; Start-Sleep -Seconds
 $out = & w32tm.exe /resync /force 2>&1 | Out-String
 if ($LASTEXITCODE -ne 0) { throw "w32tm: $($out.Trim())" }
 "Clock synced with the time server."
+"#;
+
+// Restarting the endpoint builder takes Windows Audio down with it.
+const RESTART_AUDIO: &str = r#"
+Restart-Service -Name AudioEndpointBuilder -Force
+Start-Service -Name Audiosrv
+"Windows Audio restarted."
+"#;
+
+const RESET_STORE: &str = r#"
+$exe = Join-Path $env:SystemRoot 'System32\wsreset.exe'
+if (-not (Test-Path -LiteralPath $exe)) { throw 'wsreset.exe is not on this PC (no Microsoft Store).' }
+Start-Process -FilePath $exe -Wait
+"Store cache cleared; the Microsoft Store opens when it's done."
+"#;
+
+const ICON_CACHE: &str = r#"
+$dir = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Explorer'
+Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 1
+$files = @(Get-ChildItem -LiteralPath $dir -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'iconcache_*.db' -or $_.Name -like 'thumbcache_*.db' } | ForEach-Object { $_.FullName })
+$old = Join-Path $env:LOCALAPPDATA 'IconCache.db'
+if (Test-Path -LiteralPath $old) { $files += $old }
+$files | ForEach-Object { Remove-Item -LiteralPath $_ -Force -ErrorAction SilentlyContinue }
+$left = @($files | Where-Object { Test-Path -LiteralPath $_ }).Count
+for ($i = 0; $i -lt 10; $i++) { Start-Sleep -Milliseconds 500; if (Get-Process -Name explorer -ErrorAction SilentlyContinue) { break } }
+if (-not (Get-Process -Name explorer -ErrorAction SilentlyContinue)) { Start-Process explorer.exe }
+$msg = "Deleted $($files.Count - $left) of $($files.Count) cache file(s); Windows rebuilds them as you browse."
+if ($left -gt 0) { $msg += " $left were in use and go at the next sign-in." }
+$msg
+"#;
+
+// Same as Indexing Options > Advanced > Rebuild.
+const REBUILD_SEARCH: &str = r#"
+Stop-Service -Name WSearch -Force
+Set-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Microsoft\Windows Search' -Name SetupCompletedSuccessfully -Value 0 -Type DWord
+Start-Service -Name WSearch
+"Search index reset; Windows rebuilds it in the background. Results may be incomplete for a while."
+"#;
+
+const RESET_ONEDRIVE: &str = r#"
+$me = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+if ($me.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw 'OneDrive must not run as administrator. Open DeskMedic normally (not as administrator) and run this again.' }
+$exe = @(
+  (Join-Path $env:LOCALAPPDATA 'Microsoft\OneDrive\OneDrive.exe'),
+  (Join-Path $env:ProgramFiles 'Microsoft OneDrive\OneDrive.exe'),
+  (Join-Path ${env:ProgramFiles(x86)} 'Microsoft OneDrive\OneDrive.exe')
+) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $exe) { throw 'OneDrive is not installed for this user.' }
+Start-Process -FilePath $exe -ArgumentList '/reset' -Wait
+for ($i = 0; $i -lt 20; $i++) { Start-Sleep -Milliseconds 500; if (Get-Process -Name OneDrive -ErrorAction SilentlyContinue) { break } }
+if (-not (Get-Process -Name OneDrive -ErrorAction SilentlyContinue)) { Start-Process -FilePath $exe }
+"OneDrive reset and started again. It re-checks every file, so syncing can take a while; your files stay where they are."
 "#;
 
 pub fn recipes() -> &'static [Recipe] {
@@ -267,6 +320,76 @@ pub fn recipes() -> &'static [Recipe] {
                 timeout_secs: 120,
             }],
         },
+        Recipe {
+            id: "restart-audio",
+            name: "Fix no sound",
+            when: "No sound, a red X on the speaker icon, or \"No audio output device is installed\".",
+            does: "Restarts the Windows Audio services. Sound cuts out for a second.",
+            admin: true,
+            restart: false,
+            takes: "a few seconds",
+            steps: &[Step {
+                label: "Restart Windows Audio",
+                cmd: Cmd::Script(RESTART_AUDIO),
+                timeout_secs: 120,
+            }],
+        },
+        Recipe {
+            id: "reset-store",
+            name: "Fix the Microsoft Store",
+            when: "The Store won't open, downloads are stuck, or apps won't install or update.",
+            does: "Runs wsreset (Microsoft's Store reset): clears the Store cache, then opens the Store. Installed apps are not touched.",
+            admin: false,
+            restart: false,
+            takes: "up to a minute",
+            steps: &[Step {
+                label: "Reset the Store cache",
+                cmd: Cmd::Script(RESET_STORE),
+                timeout_secs: 300,
+            }],
+        },
+        Recipe {
+            id: "rebuild-icon-cache",
+            name: "Fix blank icons and thumbnails",
+            when: "Icons are blank or wrong, or pictures show the wrong preview.",
+            does: "Closes Explorer, deletes this user's icon and thumbnail caches, and starts Explorer again. Open Explorer windows close.",
+            admin: false,
+            restart: false,
+            takes: "a few seconds",
+            steps: &[Step {
+                label: "Rebuild the icon and thumbnail caches",
+                cmd: Cmd::Script(ICON_CACHE),
+                timeout_secs: 120,
+            }],
+        },
+        Recipe {
+            id: "rebuild-search",
+            name: "Fix Windows search",
+            when: "Start menu or Outlook search finds nothing, or misses files you know are there.",
+            does: "Resets the search index the same way as Indexing Options › Rebuild. Windows re-indexes in the background, which can take an hour or more.",
+            admin: true,
+            restart: false,
+            takes: "a few seconds (then re-indexing)",
+            steps: &[Step {
+                label: "Reset the search index",
+                cmd: Cmd::Script(REBUILD_SEARCH),
+                timeout_secs: 180,
+            }],
+        },
+        Recipe {
+            id: "reset-onedrive",
+            name: "Fix OneDrive sync",
+            when: "OneDrive is stuck on \"Processing changes\", shows sync errors, or stopped syncing.",
+            does: "OneDrive /reset (Microsoft's documented fix), then starts OneDrive again. Nothing is deleted; OneDrive re-checks your files. Run it without administrator rights.",
+            admin: false,
+            restart: false,
+            takes: "under a minute (then re-syncing)",
+            steps: &[Step {
+                label: "Reset OneDrive",
+                cmd: Cmd::Script(RESET_ONEDRIVE),
+                timeout_secs: 180,
+            }],
+        },
     ]
 }
 
@@ -320,7 +443,7 @@ pub fn run_fix(id: &str, elevated: bool) -> Result<FixResult, String> {
     let r = recipes()
         .iter()
         .find(|r| r.id == id)
-        .ok_or_else(|| format!("unknown fix {id}"))?;
+        .ok_or_else(|| format!("unknown remedy {id}"))?;
     if r.admin && !elevated {
         return Err(format!("{} needs administrator rights.", r.name));
     }
