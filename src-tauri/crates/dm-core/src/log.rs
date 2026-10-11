@@ -24,6 +24,7 @@ pub enum Area {
     Disk,
     Fix,
     Health,
+    Network,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

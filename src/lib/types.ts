@@ -28,7 +28,7 @@ export interface Drive {
   is_system: boolean;
 }
 
-export type LogArea = "app" | "scan" | "cleanup" | "disk" | "fix" | "health";
+export type LogArea = "app" | "scan" | "cleanup" | "disk" | "fix" | "health" | "network";
 
 export interface LogEntry {
   id: string;
@@ -235,6 +235,8 @@ export interface FixRecipe {
   does: string;
   admin: boolean;
   restart: boolean;
+  /** Offers a Windows restore point before running. */
+  restore_point: boolean;
   takes: string;
   steps: string[];
 }
@@ -249,7 +251,7 @@ export interface FixResult {
 
 export type HealthStatus = "good" | "warning" | "problem" | "unknown";
 
-export type HealthAction = { type: "remedy"; id: string } | { type: "open_cleanup" };
+export type HealthAction = { type: "remedy"; id: string } | { type: "open_cleanup" } | { type: "open_network" };
 
 export interface HealthCheck {
   id: string;
@@ -264,4 +266,18 @@ export interface HealthReport {
   checks: HealthCheck[];
   problems: number;
   warnings: number;
+}
+
+export interface NetLink {
+  id: string;
+  title: string;
+  status: HealthStatus;
+  summary: string;
+}
+
+export interface NetReport {
+  links: NetLink[];
+  verdict: string;
+  status: HealthStatus;
+  action: HealthAction | null;
 }

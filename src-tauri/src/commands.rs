@@ -591,7 +591,11 @@ pub fn fix_list() -> Vec<dm_core::fixes::RecipeInfo> {
 }
 
 #[tauri::command]
-pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::FixResult> {
+pub async fn fix_run(
+    app: AppHandle,
+    id: String,
+    restore_point: bool,
+) -> CmdResult<dm_core::fixes::FixResult> {
     {
         let state = app.state::<AppState>();
         let mut g = state.lock();
@@ -600,7 +604,9 @@ pub async fn fix_run(app: AppHandle, id: String) -> CmdResult<dm_core::fixes::Fi
         }
         g.fixing = true;
     }
-    let result = blocking(move || dm_core::fixes::run_fix(&id, dm_core::sys::is_elevated())).await;
+    let result =
+        blocking(move || dm_core::fixes::run_fix(&id, dm_core::sys::is_elevated(), restore_point))
+            .await;
     let state = app.state::<AppState>();
     let mut g = state.lock();
     g.fixing = false;
@@ -665,4 +671,79 @@ pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
         )),
     }
     result
+}
+
+// ---------- network doctor ----------
+
+/// Goes online (router ping, DNS lookup, Microsoft's test page); the page
+/// asks before calling it.
+#[tauri::command]
+pub async fn network_run(app: AppHandle) -> CmdResult<dm_core::netdoc::Report> {
+    let result = blocking(dm_core::netdoc::run).await;
+    let state = app.state::<AppState>();
+    let mut g = state.lock();
+    match &result {
+        Ok(r) => {
+            g.record(
+                &LogEntry::new(Area::Network, "Network doctor", true, r.verdict.clone())
+                    .with_details(
+                        r.links
+                            .iter()
+                            .map(|l| format!("{:?} {}: {}", l.status, l.title, l.summary))
+                            .collect(),
+                    ),
+            );
+            g.last_network = Some(dm_core::netdoc::to_text(r));
+        }
+        Err(e) => g.record(&LogEntry::new(
+            Area::Network,
+            "Network doctor",
+            false,
+            e.clone(),
+        )),
+    }
+    result
+}
+
+// ---------- send to IT ----------
+
+/// Save a zip for the helpdesk: system info, a fresh health check, the last
+/// network doctor result and the log. Returns the file names inside.
+#[tauri::command]
+pub async fn send_to_it(app: AppHandle, path: PathBuf) -> CmdResult<Vec<String>> {
+    let (log_text, network) = {
+        let state = app.state::<AppState>();
+        let g = state.lock();
+        let entries = dm_core::log::read(&g.log_path());
+        (dm_core::log::to_text(&entries), g.last_network.clone())
+    };
+    let dest = path.clone();
+    let names = blocking(move || {
+        let health = match dm_core::health::run() {
+            Ok(r) => dm_core::health::to_text(&r),
+            Err(e) => format!("The health check failed: {e}"),
+        };
+        let mut files = vec![
+            ("system-info.txt", dm_core::bundle::system_info()),
+            ("health-check.txt", health),
+        ];
+        if let Some(n) = network {
+            files.push(("network-doctor.txt", n));
+        }
+        files.push(("deskmedic-log.txt", log_text));
+        dm_core::bundle::write_zip(&files, &dest)?;
+        Ok(files.iter().map(|(n, _)| n.to_string()).collect::<Vec<_>>())
+    })
+    .await;
+    let state = app.state::<AppState>();
+    state.lock().record(&LogEntry::new(
+        Area::App,
+        "Send to IT bundle",
+        names.is_ok(),
+        match &names {
+            Ok(n) => format!("{} files to {}", n.len(), path.display()),
+            Err(e) => e.clone(),
+        },
+    ));
+    names
 }

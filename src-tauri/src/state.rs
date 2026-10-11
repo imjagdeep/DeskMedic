@@ -23,8 +23,10 @@ pub struct Inner {
     pub tree: Option<Arc<Tree>>,
     /// The scan in progress, if any.
     pub scanning: Option<Scanning>,
-    /// A fix-it is running (one at a time).
+    /// A remedy is running (one at a time).
     pub fixing: bool,
+    /// The last network doctor result, as text for the IT bundle.
+    pub last_network: Option<String>,
 }
 
 impl AppState {
@@ -35,6 +37,7 @@ impl AppState {
             tree: None,
             scanning: None,
             fixing: false,
+            last_network: None,
         }))
     }
 

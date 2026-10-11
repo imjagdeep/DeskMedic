@@ -36,6 +36,9 @@ pub struct Recipe {
     pub does: &'static str,
     pub admin: bool,
     pub restart: bool,
+    /// Offer a Windows restore point first: the remedy changes system
+    /// settings or files in a way that is hard to undo by hand.
+    pub restore_point: bool,
     /// Rough duration shown to the user.
     pub takes: &'static str,
     pub steps: &'static [Step],
@@ -140,6 +143,25 @@ if (-not (Get-Process -Name OneDrive -ErrorAction SilentlyContinue)) { Start-Pro
 "OneDrive reset and started again. It re-checks every file, so syncing can take a while; your files stay where they are."
 "#;
 
+// Windows allows one restore point per 24 hours by default and quietly skips
+// extra ones, so a recent existing point counts as the way back.
+const RESTORE_POINT: &str = r#"
+$before = @(Get-ComputerRestorePoint -ErrorAction SilentlyContinue).Count
+Checkpoint-Computer -Description $env:DM_ARG_DESC -RestorePointType MODIFY_SETTINGS -WarningAction SilentlyContinue
+$all = @(Get-ComputerRestorePoint -ErrorAction SilentlyContinue)
+if ($all.Count -gt $before) {
+  "Restore point created."
+} else {
+  $last = $all | Sort-Object SequenceNumber | Select-Object -Last 1
+  $t = if ($last) { [Management.ManagementDateTimeConverter]::ToDateTime($last.CreationTime) } else { $null }
+  if ($t -and ((Get-Date) - $t).TotalHours -lt 24) {
+    "Windows already made a restore point at $($t.ToString('g')) (it allows one a day); that one is the way back."
+  } else {
+    throw 'No restore point was made. System Protection may be off for the Windows drive (Control Panel > Recovery > Configure System Restore).'
+  }
+}
+"#;
+
 pub fn recipes() -> &'static [Recipe] {
     &[
         Recipe {
@@ -149,6 +171,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "ipconfig /flushdns",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "a second",
             steps: &[Step {
                 label: "Flush the DNS resolver cache",
@@ -167,6 +190,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "netsh winsock reset, netsh int ip reset. Network adapters keep their settings; a restart is needed.",
             admin: true,
             restart: true,
+            restore_point: true,
             takes: "a few seconds",
             steps: &[
                 Step {
@@ -196,6 +220,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Stops the print spooler, deletes the queued job files, starts it again. Pending print jobs are lost.",
             admin: true,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[Step {
                 label: "Restart the spooler with an empty queue",
@@ -210,6 +235,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Ends explorer.exe and starts it again. Open Explorer windows close.",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[Step {
                 label: "Restart explorer.exe",
@@ -224,6 +250,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "gpupdate /force",
             admin: true,
             restart: false,
+            restore_point: false,
             takes: "up to a few minutes",
             steps: &[Step {
                 label: "Apply computer and user policy",
@@ -242,6 +269,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Closes Teams, then clears its cache (Microsoft's documented fix). Teams rebuilds it on the next start; the user may need to sign in again.",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[
                 Step {
@@ -263,6 +291,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Stops the update services, renames SoftwareDistribution and catroot2 (kept as .old), starts the services. Microsoft's standard reset.",
             admin: true,
             restart: true,
+            restore_point: true,
             takes: "under a minute",
             steps: &[Step {
                 label: "Reset Windows Update components",
@@ -277,6 +306,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "sfc /scannow: checks protected Windows files and repairs them from the local cache.",
             admin: true,
             restart: false,
+            restore_point: true,
             takes: "10 to 20 minutes",
             steps: &[Step {
                 label: "sfc /scannow",
@@ -295,6 +325,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "DISM /Online /Cleanup-Image /RestoreHealth: repairs the component store using Windows Update. Needs internet.",
             admin: true,
             restart: false,
+            restore_point: true,
             takes: "10 to 30 minutes",
             steps: &[Step {
                 label: "DISM /RestoreHealth",
@@ -313,6 +344,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Starts the Windows Time service if needed, then w32tm /resync.",
             admin: true,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[Step {
                 label: "Resync with the time server",
@@ -327,6 +359,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Restarts the Windows Audio services. Sound cuts out for a second.",
             admin: true,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[Step {
                 label: "Restart Windows Audio",
@@ -341,6 +374,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Runs wsreset (Microsoft's Store reset): clears the Store cache, then opens the Store. Installed apps are not touched.",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "up to a minute",
             steps: &[Step {
                 label: "Reset the Store cache",
@@ -355,6 +389,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Closes Explorer, deletes this user's icon and thumbnail caches, and starts Explorer again. Open Explorer windows close.",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "a few seconds",
             steps: &[Step {
                 label: "Rebuild the icon and thumbnail caches",
@@ -369,6 +404,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "Resets the search index the same way as Indexing Options › Rebuild. Windows re-indexes in the background, which can take an hour or more.",
             admin: true,
             restart: false,
+            restore_point: true,
             takes: "a few seconds (then re-indexing)",
             steps: &[Step {
                 label: "Reset the search index",
@@ -383,6 +419,7 @@ pub fn recipes() -> &'static [Recipe] {
             does: "OneDrive /reset (Microsoft's documented fix), then starts OneDrive again. Nothing is deleted; OneDrive re-checks your files. Run it without administrator rights.",
             admin: false,
             restart: false,
+            restore_point: false,
             takes: "under a minute (then re-syncing)",
             steps: &[Step {
                 label: "Reset OneDrive",
@@ -401,6 +438,7 @@ pub struct RecipeInfo {
     pub does: &'static str,
     pub admin: bool,
     pub restart: bool,
+    pub restore_point: bool,
     pub takes: &'static str,
     pub steps: Vec<&'static str>,
 }
@@ -415,6 +453,7 @@ pub fn list() -> Vec<RecipeInfo> {
             does: r.does,
             admin: r.admin,
             restart: r.restart,
+            restore_point: r.restore_point,
             takes: r.takes,
             steps: r.steps.iter().map(|s| s.label).collect(),
         })
@@ -438,8 +477,10 @@ pub struct FixResult {
     pub steps: Vec<StepResult>,
 }
 
-/// Run a recipe by id. Stops at the first failed step.
-pub fn run_fix(id: &str, elevated: bool) -> Result<FixResult, String> {
+/// Run a recipe by id. Stops at the first failed step. With
+/// `restore_point` (only for recipes that offer it) a Windows restore point
+/// is made first, and nothing runs if that fails.
+pub fn run_fix(id: &str, elevated: bool, restore_point: bool) -> Result<FixResult, String> {
     let r = recipes()
         .iter()
         .find(|r| r.id == id)
@@ -448,6 +489,33 @@ pub fn run_fix(id: &str, elevated: bool) -> Result<FixResult, String> {
         return Err(format!("{} needs administrator rights.", r.name));
     }
     let mut steps = Vec::new();
+    if restore_point && r.restore_point {
+        let res = ps::run_text(
+            RESTORE_POINT,
+            &[("DESC", &format!("DeskMedic: before {}", r.name))],
+            Duration::from_secs(600),
+        )
+        .map_err(|e| e.to_string());
+        let failed = res.is_err();
+        steps.push(StepResult {
+            label: "Create a restore point",
+            ok: !failed,
+            output: res.unwrap_or_else(|e| {
+                format!(
+                    "{e}\nNothing was changed. Run it again without a restore point if that is acceptable."
+                )
+            }),
+        });
+        if failed {
+            return Ok(FixResult {
+                id: r.id,
+                name: r.name,
+                ok: false,
+                restart: false,
+                steps,
+            });
+        }
+    }
     let mut ok = true;
     for s in r.steps {
         let res = run_step(s);
@@ -552,6 +620,16 @@ mod tests {
         }
     }
 
+    /// Only admin recipes can make a restore point (Windows needs admin).
+    #[test]
+    fn restore_points_only_on_admin_recipes() {
+        assert!(recipes()
+            .iter()
+            .filter(|r| r.restore_point)
+            .all(|r| r.admin));
+        assert!(recipes().iter().any(|r| r.restore_point));
+    }
+
     #[test]
     fn cleanup_steps_point_at_real_categories() {
         let cats: HashSet<_> = cleanup::catalog().iter().map(|c| c.id).collect();
@@ -566,16 +644,16 @@ mod tests {
 
     #[test]
     fn admin_fix_refused_without_admin() {
-        let e = run_fix("sfc", false).unwrap_err();
+        let e = run_fix("sfc", false, true).unwrap_err();
         assert!(e.contains("administrator"));
-        assert!(run_fix("nope", true).is_err());
+        assert!(run_fix("nope", true, false).is_err());
     }
 
     /// Safe to run for real: only clears the DNS cache.
     #[cfg(windows)]
     #[test]
     fn flush_dns_runs() {
-        let r = run_fix("flush-dns", false).unwrap();
+        let r = run_fix("flush-dns", false, true).unwrap();
         assert!(r.ok, "{:?}", r.steps);
     }
 }

@@ -10,6 +10,8 @@ export function Remedies({ ask, onAsked }: { ask?: string | null; onAsked?: () =
   const info = useAppInfo();
   const [recipes, setRecipes] = useState<FixRecipe[]>([]);
   const [asking, setAsking] = useState<FixRecipe | null>(null);
+  // Restore point first, for remedies that offer one. On by default.
+  const [restorePoint, setRestorePoint] = useState(true);
   // Kept outside the page so leaving it mid-fix loses nothing.
   const { running, result } = useFixJob();
 
@@ -20,13 +22,16 @@ export function Remedies({ ask, onAsked }: { ask?: string | null; onAsked?: () =
   useEffect(() => {
     if (!ask || recipes.length === 0) return;
     const r = recipes.find((x) => x.id === ask);
-    if (r && !(r.admin && !info?.elevated)) setAsking(r);
+    if (r && !(r.admin && !info?.elevated)) {
+      setRestorePoint(true);
+      setAsking(r);
+    }
     onAsked?.();
   }, [ask, recipes, info, onAsked]);
 
   const run = (r: FixRecipe) => {
     setAsking(null);
-    void runFix(r.id);
+    void runFix(r.id, r.restore_point && restorePoint);
   };
 
   return (
@@ -52,7 +57,10 @@ export function Remedies({ ask, onAsked }: { ask?: string | null; onAsked?: () =
                   className="primary"
                   disabled={blocked || running !== null}
                   title={blocked ? "Needs administrator" : undefined}
-                  onClick={() => setAsking(r)}
+                  onClick={() => {
+                    setRestorePoint(true);
+                    setAsking(r);
+                  }}
                 >
                   {running === r.id ? "Running…" : "Run"}
                 </button>
@@ -84,6 +92,17 @@ export function Remedies({ ask, onAsked }: { ask?: string | null; onAsked?: () =
             <p className="muted small">
               Takes {asking.takes}.{asking.restart && " Restart the PC afterwards for it to take effect."}
             </p>
+            {asking.restore_point && (
+              <label className="check-row">
+                <input type="checkbox" checked={restorePoint} onChange={(e) => setRestorePoint(e.target.checked)} />
+                <span>
+                  Create a restore point first (recommended)
+                  <span className="muted small block">
+                    A way back through System Restore if something goes wrong. Adds up to a minute.
+                  </span>
+                </span>
+              </label>
+            )}
             <div className="modal-actions">
               <button onClick={() => setAsking(null)}>Cancel</button>
               <button className="primary" autoFocus onClick={() => run(asking)}>

@@ -1,12 +1,14 @@
 //! DeskMedic engine. Everything here runs without Tauri so it can be unit
 //! tested; the app crate only wires these functions to commands.
 
+pub mod bundle;
 pub mod cleanup;
 pub mod disk;
 pub mod drives;
 pub mod fixes;
 pub mod health;
 pub mod log;
+pub mod netdoc;
 pub mod paths;
 pub mod procs;
 pub mod profiles;

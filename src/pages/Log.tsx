@@ -1,6 +1,7 @@
 import { save } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/Common";
+import { SendToIt } from "../components/SendToIt";
 import { api } from "../lib/api";
 import { dateTime } from "../lib/format";
 import { toast, toastError } from "../lib/store";
@@ -38,6 +39,7 @@ export function Log() {
     <div className="page">
       <PageHeader title="Log">
         <button onClick={exportText} disabled={!entries?.length}>Export for ticket…</button>
+        <SendToIt />
       </PageHeader>
       <p className="muted">Everything DeskMedic changed on this PC, who ran it and what happened.</p>
       {entries === null && <div className="empty">Loading…</div>}
