@@ -8,6 +8,7 @@ import { DiskMap } from "./pages/DiskMap";
 import { Health } from "./pages/Health";
 import { Disks } from "./pages/Disks";
 import { Log } from "./pages/Log";
+import { Network } from "./pages/Network";
 import { Overview } from "./pages/Overview";
 import { Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
@@ -19,8 +20,10 @@ export default function App() {
   const [askRemedy, setAskRemedy] = useState<string | null>(null);
   const clearAsk = useCallback(() => setAskRemedy(null), []);
   const onHealthAction = (a: HealthAction) => {
-    if (a.type === "remedy") setAskRemedy(a.id);
-    setPage(a.type === "remedy" ? "remedies" : "cleanup");
+    if (a.type === "remedy") {
+      setAskRemedy(a.id);
+      setPage("remedies");
+    } else setPage(a.type === "open_cleanup" ? "cleanup" : "network");
   };
   const content = useRef<HTMLElement>(null);
 
@@ -47,6 +50,7 @@ export default function App() {
       <main className="content" ref={content}>
         {page === "overview" && <Overview />}
         {page === "health" && <Health onAction={onHealthAction} />}
+        {page === "network" && <Network onAction={onHealthAction} />}
         {page === "diskmap" && <DiskMap />}
         {page === "cleanup" && <Cleanup />}
         {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}

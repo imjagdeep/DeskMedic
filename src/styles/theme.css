@@ -516,3 +516,16 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .health-dot.good, .health-dot.warning, .health-dot.problem { background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 18%, transparent); }
 .health-tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 9px; color: var(--c, var(--text)); background: color-mix(in srgb, var(--c, var(--text)) 12%, transparent); }
 .health-row > button { flex: none; }
+
+/* Network doctor: the links drawn as a chain */
+.net-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; }
+.net-link { margin: 0; display: flex; align-items: center; gap: 14px; position: relative; }
+.net-link h2 { margin: 0; }
+.net-link p { margin: 3px 0 0; }
+.net-link + .net-link::before { content: ""; position: absolute; left: 20px; top: -9px; width: 2px; height: 10px; background: var(--sep); }
+.health-summary > div { min-width: 0; }
+
+/* restore-point option in the remedy dialog */
+.check-row { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 4px; cursor: pointer; }
+.check-row input { margin-top: 3px; }
+.block { display: block; }

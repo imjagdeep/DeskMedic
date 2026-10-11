@@ -125,6 +125,8 @@ pub enum Action {
         id: &'static str,
     },
     OpenCleanup,
+    /// Run the network doctor for a closer look.
+    OpenNetwork,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -351,11 +353,9 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
             Status::Problem,
             "Connected to a network, but Windows can't reach the internet.".into(),
         )
-        .advice("Restart the router first. If other devices are fine, reset this PC's network.")
-        .action(Action::Remedy {
-            id: "reset-network",
-        }),
-        _ => unknown("internet", "Internet"),
+        .advice("Run the network doctor to see where it breaks.")
+        .action(Action::OpenNetwork),
+        _ => unknown("internet", "Internet").action(Action::OpenNetwork),
     });
 
     // Physical disk health.
@@ -517,6 +517,25 @@ pub fn evaluate(f: &Facts) -> Vec<Check> {
     out
 }
 
+/// Plain text for a ticket.
+pub fn to_text(r: &Report) -> String {
+    let mut s = format!(
+        "Health check: {} problem(s), {} warning(s)
+
+",
+        r.problems, r.warnings
+    );
+    for c in &r.checks {
+        s.push_str(&format!("[{:?}] {}: {}
+", c.status, c.title, c.summary));
+        if let Some(a) = &c.advice {
+            s.push_str(&format!("    {a}
+"));
+        }
+    }
+    s
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -631,16 +650,11 @@ mod tests {
     }
 
     #[test]
-    fn offline_offers_network_reset_only_when_connected() {
+    fn offline_offers_network_doctor_only_when_connected() {
         let mut f = healthy();
         f.internet = Some(false);
         let c = evaluate(&f);
-        assert_eq!(
-            find(&c, "internet").action,
-            Some(Action::Remedy {
-                id: "reset-network"
-            })
-        );
+        assert_eq!(find(&c, "internet").action, Some(Action::OpenNetwork));
         f.networks = Some(0);
         let c = evaluate(&f);
         assert_eq!(find(&c, "internet").status, Status::Problem);

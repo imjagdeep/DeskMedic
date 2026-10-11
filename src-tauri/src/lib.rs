@@ -72,6 +72,8 @@ pub fn run() {
             commands::fix_list,
             commands::fix_run,
             commands::health_run,
+            commands::network_run,
+            commands::send_to_it,
         ])
         .run(tauri::generate_context!())
         .expect("error while running DeskMedic");

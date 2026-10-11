@@ -1,6 +1,6 @@
 [package]
 name = "deskmedic"
-version = "0.2.0"
+version = "0.3.0"
 description = "Windows helpdesk disk utility"
 license = "MIT"
 edition = "2021"

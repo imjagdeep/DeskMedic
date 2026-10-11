@@ -11,6 +11,7 @@ import type {
   FixRecipe,
   FixResult,
   HealthReport,
+  NetReport,
   BigFile,
   Drive,
   Listing,
@@ -51,8 +52,10 @@ export const api = {
   resize: (disk: number, partition: number, size: number, confirm: string) =>
     invoke<string>("resize", { disk, partition, size, confirm }),
   fixList: () => invoke<FixRecipe[]>("fix_list"),
-  fixRun: (id: string) => invoke<FixResult>("fix_run", { id }),
+  fixRun: (id: string, restorePoint: boolean) => invoke<FixResult>("fix_run", { id, restorePoint }),
   healthRun: () => invoke<HealthReport>("health_run"),
+  networkRun: () => invoke<NetReport>("network_run"),
+  sendToIt: (path: string) => invoke<string[]>("send_to_it", { path }),
 };
 
 export function errorText(e: unknown): string {

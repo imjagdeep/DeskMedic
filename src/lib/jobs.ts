@@ -1,11 +1,11 @@
-// Long-running jobs (scan, cleanup, remedy, health check) live here instead of in the
+// Long-running jobs (scan, cleanup, remedy, health check, network doctor) live here instead of in the
 // pages, so switching pages mid-job doesn't lose the progress or the result.
 
 import { listen } from "@tauri-apps/api/event";
 import { useSyncExternalStore } from "react";
 import { api } from "./api";
 import { createStore, toastError } from "./store";
-import type { CleanupReport, FixResult, HealthReport, ScanProgress, ScanSummary } from "./types";
+import type { CleanupReport, FixResult, HealthReport, NetReport, ScanProgress, ScanSummary } from "./types";
 
 export interface ScanJob {
   root: string;
@@ -28,11 +28,18 @@ const healthStore = createStore<{ running: boolean; report: HealthReport | null;
   at: null,
 });
 
+const networkStore = createStore<{ running: boolean; report: NetReport | null; at: number | null }>({
+  running: false,
+  report: null,
+  at: null,
+});
+
 export const useScanJob = () => useSyncExternalStore(scanStore.subscribe, scanStore.get);
 export const useScanDone = () => useSyncExternalStore(scanDoneStore.subscribe, scanDoneStore.get);
 export const useCleanupJob = () => useSyncExternalStore(cleanupStore.subscribe, cleanupStore.get);
 export const useFixJob = () => useSyncExternalStore(fixStore.subscribe, fixStore.get);
 export const useHealthJob = () => useSyncExternalStore(healthStore.subscribe, healthStore.get);
+export const useNetworkJob = () => useSyncExternalStore(networkStore.subscribe, networkStore.get);
 
 let started = false;
 /** Follow backend job events for the whole session. Call once at start. */
@@ -80,10 +87,10 @@ export async function runCleanup(ids: string[], allUsers: boolean) {
 
 export const clearCleanupReport = () => cleanupStore.set({ running: false, report: null });
 
-export async function runFix(id: string) {
+export async function runFix(id: string, restorePoint: boolean) {
   fixStore.set({ running: id, result: null });
   try {
-    fixStore.set({ running: null, result: await api.fixRun(id) });
+    fixStore.set({ running: null, result: await api.fixRun(id, restorePoint) });
   } catch (e) {
     fixStore.set({ running: null, result: null });
     toastError(e);
@@ -99,6 +106,17 @@ export async function runHealthCheck() {
     healthStore.set({ running: false, report: await api.healthRun(), at: Date.now() });
   } catch (e) {
     healthStore.set({ ...healthStore.get(), running: false });
+    toastError(e);
+  }
+}
+
+export async function runNetworkDoctor() {
+  if (networkStore.get().running) return;
+  networkStore.set({ ...networkStore.get(), running: true });
+  try {
+    networkStore.set({ running: false, report: await api.networkRun(), at: Date.now() });
+  } catch (e) {
+    networkStore.set({ ...networkStore.get(), running: false });
     toastError(e);
   }
 }

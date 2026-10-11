@@ -1,4 +1,5 @@
 import { PageHeader } from "../components/Common";
+import { SendToIt } from "../components/SendToIt";
 import { runHealthCheck, useHealthJob } from "../lib/jobs";
 import type { HealthAction, HealthCheck, HealthStatus } from "../lib/types";
 
@@ -20,13 +21,15 @@ export function Health({ onAction }: { onAction: (a: HealthAction) => void }) {
   return (
     <div className="page">
       <PageHeader title="Health check">
+        <SendToIt />
         <button className="primary" disabled={running} onClick={() => void runHealthCheck()}>
           {running ? "Checking…" : report ? "Check again" : "Run health check"}
         </button>
       </PageHeader>
       <p className="muted">
         A quick, read-only look at what usually sits behind a slow or misbehaving PC: space, restarts, updates, virus
-        protection, internet, drives, crashes, memory and battery. Nothing is changed, and nothing goes online.
+        protection, internet, drives, crashes, memory and battery. Nothing is changed, and nothing goes online. Send to IT
+        saves this with system details and the log as one zip for a ticket.
       </p>
 
       {!report && !running && (
@@ -82,7 +85,7 @@ function Row({ check: c, onAction }: { check: HealthCheck; onAction: (a: HealthA
       </div>
       {action && (
         <button onClick={() => onAction(action)}>
-          {action.type === "open_cleanup" ? "Open Cleanup" : "Fix it"}
+          {action.type === "open_cleanup" ? "Open Cleanup" : action.type === "open_network" ? "Network doctor" : "Fix it"}
         </button>
       )}
     </div>
