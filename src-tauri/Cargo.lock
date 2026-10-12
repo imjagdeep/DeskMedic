@@ -796,7 +796,7 @@ dependencies = [
 
 [[package]]
 name = "deskmedic"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "dm-core",
  "serde",
