@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/Common";
+import { DeskLabTools } from "../components/DeskLab";
 import { api } from "../lib/api";
 import { refreshAppInfo, toastError, useAppInfo } from "../lib/store";
 import { checkAndDownload, installNow, useUpdate } from "../lib/updates";
@@ -233,11 +234,7 @@ export function SettingsPage() {
           </label>
         )}
         <div className="more-tools">
-          <div className="muted small">More free tools by the same developer</div>
-          <button className="tool-link" onClick={() => api.openLink("deskzero").catch(toastError)}>
-            <strong>DeskZero</strong>
-            <span className="muted small">Tiny offline app that keeps your folders organized. Windows, macOS and Linux.</span>
-          </button>
+          <DeskLabTools own="deskmedic" />
           <div className="muted small made-by">
             Made by Jagdeep Sandhu ·{" "}
             <button className="link" onClick={() => api.openLink("developer").catch(toastError)}>
