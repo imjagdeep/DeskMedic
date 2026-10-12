@@ -28,8 +28,8 @@ export function Health({ onAction }: { onAction: (a: HealthAction) => void }) {
       </PageHeader>
       <p className="muted">
         A quick, read-only look at what usually sits behind a slow or misbehaving PC: space, restarts, updates, virus
-        protection, internet, drives, crashes, memory and battery. Nothing is changed, and nothing goes online. Send to IT
-        saves this with system details and the log as one zip for a ticket.
+        protection, internet, drives, crashes, memory and battery. Nothing is changed, and nothing goes online. Export
+        report saves this with system details and the log as one zip for a ticket.
       </p>
 
       {!report && !running && (

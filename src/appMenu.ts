@@ -50,8 +50,8 @@ export function useAppMenus(go: (p: Page) => void): MenuDef[] {
     const file: MenuDef = {
       label: "File",
       items: [
-        // Send to IT lives on the Overview page; this opens its explanation there.
-        { id: "send-to-it", label: "Send to IT…", run: () => (go("overview"), setTimeout(() => window.dispatchEvent(new Event("send-to-it")), 60)) },
+        // Export report lives on the Overview page; this opens its explanation there.
+        { id: "send-to-it", label: "Export report…", run: () => (go("overview"), setTimeout(() => window.dispatchEvent(new Event("send-to-it")), 60)) },
         { id: "export-log", label: "Export log for a ticket…", run: exportLogFile },
         { id: "data-folder", label: "Open data folder", run: () => api.openDataFolder() },
         "-",

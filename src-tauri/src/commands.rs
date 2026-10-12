@@ -748,7 +748,7 @@ pub async fn network_run(app: AppHandle) -> CmdResult<dm_core::netdoc::Report> {
     result
 }
 
-// ---------- send to IT ----------
+// ---------- export report (was "Send to IT") ----------
 
 /// Save a zip for the helpdesk: system info, a fresh health check, the last
 /// network doctor result and the log. Returns the file names inside.
@@ -781,7 +781,7 @@ pub async fn send_to_it(app: AppHandle, path: PathBuf) -> CmdResult<Vec<String>>
     let state = app.state::<AppState>();
     state.lock().record(&LogEntry::new(
         Area::App,
-        "Send to IT bundle",
+        "Exported report",
         names.is_ok(),
         match &names {
             Ok(n) => format!("{} files to {}", n.len(), path.display()),

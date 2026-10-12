@@ -4,13 +4,13 @@ import { api } from "../lib/api";
 import { useNetworkJob } from "../lib/jobs";
 import { toast, toastError, useAppInfo } from "../lib/store";
 
-/** "Send to IT" button: explains what goes in the zip, then saves it. */
+/** "Export report" button: explains what goes in the zip, then saves it. */
 export function SendToIt() {
   const info = useAppInfo();
   const network = useNetworkJob().report;
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  // File › Send to IT opens this explanation too.
+  // File › Export report opens this explanation too.
   useEffect(() => {
     const show = () => setOpen(true);
     window.addEventListener("send-to-it", show);
@@ -21,7 +21,7 @@ export function SendToIt() {
     try {
       const day = new Date().toISOString().slice(0, 10);
       const path = await save({
-        title: "Save the bundle for IT",
+        title: "Save the report",
         defaultPath: `DeskMedic-${info?.computer || "PC"}-${day}.zip`,
         filters: [{ name: "Zip", extensions: ["zip"] }],
       });
@@ -39,11 +39,11 @@ export function SendToIt() {
 
   return (
     <>
-      <button onClick={() => setOpen(true)}>Send to IT…</button>
+      <button onClick={() => setOpen(true)}>Export report…</button>
       {open && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="it-h">
           <div className="modal">
-            <h2 id="it-h">Send to IT</h2>
+            <h2 id="it-h">Export report</h2>
             <p>Saves one zip you can attach to an email or ticket. It holds plain-text files:</p>
             <ul className="steps">
               <li>

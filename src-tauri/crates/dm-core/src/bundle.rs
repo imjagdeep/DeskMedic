@@ -1,4 +1,4 @@
-//! "Send to IT": one zip with plain-text files a helpdesk can read: system
+//! "Export report": one zip with plain-text files a helpdesk can read: system
 //! information, a fresh health check, the last network doctor result and the
 //! DeskMedic log. Built in a temporary folder and zipped with PowerShell's
 //! Compress-Archive (the destination path is passed as data, never as code).
