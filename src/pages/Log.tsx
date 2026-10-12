@@ -7,6 +7,24 @@ import { dateTime } from "../lib/format";
 import { toast, toastError } from "../lib/store";
 import type { LogEntry } from "../lib/types";
 
+/** Save the log as text for a ticket (the Log page and File › Export log). */
+export async function exportLogFile(): Promise<boolean> {
+  try {
+    const path = await save({
+      title: "Save the log for a ticket",
+      defaultPath: "DeskMedic-log.txt",
+      filters: [{ name: "Text", extensions: ["txt"] }],
+    });
+    if (!path) return false;
+    const n = await api.exportLog(path);
+    toast(`Saved ${n} entries`);
+    return true;
+  } catch (e) {
+    toastError(e);
+    return false;
+  }
+}
+
 export function Log() {
   const [entries, setEntries] = useState<LogEntry[] | null>(null);
   const [open, setOpen] = useState<string | null>(null);
@@ -20,19 +38,7 @@ export function Log() {
   useEffect(load, []);
 
   const exportText = async () => {
-    try {
-      const path = await save({
-        title: "Save the log for a ticket",
-        defaultPath: "DeskMedic-log.txt",
-        filters: [{ name: "Text", extensions: ["txt"] }],
-      });
-      if (!path) return;
-      const n = await api.exportLog(path);
-      toast(`Saved ${n} entries`);
-      load();
-    } catch (e) {
-      toastError(e);
-    }
+    if (await exportLogFile()) load();
   };
 
   return (

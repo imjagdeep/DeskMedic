@@ -35,7 +35,7 @@ export const api = {
   restartAsAdmin: () => invoke<void>("restart_as_admin"),
   saveSettings: (settings: Settings) => invoke<void>("save_settings", { settings }),
   openDataFolder: () => invoke<void>("open_data_folder"),
-  openLink: (id: "releases" | "developer" | LabToolId) => invoke<void>("open_link", { id }),
+  openLink: (id: "site" | "repo" | "issues" | "releases" | "developer" | LabToolId) => invoke<void>("open_link", { id }),
   /** The other DeskLab tools and whether each is installed here. */
   desklabTools: () => invoke<LabTool[]>("desklab_tools"),
   /** Start an installed DeskLab tool, optionally with a file for it to open. */
