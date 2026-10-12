@@ -1,5 +1,5 @@
 import { save } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { useNetworkJob } from "../lib/jobs";
 import { toast, toastError, useAppInfo } from "../lib/store";
@@ -10,6 +10,12 @@ export function SendToIt() {
   const network = useNetworkJob().report;
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  // File › Send to IT opens this explanation too.
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener("send-to-it", show);
+    return () => window.removeEventListener("send-to-it", show);
+  }, []);
 
   const make = async () => {
     try {

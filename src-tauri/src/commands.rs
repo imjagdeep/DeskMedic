@@ -108,6 +108,9 @@ pub fn open_link(app: AppHandle, id: String) -> CmdResult<()> {
     let url = match id.as_str() {
         "releases" => "https://github.com/imjagdeep/DeskMedic/releases/latest",
         "developer" => "https://github.com/imjagdeep",
+        "site" => "https://jaggi.cc/tools/#deskmedic",
+        "repo" => "https://github.com/imjagdeep/DeskMedic",
+        "issues" => "https://github.com/imjagdeep/DeskMedic/issues",
         "deskzero" => "https://github.com/imjagdeep/DeskZero/releases/latest",
         "deskmedic" => "https://github.com/imjagdeep/DeskMedic/releases/latest",
         "deskfolio" => "https://github.com/imjagdeep/DeskFolio/releases/latest",

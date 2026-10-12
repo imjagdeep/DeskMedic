@@ -1,11 +1,14 @@
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAppMenus } from "./appMenu";
+import logo from "./assets/logo.png";
 import { Toasts } from "./components/Common";
 import { UpdateBanner } from "./components/UpdateBanner";
-import { Sidebar, type Page } from "./components/Sidebar";
+import { PAGES, Sidebar, type Page } from "./components/Sidebar";
 import { api } from "./lib/api";
 import { runHealthCheck, startJobs } from "./lib/jobs";
-import { refreshAppInfo, useAppInfo } from "./lib/store";
+import { refreshAppInfo, toastError, useAppInfo } from "./lib/store";
 import { checkAndDownload, dailyCheckDue } from "./lib/updates";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
@@ -17,9 +20,14 @@ import { Overview } from "./pages/Overview";
 import { Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
 import type { HealthAction } from "./lib/types";
+import { ShellDialogs } from "./shell/Dialogs";
+import { MenuBar } from "./shell/MenuBar";
+import { applySavedZoom } from "./shell/shell";
 
 export default function App() {
-  const [page, setPage] = useState<Page>("overview");
+  const [page, setPageRaw] = useState<Page>("overview");
+  const setPage = useCallback((p: Page) => setPageRaw(p), []);
+  const menus = useAppMenus(setPage);
   // A remedy the Health check asked to open on the Remedies page.
   const [askRemedy, setAskRemedy] = useState<string | null>(null);
   const clearAsk = useCallback(() => setAskRemedy(null), []);
@@ -74,6 +82,20 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    void applySavedZoom().catch(() => undefined);
+  }, []);
+
+  // The window title names the page (and shows when running as administrator).
+  const elevated = !!info?.elevated;
+  useEffect(() => {
+    const where = PAGES.find((p) => p.page === page)?.label ?? "";
+    const name = elevated ? "DeskMedic (Administrator)" : "DeskMedic";
+    void getCurrentWindow()
+      .setTitle(page === "overview" ? name : `${where} — ${name}`)
+      .catch(() => undefined);
+  }, [page, elevated]);
+
   // "system" leaves the attribute off so the CSS media query decides.
   useEffect(() => {
     if (theme === "system") document.documentElement.removeAttribute("data-theme");
@@ -81,19 +103,38 @@ export default function App() {
   }, [theme]);
 
   return (
-    <div className="app">
-      <Sidebar page={page} onNavigate={setPage} />
-      <main className="content" ref={content}>
-        {page === "overview" && <Overview onNavigate={setPage} />}
-        {page === "health" && <Health onAction={onHealthAction} />}
-        {page === "network" && <Network onAction={onHealthAction} />}
-        {page === "diskmap" && <DiskMap />}
-        {page === "cleanup" && <Cleanup />}
-        {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
-        {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} />}
-        {page === "log" && <Log />}
-        {page === "settings" && <SettingsPage />}
-      </main>
+    <div className="app-frame">
+      <MenuBar appName="DeskMedic" menus={menus} onError={toastError} />
+      <div className="app">
+        <Sidebar page={page} onNavigate={setPage} />
+        <main className="content" ref={content}>
+          {page === "overview" && <Overview onNavigate={setPage} />}
+          {page === "health" && <Health onAction={onHealthAction} />}
+          {page === "network" && <Network onAction={onHealthAction} />}
+          {page === "diskmap" && <DiskMap />}
+          {page === "cleanup" && <Cleanup />}
+          {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
+          {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} />}
+          {page === "log" && <Log />}
+          {page === "settings" && <SettingsPage />}
+        </main>
+      </div>
+      <ShellDialogs
+        menus={menus}
+        onError={toastError}
+        about={{
+          name: "DeskMedic",
+          logo,
+          version: info?.version ?? "",
+          tagline: "A first-aid kit for Windows PCs: health check, disk map, safe cleanup, network doctor and one-click remedies.",
+          links: [
+            { label: "Website", open: () => void api.openLink("site").catch(toastError) },
+            { label: "Source code", open: () => void api.openLink("repo").catch(toastError) },
+            { label: "What's new", open: () => void api.openLink("releases").catch(toastError) },
+            { label: "Report a problem", open: () => void api.openLink("issues").catch(toastError) },
+          ],
+        }}
+      />
       <UpdateBanner app="DeskMedic" />
       <Toasts />
     </div>

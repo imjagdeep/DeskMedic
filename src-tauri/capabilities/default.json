@@ -10,6 +10,11 @@
     "dialog:allow-save",
     "dialog:allow-ask",
     "updater:default",
-    "process:allow-restart"
+    "process:allow-restart",
+    "process:allow-exit",
+    "core:window:allow-set-title",
+    "core:window:allow-set-fullscreen",
+    "core:window:allow-is-fullscreen",
+    "core:webview:allow-set-webview-zoom"
   ]
 }
