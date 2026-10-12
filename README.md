@@ -30,7 +30,7 @@ A portable Windows toolkit for helpdesk technicians: see what fills a disk, clea
 | **Home** | The PC at a glance: make and model, Windows version and build, processor, memory, last restart, network and IP, the latest health result, quick links to every tool, and the drives. |
 | **Health check** | One read-only look at what usually sits behind a call: free space, pending or overdue restart, Windows Update, virus protection, internet (as Windows sees it), drive health, blue screens and unexpected shutdowns, apps that keep crashing, memory, startup apps and laptop battery wear. Each item is rated good / warning / problem with a plain-English next step, and a **Fix it** button where a remedy or Cleanup helps. Nothing is changed and nothing goes online. |
 | **Network doctor** | Tests each link in turn (connection, Wi-Fi signal, router, DNS, internet, clock) and says in plain English where it breaks, e.g. "This PC reaches the router but not the internet: restart the router or call your provider". Spots hotel/guest Wi-Fi sign-in pages and a wrong clock, and offers the matching remedy. |
-| **Send to IT** | One zip for a ticket: system information (make, model, serial, Windows version, drives, IP addresses), a fresh health check, the last network doctor result and the DeskMedic log, all as plain text. Nothing is sent; you choose where to save it. |
+| **Export report** | One zip for a ticket: system information (make, model, serial, Windows version, drives, IP addresses), a fresh health check, the last network doctor result and the DeskMedic log, all as plain text. Nothing is sent; you choose where to save it. |
 | **Disk map** | Scan a drive and see which folders and files take the space: a treemap you can click into, folder sizes, the largest files, totals by file type, and user profiles (oldest first) with their sizes. As administrator, NTFS drives are read straight from the master file table, like WizTree: a whole drive in seconds. Without admin rights it walks folder by folder. |
 | **Cleanup** | Measures first, then clears temp files, Windows Update downloads, the Delivery Optimization cache, crash dumps, the thumbnail cache, the Recycle Bin, browser caches, the Teams cache, Outlook's temporary attachments, and old Windows components (DISM). Shows the drive's free space before and after. |
 | **Disks** | Every disk drawn like Disk Management, with plain-English findings and a fix for each: offline disks (including cloned disks), read-only disks and partitions, volumes without a drive letter, file-system errors, nearly full drives, failing drives, and a stuck or disabled Virtual Disk Service. |
@@ -58,11 +58,11 @@ Needs Windows 10 or 11 with the Microsoft Edge WebView2 runtime (built into Wind
 | Disk map (folder-by-folder scan) | Fast NTFS scan, and folders the user can't open |
 | Cleanup of the user's own temp files, crash dumps, thumbnails, Recycle Bin, browser, Teams and Outlook caches | Windows temp, Windows Update, Delivery Optimization, system crash dumps, component cleanup, other users' profiles |
 | Looking at disks and findings | Every disk change |
-| Health check, Network doctor, Send to IT; flush DNS, restart Explorer, reset Teams, Store, icons, OneDrive | All other remedies, restore points |
+| Health check, Network doctor, Export report; flush DNS, restart Explorer, reset Teams, Store, icons, OneDrive | All other remedies, restore points |
 
 ## Getting started
 
-**"Something is wrong with my PC."** Open **Health check** and press **Run health check**. Problems and warnings come first, each with what to do; **Fix it** opens the matching remedy. **Send to IT…** saves everything as one zip for a ticket.
+**"Something is wrong with my PC."** Open **Health check** and press **Run health check**. Problems and warnings come first, each with what to do; **Fix it** opens the matching remedy. **Export report…** saves everything as one zip for a ticket.
 
 **"The internet isn't working."** Open **Network doctor** and press **Test the network**. The top line says where it breaks and what to do next.
 
