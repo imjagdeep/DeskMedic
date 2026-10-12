@@ -1,5 +1,6 @@
 mod assistant;
 mod commands;
+mod desklab;
 mod state;
 mod tray;
 
@@ -114,6 +115,8 @@ pub fn run() {
             commands::save_settings,
             commands::open_data_folder,
             commands::open_link,
+            commands::desklab_tools,
+            commands::open_tool,
             commands::list_drives,
             commands::read_log,
             commands::export_log,

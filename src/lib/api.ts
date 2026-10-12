@@ -24,12 +24,22 @@ import type {
   TypeTotal,
 } from "./types";
 
+export type LabToolId = "deskzero" | "deskmedic" | "deskfolio";
+export interface LabTool {
+  id: LabToolId;
+  installed: boolean;
+}
+
 export const api = {
   appInfo: () => invoke<AppInfo>("app_info"),
   restartAsAdmin: () => invoke<void>("restart_as_admin"),
   saveSettings: (settings: Settings) => invoke<void>("save_settings", { settings }),
   openDataFolder: () => invoke<void>("open_data_folder"),
-  openLink: (id: "releases" | "developer" | "deskzero") => invoke<void>("open_link", { id }),
+  openLink: (id: "releases" | "developer" | LabToolId) => invoke<void>("open_link", { id }),
+  /** The other DeskLab tools and whether each is installed here. */
+  desklabTools: () => invoke<LabTool[]>("desklab_tools"),
+  /** Start an installed DeskLab tool, optionally with a file for it to open. */
+  openTool: (id: LabToolId, file?: string) => invoke<void>("open_tool", { id, file: file ?? null }),
   listDrives: () => invoke<Drive[]>("list_drives"),
   readLog: () => invoke<LogEntry[]>("read_log"),
   exportLog: (path: string) => invoke<number>("export_log", { path }),
