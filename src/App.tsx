@@ -21,7 +21,7 @@ import { Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
 import type { HealthAction } from "./lib/types";
 import { ShellDialogs } from "./shell/Dialogs";
-import { MenuBar } from "./shell/MenuBar";
+import { TopBar } from "./shell/TopBar";
 import { applySavedZoom } from "./shell/shell";
 
 export default function App() {
@@ -104,7 +104,7 @@ export default function App() {
 
   return (
     <div className="app-frame">
-      <MenuBar appName="DeskMedic" menus={menus} onError={toastError} />
+      <TopBar appName="DeskMedic" logo={logo} title={PAGES.find((p) => p.page === page)?.label} menus={menus} onError={toastError} />
       <div className="app">
         <Sidebar page={page} onNavigate={setPage} />
         <main className="content" ref={content}>
