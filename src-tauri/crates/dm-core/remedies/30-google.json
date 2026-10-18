@@ -1,0 +1,108 @@
+{
+  "id": "google",
+  "title": "Google Workspace",
+  "icon": "globe",
+  "blurb": "Gmail, Google Drive, Docs, Sheets, Meet and Chrome sign-in.",
+  "remedies": [
+    {
+      "id": "gmail-not-loading",
+      "os": ["windows", "macos"],
+      "title": "Gmail won't load or is very slow",
+      "symptoms": ["gmail not loading", "gmail slow", "gmail stuck loading", "gmail temporary error"],
+      "why": "Extensions, a full browser cache, or a temporary Google problem.",
+      "steps": [
+        { "text": "Try a private window; if it works, an extension is the cause." },
+        { "text": "Clear cookies for mail.google.com and sign in again." },
+        { "text": "Check google.com/appsstatus for outages." },
+        { "text": "Try the basic HTML view or another browser." }
+      ],
+      "related": ["browser-clear-cache"]
+    },
+    {
+      "id": "google-drive-access-denied",
+      "os": ["windows", "macos"],
+      "title": "\"You need access\" to a Google Doc or Drive file",
+      "symptoms": ["you need access google doc", "request access drive", "google drive permission", "can't open shared google file"],
+      "why": "The file is shared with a different Google account than the one you're using.",
+      "steps": [
+        { "text": "Check which account you're signed in with (picture at the top right); switch to the one it was shared with." },
+        { "text": "Use Request access, or ask the owner to share with the account you use." },
+        { "text": "Work files may only be shared inside your organisation." }
+      ]
+    },
+    {
+      "id": "google-account-switch",
+      "os": ["windows", "macos"],
+      "title": "Google keeps opening the wrong account (personal vs work)",
+      "symptoms": ["google wrong account", "switch google account", "default google account", "multiple google accounts"],
+      "why": "The first account you signed into becomes the default in that browser.",
+      "steps": [
+        { "text": "Use separate Chrome profiles for work and personal (picture at the top › Add)." },
+        { "text": "Or sign out of all accounts and sign into the main one first." }
+      ],
+      "related": ["browser-reset-profile"]
+    },
+    {
+      "id": "google-meet-problems",
+      "os": ["windows", "macos"],
+      "title": "Google Meet camera, mic or screen share doesn't work",
+      "symptoms": ["google meet camera not working", "meet microphone", "meet screen share", "meet can't present"],
+      "why": "The browser or system blocks access, or the wrong device is picked.",
+      "steps": [
+        { "text": "Click the camera icon in the address bar › Allow; pick devices in Meet's ⋮ › Settings." },
+        { "text": "Allow the browser to use the camera, microphone and (Mac) screen recording.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" },
+        { "text": "Allow the browser to use the camera and microphone.", "os": ["windows"], "open": "ms-settings:privacy-webcam" }
+      ],
+      "related": ["browser-camera-mic", "screen-share-not-working"]
+    },
+    {
+      "id": "google-docs-offline",
+      "os": ["windows", "macos"],
+      "title": "Use Google Docs, Sheets or Drive offline",
+      "symptoms": ["google docs offline", "work offline google drive", "google drive for desktop offline", "offline sheets"],
+      "why": "Offline mode keeps recent files available in Chrome; Drive for desktop keeps files on the computer.",
+      "steps": [
+        { "text": "Drive › Settings › Offline: turn it on (Chrome or Edge with the Docs Offline extension)." },
+        { "text": "Right-click a file › Available offline." },
+        { "text": "Google Drive for desktop can mirror files locally." }
+      ]
+    },
+    {
+      "id": "google-drive-storage-full",
+      "os": ["windows", "macos"],
+      "title": "Google storage is full (Gmail can't receive)",
+      "symptoms": ["google storage full", "gmail storage full", "drive full", "15 gb full"],
+      "why": "Gmail, Drive and Photos share one storage quota; when full, mail stops arriving.",
+      "steps": [
+        { "text": "one.google.com/storage › Clean up space shows large items." },
+        { "text": "Search Gmail for has:attachment larger:10M and delete." },
+        { "text": "Empty Drive's Trash and Gmail's Trash and Spam." }
+      ],
+      "related": ["mailbox-full"]
+    },
+    {
+      "id": "google-sheets-convert-excel",
+      "os": ["windows", "macos"],
+      "title": "Excel file looks wrong in Google Sheets (or the other way)",
+      "symptoms": ["excel to google sheets", "sheets to excel", "formulas broken google sheets", "macros google sheets"],
+      "why": "Macros, some formulas and formatting don't convert between the two.",
+      "steps": [
+        { "text": "Open Excel files in Sheets for viewing; edit complex ones in Excel." },
+        { "text": "File › Download › Microsoft Excel to send back as .xlsx." },
+        { "text": "VBA macros don't run in Sheets (Apps Script is different)." }
+      ]
+    },
+    {
+      "id": "chrome-sync-paused",
+      "os": ["windows", "macos"],
+      "title": "Chrome says \"Sync is paused\"",
+      "symptoms": ["sync is paused", "chrome sync paused", "chrome signed out", "sync error chrome"],
+      "why": "Chrome lost its Google sign-in (cookies cleared or password changed).",
+      "steps": [
+        { "text": "Click the profile picture › Sign in again." },
+        { "text": "Allow cookies for accounts.google.com if you block cookies." }
+      ],
+      "related": ["browser-passwords"]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "id": "media",
+  "title": "Music, video & games",
+  "icon": "video",
+  "blurb": "Streaming, Spotify, video files, game launchers.",
+  "remedies": [
+    {
+      "id": "video-file-wont-play",
+      "os": ["windows", "macos"],
+      "title": "A video file won't play (\"unsupported format\" or no picture)",
+      "symptoms": ["video won't play", "mkv not playing", "codec missing", "hevc", "no video only sound", "unsupported format"],
+      "why": "The video uses a format or codec the built-in player doesn't handle (HEVC, MKV, AVI).",
+      "steps": [
+        { "text": "Install the free HEVC/AV1 extensions from the Microsoft Store, or use VLC (plays almost everything).", "os": ["windows"] },
+        { "text": "Use VLC or IINA for MKV and other formats QuickTime refuses.", "os": ["macos"] },
+        { "text": "Avoid \"codec pack\" downloads from unknown sites." }
+      ],
+      "related": ["file-wont-open"]
+    },
+    {
+      "id": "streaming-buffering",
+      "os": ["windows", "macos"],
+      "title": "Netflix, YouTube or Disney+ keeps buffering",
+      "symptoms": ["buffering", "netflix buffering", "youtube lagging", "stream quality low", "video keeps loading"],
+      "why": "The connection can't keep up with the quality, or the browser struggles.",
+      "steps": [
+        { "text": "Run a speed test; 4K needs ~25 Mbps, HD ~5 Mbps." },
+        { "text": "Lower the quality in the player, or close other downloads." },
+        { "text": "Use the service's own app or Edge/Safari for higher quality streams." }
+      ],
+      "related": ["wifi-slow", "browser-video-wont-play"]
+    },
+    {
+      "id": "spotify-problems",
+      "os": ["windows", "macos"],
+      "title": "Spotify or music app won't play or keeps stopping",
+      "symptoms": ["spotify not working", "spotify keeps pausing", "spotify offline", "music app no sound"],
+      "why": "Another device took over playback, the app's cache is full, or the sound output changed.",
+      "steps": [
+        { "text": "Check the Connect/devices icon: playback may be on your phone or speaker." },
+        { "text": "Log out on all devices (account page) if it keeps pausing." },
+        { "text": "Pick the right sound output.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Pick the right sound output.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Reinstall the app to clear its cache." }
+      ],
+      "related": ["no-sound"]
+    },
+    {
+      "id": "game-launcher-problems",
+      "os": ["windows", "macos"],
+      "title": "Steam, Epic or Xbox app won't launch a game",
+      "symptoms": ["game won't launch", "steam game not starting", "epic games error", "xbox app not working", "verify game files"],
+      "why": "Damaged game files, missing runtimes, or antivirus blocking the game.",
+      "steps": [
+        { "text": "Verify/repair the game files (Steam: Properties › Installed Files › Verify)." },
+        { "text": "Update graphics drivers.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" },
+        { "text": "Xbox app/Store games: Reset the Gaming Services and Store.", "os": ["windows"], "fix": "reset-store" },
+        { "text": "Check the game's Mac/Windows requirements." }
+      ],
+      "related": ["games-slow", "app-missing-dll"]
+    },
+    {
+      "id": "cast-to-tv",
+      "os": ["windows", "macos"],
+      "title": "Cast or AirPlay to a TV or Chromecast",
+      "symptoms": ["cast to tv", "chromecast laptop", "airplay to tv", "screen on tv wireless", "smart tv cast"],
+      "why": "TVs accept AirPlay (Apple), Google Cast (Chrome) or Miracast (Windows).",
+      "steps": [
+        { "text": "Chromecast/Google TV: Chrome › ⋮ › Cast. Same Wi-Fi needed." },
+        { "text": "Miracast TVs: Windows+K.", "os": ["windows"] },
+        { "text": "AirPlay TVs/Apple TV: Control Center › Screen Mirroring.", "os": ["macos"] },
+        { "text": "Guest or office Wi-Fi often blocks casting; a HDMI cable always works." }
+      ],
+      "related": ["projector-tv-mirror"]
+    },
+    {
+      "id": "photos-app-library",
+      "os": ["windows", "macos"],
+      "title": "Photos app doesn't show my pictures",
+      "symptoms": ["photos app empty", "pictures not showing photos app", "add folder to photos", "photos library missing"],
+      "why": "The Photos app only shows folders it's told about, or a different library.",
+      "steps": [
+        { "text": "Photos › Folders › Add a folder.", "os": ["windows"] },
+        { "text": "Hold Option while opening Photos to choose the right library.", "os": ["macos"] }
+      ],
+      "related": ["photos-phone-to-computer"]
+    }
+  ]
+}
