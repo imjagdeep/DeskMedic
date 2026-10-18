@@ -1,0 +1,102 @@
+{
+  "id": "accessibility",
+  "title": "Accessibility & comfort",
+  "icon": "eye",
+  "blurb": "Bigger text, reading aloud, dictation, magnifier, eye strain.",
+  "remedies": [
+    {
+      "id": "read-aloud",
+      "os": ["windows", "macos"],
+      "title": "Have the computer read text aloud",
+      "symptoms": ["read aloud", "text to speech", "narrator", "voiceover", "speak selection"],
+      "why": "Both systems can read selected text or the whole screen aloud.",
+      "steps": [
+        { "text": "Edge and Word: Read aloud (right-click or Review tab). Narrator for the whole screen: Windows+Ctrl+Enter.", "os": ["windows"], "open": "ms-settings:easeofaccess-narrator" },
+        { "text": "Accessibility › Spoken Content › Speak selection (Option+Esc). VoiceOver: ⌘F5.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    },
+    {
+      "id": "dictation",
+      "os": ["windows", "macos"],
+      "title": "Type with my voice (dictation)",
+      "symptoms": ["dictation", "voice typing", "speech to text", "talk to type"],
+      "why": "Built-in dictation turns speech into text in any app.",
+      "steps": [
+        { "text": "Press Windows+H in any text box.", "os": ["windows"] },
+        { "text": "Press the microphone key or Fn twice; turn it on in Keyboard › Dictation.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" },
+        { "text": "Allow the microphone if it doesn't hear you." }
+      ],
+      "related": ["mic-not-working"]
+    },
+    {
+      "id": "magnifier-zoom",
+      "os": ["windows", "macos"],
+      "title": "Zoom in on part of the screen",
+      "symptoms": ["magnifier", "zoom screen", "screen zoom", "enlarge part of screen"],
+      "why": "Magnifiers enlarge what's under the pointer.",
+      "steps": [
+        { "text": "Windows+Plus starts Magnifier; Windows+Esc stops it.", "os": ["windows"], "open": "run:magnifier" },
+        { "text": "Accessibility › Zoom: use a keyboard shortcut or scroll with a modifier key.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ],
+      "related": ["text-too-small"]
+    },
+    {
+      "id": "eye-strain",
+      "os": ["windows", "macos"],
+      "title": "Screen is tiring my eyes",
+      "symptoms": ["eye strain", "eyes tired screen", "blue light", "screen too bright", "headache screen"],
+      "why": "Brightness, glare, small text and long sessions all add up.",
+      "steps": [
+        { "text": "Match screen brightness to the room; use Night light / Night Shift in the evening.", "os": ["windows"], "open": "ms-settings:nightlight" },
+        { "text": "Match screen brightness to the room; use Night Shift in the evening.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Make text larger and try dark mode." },
+        { "text": "Every 20 minutes, look 20 feet away for 20 seconds." }
+      ],
+      "related": ["screen-yellow-dim", "text-too-small"]
+    },
+    {
+      "id": "high-contrast",
+      "os": ["windows", "macos"],
+      "title": "Make the screen easier to read (contrast, bold text)",
+      "symptoms": ["high contrast", "contrast theme", "bold text", "increase contrast", "hard to read screen"],
+      "why": "Contrast themes and bolder text help low vision.",
+      "steps": [
+        { "text": "Accessibility › Contrast themes (Left Alt+Left Shift+Print Screen toggles).", "os": ["windows"], "open": "ms-settings:easeofaccess-highcontrast" },
+        { "text": "Accessibility › Display › Increase contrast, Reduce transparency.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    },
+    {
+      "id": "sticky-keys-popup",
+      "os": ["windows"],
+      "title": "\"Do you want to turn on Sticky Keys?\" keeps popping up",
+      "symptoms": ["sticky keys popup", "pressing shift five times", "turn off sticky keys shortcut", "filter keys popup"],
+      "why": "Pressing Shift five times (or holding it) triggers the accessibility shortcut.",
+      "steps": [
+        { "text": "Accessibility › Keyboard: turn off the keyboard shortcuts for Sticky, Filter and Toggle Keys.", "open": "ms-settings:easeofaccess-keyboard" }
+      ],
+      "related": ["caps-lock-stuck"]
+    },
+    {
+      "id": "reduce-motion",
+      "os": ["windows", "macos"],
+      "title": "Turn off animations (motion sickness or a slow computer)",
+      "symptoms": ["reduce motion", "turn off animations", "animations dizzy", "visual effects off"],
+      "why": "Window animations can cause discomfort and use resources.",
+      "steps": [
+        { "text": "Accessibility › Visual effects › Animation effects off.", "os": ["windows"], "open": "ms-settings:easeofaccess-visualeffects" },
+        { "text": "Accessibility › Display › Reduce motion.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    },
+    {
+      "id": "voice-control",
+      "os": ["windows", "macos"],
+      "title": "Control the computer by voice",
+      "symptoms": ["voice control", "voice access", "control computer with voice", "hands free computer"],
+      "why": "Voice Access (Windows) and Voice Control (Mac) let you click, type and navigate by speaking.",
+      "steps": [
+        { "text": "Accessibility › Speech › Voice access.", "os": ["windows"], "open": "ms-settings:easeofaccess-speechrecognition" },
+        { "text": "Accessibility › Voice Control.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "storage",
+  "title": "Storage & disks",
+  "icon": "disk",
+  "blurb": "Disk full, external drives, USB sticks, disk errors.",
+  "remedies": [
+    {
+      "id": "system-data-huge-mac",
+      "os": ["macos"],
+      "title": "\"System Data\" takes up a huge part of my Mac's storage",
+      "symptoms": ["system data large", "other storage mac", "system data 100gb", "mac storage system"],
+      "why": "System Data includes caches, logs, Time Machine local snapshots and app support files.",
+      "steps": [
+        { "text": "Restart the Mac; temporary files and local snapshots shrink by themselves." },
+        { "text": "Clean caches and logs with DeskMedic's Cleanup.", "page": "cleanup" },
+        { "text": "Find big folders in the Disk map (Library, Xcode, iOS backups, Docker).", "page": "diskmap" },
+        { "text": "Old iPhone backups: System Settings › General › Storage › iOS Files.", "open": "x-apple.systempreferences:com.apple.settings.Storage" }
+      ],
+      "related": ["low-disk-space"]
+    },
+    {
+      "id": "winsxs-large",
+      "os": ["windows"],
+      "title": "Windows folder takes a lot of space (WinSxS, old updates)",
+      "symptoms": ["winsxs large", "windows folder big", "windows.old", "clean up system files", "previous windows installation"],
+      "why": "Windows keeps components and the previous version (Windows.old) for 10 days to allow going back.",
+      "steps": [
+        { "text": "DeskMedic's Cleanup includes old Windows update files.", "page": "cleanup" },
+        { "text": "Disk Cleanup › Clean up system files › Windows Update Cleanup and Previous Windows installation(s).", "open": "run:disk-cleanup" },
+        { "text": "Don't delete WinSxS files by hand; Windows needs them." }
+      ],
+      "related": ["low-disk-space"]
+    },
+    {
+      "id": "drive-letter-missing",
+      "os": ["windows"],
+      "title": "A drive or partition has no letter, or the D: drive vanished",
+      "symptoms": ["drive letter missing", "d drive missing", "partition not showing", "assign drive letter", "second drive not showing"],
+      "why": "Windows lost the letter, or a new disk was never set up (initialised and formatted).",
+      "steps": [
+        { "text": "Look in DeskMedic's Disks page for the drive and its state.", "page": "disks" },
+        { "text": "Disk Management: right-click the volume › Change Drive Letter and Paths › Add.", "open": "run:disk-management" },
+        { "text": "A brand-new empty disk shows as \"Not initialized\": initialise it (GPT) and create a volume. Don't do this on a disk that has data." }
+      ],
+      "related": ["external-drive-not-showing"]
+    },
+    {
+      "id": "ssd-health",
+      "os": ["windows", "macos"],
+      "title": "Check my disk's health",
+      "symptoms": ["disk health", "ssd health", "smart status", "check hard drive", "drive wear"],
+      "why": "Drives report their own health; warnings mean back up and replace soon.",
+      "steps": [
+        { "text": "DeskMedic's Health check and Disks page show health and warnings.", "os": ["windows"], "page": "disks" },
+        { "text": "Settings › System › Storage › Advanced storage settings › Disks & volumes › Properties shows Drive health.", "os": ["windows"], "open": "ms-settings:storagesense" },
+        { "text": "Disk Utility shows S.M.A.R.T. status for the drive; System Information › Storage too.", "os": ["macos"], "open": "app:Disk Utility" }
+      ],
+      "related": ["disk-errors", "backup-setup"]
+    },
+    {
+      "id": "bitlocker-to-go",
+      "os": ["windows", "macos"],
+      "title": "Encrypt a USB stick or external drive",
+      "symptoms": ["encrypt usb", "password protect usb drive", "bitlocker to go", "encrypted external drive"],
+      "why": "An encrypted drive keeps files safe if it's lost.",
+      "steps": [
+        { "text": "Right-click the drive › Turn on BitLocker (Pro editions) and set a password; save the recovery key.", "os": ["windows"] },
+        { "text": "Disk Utility › Erase with an encrypted format (APFS Encrypted), or right-click in Finder › Encrypt.", "os": ["macos"], "open": "app:Disk Utility" },
+        { "text": "Encrypted drives may only open on the same kind of system." }
+      ],
+      "related": ["format-drive"]
+    },
+    {
+      "id": "nas-access",
+      "os": ["windows", "macos"],
+      "title": "Can't reach my home NAS or shared drive",
+      "symptoms": ["nas not showing", "synology not found", "network storage access", "smb nas", "can't connect to nas"],
+      "why": "The NAS changed address, is asleep, or the saved login is old.",
+      "steps": [
+        { "text": "Open it by address: \\\\192.168.x.x in File Explorer (Windows) or smb://192.168.x.x with ⌘K (Mac)." },
+        { "text": "Find its address in the router or the NAS maker's finder app." },
+        { "text": "Update the saved login.", "os": ["windows"], "open": "run:credential-manager" },
+        { "text": "Give the NAS a reserved address in the router." }
+      ],
+      "related": ["network-drive-missing", "network-printer-ip-changed"]
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "input",
+  "title": "Keyboard, mouse & trackpad",
+  "icon": "keyboard",
+  "blurb": "Keys typing wrong, mouse frozen, trackpad not clicking, touch screen.",
+  "remedies": [
+    {
+      "id": "special-characters",
+      "os": ["windows", "macos"],
+      "title": "Type accents, symbols or emoji",
+      "symptoms": ["type accents", "special characters", "emoji keyboard", "type é", "symbols", "euro sign"],
+      "why": "Both systems have pickers for emoji and symbols, and shortcuts for accents.",
+      "steps": [
+        { "text": "Windows+. (full stop) opens emoji, symbols and kaomoji.", "os": ["windows"] },
+        { "text": "Add the US-International keyboard for easy accents (' then e = é).", "os": ["windows"], "open": "ms-settings:regionlanguage" },
+        { "text": "Hold a letter key to pick an accent; Control+⌘+Space for emoji and symbols.", "os": ["macos"] }
+      ],
+      "related": ["keyboard-wrong-characters"]
+    },
+    {
+      "id": "keyboard-shortcuts-basics",
+      "os": ["windows", "macos"],
+      "title": "Handy keyboard shortcuts",
+      "symptoms": ["keyboard shortcuts", "shortcut keys", "copy paste shortcut", "switch windows shortcut", "lock computer shortcut"],
+      "why": "A few shortcuts save a lot of clicking.",
+      "steps": [
+        { "text": "Copy/paste/undo: Ctrl+C / V / Z. Switch apps: Alt+Tab. Lock: Windows+L. Desktop: Windows+D. Snip: Windows+Shift+S. Search: Windows key and type.", "os": ["windows"] },
+        { "text": "Copy/paste/undo: ⌘C / V / Z. Switch apps: ⌘Tab. Lock: Ctrl+⌘+Q. Spotlight: ⌘Space. Screenshot: ⌘+Shift+4. Force quit: ⌘+Option+Esc.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "mouse-buttons-customize",
+      "os": ["windows", "macos"],
+      "title": "Swap mouse buttons or change what the buttons do",
+      "symptoms": ["left handed mouse", "swap mouse buttons", "mouse button settings", "side buttons", "logitech options"],
+      "why": "Basic button settings are in the system; extra buttons need the mouse maker's app.",
+      "steps": [
+        { "text": "Settings › Bluetooth & devices › Mouse › Primary mouse button.", "os": ["windows"], "open": "ms-settings:mousetouchpad" },
+        { "text": "Mouse settings › Secondary click.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Mouse-Settings.extension" },
+        { "text": "Logitech Options+, Razer Synapse and others control extra buttons." }
+      ]
+    },
+    {
+      "id": "cursor-hard-to-see",
+      "os": ["windows", "macos"],
+      "title": "Mouse pointer is too small or hard to find",
+      "symptoms": ["cursor too small", "can't find mouse pointer", "bigger cursor", "pointer size", "cursor color"],
+      "why": "Pointer size and colour can be changed for comfort.",
+      "steps": [
+        { "text": "Accessibility › Mouse pointer and touch: size and colour.", "os": ["windows"], "open": "ms-settings:easeofaccess-mousepointer" },
+        { "text": "Accessibility › Display › Pointer: size, colours, and \"Shake mouse pointer to locate\".", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    },
+    {
+      "id": "fn-keys-reversed",
+      "os": ["windows", "macos"],
+      "title": "F1–F12 keys change volume/brightness instead (or the other way round)",
+      "symptoms": ["function keys", "f5 not refreshing", "fn lock", "f keys media keys", "f2 rename not working"],
+      "why": "Laptops share the top row between media and F-keys; Fn lock switches which comes first.",
+      "steps": [
+        { "text": "Press Fn+Esc (many laptops) to toggle Fn lock, or hold Fn with the key." },
+        { "text": "Some laptops set this in the BIOS/UEFI (Action keys mode) or the maker's app.", "os": ["windows"] },
+        { "text": "Keyboard › Keyboard Shortcuts › Function Keys › Use F1, F2, etc. keys as standard function keys.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" }
+      ],
+      "related": ["volume-keys-not-working"]
+    },
+    {
+      "id": "keyboard-repeat-delay",
+      "os": ["windows", "macos"],
+      "title": "Keys repeat too much (or not at all) when held",
+      "symptoms": ["key repeat", "letters repeat", "typing double letters", "key repeat rate", "keyboard lag"],
+      "why": "Key repeat speed and delay, or Filter/Slow Keys, change how held keys behave.",
+      "steps": [
+        { "text": "Keyboard properties: Repeat delay and rate (Control Panel › Keyboard).", "os": ["windows"] },
+        { "text": "Turn off Filter Keys.", "os": ["windows"], "open": "ms-settings:easeofaccess-keyboard" },
+        { "text": "Keyboard › Key repeat rate and Delay until repeat.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" },
+        { "text": "Double letters from one press on a laptop can be a worn key: try an external keyboard." }
+      ]
+    }
+  ]
+}

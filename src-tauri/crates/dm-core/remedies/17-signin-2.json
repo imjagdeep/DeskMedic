@@ -1,0 +1,99 @@
+{
+  "id": "signin",
+  "title": "Sign-in, passwords & accounts",
+  "icon": "lock",
+  "blurb": "Forgotten passwords, locked accounts, two-step sign-in, Windows Hello and Touch ID.",
+  "remedies": [
+    {
+      "id": "password-expired",
+      "os": ["windows", "macos"],
+      "title": "\"Your password has expired\" or \"must be changed\"",
+      "symptoms": ["password expired", "change password at next login", "password must be changed", "expired password"],
+      "why": "Your workplace requires a new password periodically or after a reset.",
+      "steps": [
+        { "text": "Follow the prompt to choose a new one (often it can't match recent ones)." },
+        { "text": "Working remotely? Connect the VPN first, then press Ctrl+Alt+Delete › Change a password, so the PC learns it.", "os": ["windows"] },
+        { "text": "Change it at your organisation's sign-in page (e.g. mysignins.microsoft.com) if the computer won't." },
+        { "text": "Then update it on your phone." }
+      ],
+      "related": ["password-changed-prompts", "account-locked-out"]
+    },
+    {
+      "id": "password-manager",
+      "os": ["windows", "macos"],
+      "title": "Use a password manager",
+      "symptoms": ["password manager", "remember passwords", "same password everywhere", "store passwords safely", "1password bitwarden"],
+      "why": "A password manager lets you use a different strong password for every site.",
+      "steps": [
+        { "text": "Use the one built into your browser or system (Google Password Manager, Microsoft Edge, Apple Passwords) or a dedicated one (Bitwarden, 1Password)." },
+        { "text": "Protect it with a long passphrase and two-step sign-in." },
+        { "text": "Never put work passwords in a personal manager if your workplace has its own." }
+      ]
+    },
+    {
+      "id": "passkeys",
+      "os": ["windows", "macos"],
+      "title": "What is a passkey, and how do I use one?",
+      "symptoms": ["passkey", "sign in without password", "create a passkey", "windows hello passkey", "use phone to sign in"],
+      "why": "A passkey replaces a password with your fingerprint, face or PIN, and can't be phished.",
+      "steps": [
+        { "text": "When a site offers \"Create a passkey\", accept; Windows Hello or Touch ID protects it." },
+        { "text": "Passkeys sync through your Apple/Google/Microsoft account or password manager." },
+        { "text": "Keep a recovery method (password or second device) in case." }
+      ],
+      "related": ["windows-hello-pin", "touch-id-not-working"]
+    },
+    {
+      "id": "cant-sign-in-windows",
+      "os": ["windows"],
+      "title": "Can't sign in to Windows (\"password incorrect\" or \"no logon servers\")",
+      "symptoms": ["can't log into windows", "password incorrect windows", "no logon servers", "trust relationship failed", "user profile service failed"],
+      "why": "A wrong keyboard layout, a changed password not yet known to the PC, or a damaged profile.",
+      "steps": [
+        { "text": "Check the keyboard layout shown at the bottom right of the sign-in screen, and Caps Lock." },
+        { "text": "Try your PIN or the other sign-in options." },
+        { "text": "Work PCs off the network may still accept your previous password." },
+        { "text": "\"Trust relationship failed\" or \"profile service failed\" need IT." }
+      ],
+      "escalate": "IT needs to repair the computer's link to the domain or your profile.",
+      "related": ["forgot-password", "windows-hello-pin"]
+    },
+    {
+      "id": "apple-account-locked",
+      "os": ["macos"],
+      "title": "Apple Account locked or keeps asking for the password",
+      "symptoms": ["apple id locked", "apple account disabled", "apple id password prompt", "icloud password keeps asking"],
+      "why": "Too many wrong tries locks it for security; a changed password needs entering on every device.",
+      "steps": [
+        { "text": "Unlock at iforgot.apple.com." },
+        { "text": "Re-enter the new password in System Settings › your name.", "open": "x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension" },
+        { "text": "Sign out and in again if the prompts continue." }
+      ]
+    },
+    {
+      "id": "microsoft-account-recovery",
+      "os": ["windows", "macos"],
+      "title": "Recover a personal Microsoft account (Outlook.com, Hotmail, Xbox)",
+      "symptoms": ["recover microsoft account", "hotmail hacked", "microsoft account locked", "outlook.com recovery", "can't get code microsoft"],
+      "why": "Microsoft verifies you by email, phone or a recovery form.",
+      "steps": [
+        { "text": "Go to account.live.com/password/reset (or /acsr for the recovery form if you can't get codes)." },
+        { "text": "Fill the recovery form from a device and place you've used before, with as many details as you can." },
+        { "text": "Afterwards add a recovery phone, email and two-step sign-in." }
+      ]
+    },
+    {
+      "id": "work-account-on-personal-pc",
+      "os": ["windows", "macos"],
+      "title": "Signing into work apps asks to let my organisation manage this device",
+      "symptoms": ["allow my organization to manage my device", "register device", "intune enroll", "company portal", "use this account everywhere"],
+      "why": "Office and Teams offer to register your PC with your workplace; that gives them some control.",
+      "steps": [
+        { "text": "On a personal PC, choose \"No, sign in to this app only\" if you don't want the device managed." },
+        { "text": "If your workplace requires it, use Company Portal as IT instructs." },
+        { "text": "See and remove work accounts in Access work or school.", "os": ["windows"], "open": "ms-settings:workplace" }
+      ],
+      "escalate": "Ask IT what's required before enrolling a personal device."
+    }
+  ]
+}

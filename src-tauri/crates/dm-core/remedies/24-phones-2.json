@@ -1,0 +1,46 @@
+{
+  "id": "phones",
+  "title": "Phones & syncing",
+  "icon": "phone",
+  "blurb": "Work email on a phone, photos to the computer, Phone Link, iPhone and Android.",
+  "remedies": [
+    {
+      "id": "phone-files-to-computer",
+      "os": ["windows", "macos"],
+      "title": "Send files between my phone and computer without a cable",
+      "symptoms": ["send file phone to pc", "transfer files wirelessly", "phone to laptop file", "airdrop windows", "nearby share"],
+      "why": "Several built-in and free tools move files over Wi-Fi.",
+      "steps": [
+        { "text": "Windows: Phone Link, Nearby Share/Quick Share (Android), or OneDrive.", "os": ["windows"] },
+        { "text": "Mac: AirDrop from iPhone; Android via Google Drive or Quick Share apps.", "os": ["macos"] },
+        { "text": "DeskSpan (a DeskLab app) sends phone files to your computer's Downloads." }
+      ],
+      "related": ["photos-phone-to-computer", "phone-link"]
+    },
+    {
+      "id": "iphone-backup-computer",
+      "os": ["windows", "macos"],
+      "title": "Back up my iPhone to the computer",
+      "symptoms": ["backup iphone to computer", "itunes backup", "apple devices backup", "iphone backup mac"],
+      "why": "A computer backup is a full copy, independent of iCloud storage.",
+      "steps": [
+        { "text": "Connect the iPhone, open Apple Devices (or iTunes) › Back up now; tick Encrypt to include passwords.", "os": ["windows"] },
+        { "text": "Connect the iPhone, select it in Finder's sidebar › Back Up Now; tick Encrypt local backup.", "os": ["macos"] },
+        { "text": "Backups are big; check free space first.", "page": "cleanup" }
+      ],
+      "related": ["phone-not-recognised"]
+    },
+    {
+      "id": "phone-as-webcam",
+      "os": ["windows", "macos"],
+      "title": "Use my phone as a webcam",
+      "symptoms": ["phone as webcam", "continuity camera", "iphone webcam", "android webcam"],
+      "why": "Phones have far better cameras than most laptops.",
+      "steps": [
+        { "text": "Mac + iPhone: Continuity Camera works automatically; choose the iPhone in the app's camera list.", "os": ["macos"] },
+        { "text": "Windows 11 + Android: Phone Link › Connected camera; or apps like Camo or DroidCam.", "os": ["windows"] }
+      ],
+      "related": ["camera-wrong-one"]
+    }
+  ]
+}

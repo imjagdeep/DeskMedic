@@ -1,0 +1,62 @@
+{
+  "id": "bluetooth",
+  "title": "Bluetooth & devices",
+  "icon": "bluetooth",
+  "blurb": "Pairing, headsets, AirPods, USB devices not recognised.",
+  "remedies": [
+    {
+      "id": "bluetooth-speaker-paired-no-sound",
+      "os": ["windows", "macos"],
+      "title": "Bluetooth speaker or headphones paired but no sound",
+      "symptoms": ["bluetooth connected no sound", "paired but no audio", "bluetooth speaker silent", "headphones connected nothing playing"],
+      "why": "The sound still goes to another device, or the speaker connected only for calls.",
+      "steps": [
+        { "text": "Choose the speaker as the output.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Choose the speaker as the output.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Turn the speaker's volume up; disconnect it from your phone." },
+        { "text": "Remove and pair again if it still stays silent." }
+      ],
+      "related": ["sound-wrong-device", "bluetooth-wont-pair"]
+    },
+    {
+      "id": "game-controller",
+      "os": ["windows", "macos"],
+      "title": "Game controller doesn't connect",
+      "symptoms": ["xbox controller pc", "ps5 controller mac", "controller not detected", "gamepad not working"],
+      "why": "Controllers need pairing mode (or a cable) and some games need their own controller settings.",
+      "steps": [
+        { "text": "Xbox controller: hold the pair button on top until the logo flashes, then Add device › Bluetooth." },
+        { "text": "PlayStation controller: hold PS + Share/Create until the light flashes, then pair." },
+        { "text": "A USB cable always works as a test." },
+        { "text": "Steam: Settings › Controller enables support for each kind." }
+      ],
+      "related": ["bluetooth-wont-pair"]
+    },
+    {
+      "id": "usb-c-hub-power",
+      "os": ["windows", "macos"],
+      "title": "Devices disconnect when plugged into a USB hub",
+      "symptoms": ["usb hub disconnects", "usb devices disconnect randomly", "usb power", "hub not enough power", "usb keeps resetting"],
+      "why": "Unpowered hubs can't supply drives and webcams, and USB power saving can switch ports off.",
+      "steps": [
+        { "text": "Use a hub with its own power supply for drives and webcams." },
+        { "text": "Turn off USB selective suspend: Power options › Change plan settings › Advanced › USB settings.", "os": ["windows"], "open": "run:power-options" },
+        { "text": "Plug power-hungry devices straight into the computer." }
+      ],
+      "related": ["usb-not-recognized", "dock-not-working"]
+    },
+    {
+      "id": "drawing-tablet-pen",
+      "os": ["windows", "macos"],
+      "title": "Pen or drawing tablet doesn't work properly",
+      "symptoms": ["pen not working", "wacom not working", "stylus not working", "pen pressure not working", "surface pen"],
+      "why": "The pen battery, pairing, or the tablet's driver.",
+      "steps": [
+        { "text": "Charge or replace the pen battery; Surface pens pair in Bluetooth settings." },
+        { "text": "Install the tablet maker's driver and restart." },
+        { "text": "Allow the driver in Privacy & Security › Accessibility (and Input Monitoring).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility" },
+        { "text": "Check Pen & Windows Ink settings.", "os": ["windows"], "open": "ms-settings:pen" }
+      ]
+    }
+  ]
+}

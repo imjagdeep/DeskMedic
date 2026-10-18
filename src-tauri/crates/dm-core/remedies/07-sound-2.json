@@ -1,0 +1,75 @@
+{
+  "id": "sound",
+  "title": "Sound & microphone",
+  "icon": "sound",
+  "blurb": "No sound, wrong speaker, crackling, microphone not picking up.",
+  "remedies": [
+    {
+      "id": "volume-too-low",
+      "os": ["windows", "macos"],
+      "title": "Volume is too low even at 100%",
+      "symptoms": ["volume too low", "sound quiet", "max volume not loud", "speakers too quiet", "laptop sound low"],
+      "why": "An app's own volume, a quiet video, or the speaker's limits; Windows also has loudness tools.",
+      "steps": [
+        { "text": "Turn up the app's and the video's own volume, and check the mixer.", "os": ["windows"], "open": "ms-settings:apps-volume" },
+        { "text": "Turn on Loudness Equalization: Sound control panel › speakers › Properties › Enhancements (if offered).", "os": ["windows"], "open": "run:sound-control-panel" },
+        { "text": "Check the Mac's Balance is centred and the output volume is up in Sound settings.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "For laptops, external speakers or headphones are much louder." }
+      ],
+      "related": ["no-sound"]
+    },
+    {
+      "id": "sound-one-side",
+      "os": ["windows", "macos"],
+      "title": "Sound only comes out of one side",
+      "symptoms": ["sound one ear", "left speaker only", "right speaker only", "audio balance", "mono audio"],
+      "why": "Balance is off-centre, Mono audio is on, or the plug/cable is damaged.",
+      "steps": [
+        { "text": "Check Mono audio is off: Accessibility › Audio.", "os": ["windows"], "open": "ms-settings:easeofaccess-audio" },
+        { "text": "Check the balance: Sound control panel › device › Properties › Levels › Balance.", "os": ["windows"], "open": "run:sound-control-panel" },
+        { "text": "Centre the Balance in Sound settings and turn off Mono in Accessibility › Audio.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Try other headphones; one-sided sound on one pair means a broken wire." }
+      ]
+    },
+    {
+      "id": "notification-sounds",
+      "os": ["windows", "macos"],
+      "title": "Turn off (or on) notification and system sounds",
+      "symptoms": ["notification sound", "ding sound", "system sounds off", "mute alerts", "alert sound"],
+      "why": "System and app sounds are set separately from music and calls.",
+      "steps": [
+        { "text": "Settings › System › Notifications: turn off sounds per app; Sound control panel › Sounds tab › Sound scheme: No Sounds.", "os": ["windows"], "open": "ms-settings:notifications" },
+        { "text": "Sound › Sound Effects for alert sounds; Notifications for per-app sounds.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" }
+      ],
+      "related": ["notifications-missing"]
+    },
+    {
+      "id": "usb-audio-not-detected",
+      "os": ["windows", "macos"],
+      "title": "USB headset, speakers or microphone not detected",
+      "symptoms": ["usb headset not detected", "usb microphone not showing", "usb speaker not working", "audio interface"],
+      "why": "Not enough power through a hub, a missing driver, or the device needs its own app.",
+      "steps": [
+        { "text": "Plug straight into the computer and try another port." },
+        { "text": "Look under Audio inputs and outputs in Device Manager for warnings.", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Check it shows in Audio MIDI Setup.", "os": ["macos"], "open": "app:Audio MIDI Setup" },
+        { "text": "Install the maker's driver for audio interfaces." }
+      ],
+      "related": ["usb-not-recognized"]
+    },
+    {
+      "id": "mic-background-noise",
+      "os": ["windows", "macos"],
+      "title": "People hear background noise, typing or a hum",
+      "symptoms": ["background noise mic", "keyboard noise in call", "mic hum", "noise suppression", "fan noise mic"],
+      "why": "The microphone picks up the room; laptop mics sit right next to the keyboard and fan.",
+      "steps": [
+        { "text": "Turn on noise suppression in the meeting app (Teams: Noise suppression High; Zoom: Background noise)." },
+        { "text": "Use a headset microphone close to your mouth." },
+        { "text": "A hum on a wired mic often comes from a charger; unplug it to test." },
+        { "text": "Turn on Voice Clarity / Voice Isolation if the system offers it (Mac: Control Center › Mic Mode during a call).", "os": ["macos"] }
+      ],
+      "related": ["meeting-echo"]
+    }
+  ]
+}

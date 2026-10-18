@@ -1,0 +1,103 @@
+{
+  "id": "hardware",
+  "title": "Hardware & accidents",
+  "icon": "wrench",
+  "blurb": "Spills, drops, overheating, ports, swollen batteries.",
+  "remedies": [
+    {
+      "id": "liquid-spill",
+      "os": ["windows", "macos"],
+      "title": "I spilled a drink on my laptop",
+      "symptoms": ["spilled water on laptop", "coffee on keyboard", "liquid damage", "laptop wet", "spill"],
+      "why": "Liquid plus power causes short circuits; quick action improves the odds.",
+      "steps": [
+        { "text": "Turn it off immediately (hold the power button) and unplug the charger." },
+        { "text": "Unplug everything, turn it upside down in a tent shape to drain, and wipe what you can reach." },
+        { "text": "Don't turn it on or use a hair dryer; leave it at least 48 hours, ideally take it for service." },
+        { "text": "Sugary drinks leave residue: it needs professional cleaning even if it dries out." }
+      ],
+      "escalate": "Tell IT right away for work laptops; data may still be recoverable."
+    },
+    {
+      "id": "swollen-battery",
+      "os": ["windows", "macos"],
+      "title": "Laptop case bulges, trackpad lifts, or the lid won't close flat",
+      "symptoms": ["swollen battery", "battery bulging", "trackpad raised", "laptop case lifting", "lid not closing"],
+      "why": "A swollen lithium battery is a fire risk.",
+      "steps": [
+        { "text": "Stop using and charging it; shut it down." },
+        { "text": "Keep it on a hard, non-flammable surface away from things that burn." },
+        { "text": "Don't press, puncture or try to remove the battery yourself." }
+      ],
+      "escalate": "Contact IT or an authorised repairer straight away."
+    },
+    {
+      "id": "laptop-overheating",
+      "os": ["windows", "macos"],
+      "title": "Laptop gets very hot or shuts down from heat",
+      "symptoms": ["laptop overheating", "too hot to touch", "thermal shutdown", "laptop burning hot", "fan clogged"],
+      "why": "Blocked vents, dust, a hot room or a busy app.",
+      "steps": [
+        { "text": "Use it on a hard, flat surface; never on beds or cushions." },
+        { "text": "Find what's busy.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Find what's busy.", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Blow dust out of the vents with short bursts of compressed air (laptop off)." }
+      ],
+      "escalate": "If it shuts down from heat with nothing running, the fan may be failing.",
+      "related": ["high-cpu", "kernel-task-mac"]
+    },
+    {
+      "id": "cracked-screen",
+      "os": ["windows", "macos"],
+      "title": "Dropped laptop or cracked screen",
+      "symptoms": ["cracked screen", "dropped laptop", "broken screen", "screen damage", "laptop fell"],
+      "why": "Drops can damage the screen, drive or hinges.",
+      "steps": [
+        { "text": "Back up important files now if the computer still works." },
+        { "text": "Connect an external monitor to keep working." },
+        { "text": "Avoid pressing on cracked glass; tape over sharp edges." }
+      ],
+      "escalate": "Report work-device damage to IT for repair or replacement.",
+      "related": ["backup-setup"]
+    },
+    {
+      "id": "port-loose",
+      "os": ["windows", "macos"],
+      "title": "Charging port, headphone jack or USB port is loose or dead",
+      "symptoms": ["port loose", "usb-c port not working", "charging port wobbly", "port dirty", "lint in port"],
+      "why": "Lint and dust build up in ports; worn ports lose contact.",
+      "steps": [
+        { "text": "Turn the computer off and gently remove lint with a wooden toothpick or compressed air." },
+        { "text": "Try another cable and another port." },
+        { "text": "A port that only works at an angle needs repair." }
+      ],
+      "related": ["battery-not-charging", "usb-not-recognized"]
+    },
+    {
+      "id": "clicking-noise",
+      "os": ["windows", "macos"],
+      "title": "Computer makes clicking, grinding or buzzing noises",
+      "symptoms": ["clicking noise", "grinding noise", "hard drive clicking", "buzzing laptop", "coil whine"],
+      "why": "Clicking or grinding from a hard drive means it's failing; a high whine is usually harmless electronics.",
+      "steps": [
+        { "text": "Clicking/grinding: back up immediately, and check the disk's health.", "os": ["windows"], "page": "disks" },
+        { "text": "Clicking/grinding: back up immediately, then check the disk in Disk Utility.", "os": ["macos"], "open": "app:Disk Utility" },
+        { "text": "Fan noise that rattles: dust or a failing fan." }
+      ],
+      "escalate": "A clicking drive should be replaced; tell IT before it fails completely.",
+      "related": ["disk-errors", "backup-setup"]
+    },
+    {
+      "id": "find-serial-number",
+      "os": ["windows", "macos"],
+      "title": "Find my computer's model and serial number",
+      "symptoms": ["serial number", "computer model", "service tag", "what model is my laptop", "warranty"],
+      "why": "IT, warranty and repair need the exact model and serial.",
+      "steps": [
+        { "text": "DeskMedic's Overview shows the model; Export report includes the serial.", "page": "health" },
+        { "text": "System Information (msinfo32) › System Model; the serial is on the label under the laptop.", "os": ["windows"], "open": "run:system-information" },
+        { "text": "Apple menu › About This Mac shows the model and serial.", "os": ["macos"] }
+      ]
+    }
+  ]
+}

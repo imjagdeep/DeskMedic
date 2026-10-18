@@ -164,6 +164,7 @@ const CATEGORY_PATHS: Record<string, string[]> = {
   clock: ["M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17z", "M12 7.5V12l3 2"],
   phone: ["M7.5 2.5h9v19h-9z", "M11 18.5h2"],
   backup: ["M12 20.5a8.5 8.5 0 1 1 8.2-6.3", "M20.5 9.5v4.7h-4.7", "M12 7.5V12l3 2"],
+  eye: ["M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z", "M12 14.8a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6z"],
 };
 
 export function CategoryIcon({ name, size = 18 }: { name: string; size?: number }) {
@@ -177,6 +178,7 @@ export function CategoryIcon({ name, size = 18 }: { name: string; size?: number 
     lock: LockIcon,
     shield: ShieldIcon,
     window: WindowIcon,
+    wrench: WrenchIcon,
   };
   const Known = known[name];
   if (Known) return <Known size={size} />;
