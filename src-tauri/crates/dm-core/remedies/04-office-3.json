@@ -1,0 +1,154 @@
+{
+  "id": "office",
+  "title": "Microsoft 365 & Office",
+  "icon": "apps",
+  "blurb": "Word, Excel, PowerPoint: activation, sign-in, crashes, files that won't open.",
+  "remedies": [
+    {
+      "id": "excel-file-too-big",
+      "os": ["windows", "macos"],
+      "title": "Excel file is huge or slow to open",
+      "symptoms": ["excel file large", "workbook too big", "excel file size", "reduce excel file size"],
+      "why": "Formatting on millions of empty cells, pictures, pivot caches and hidden sheets bloat files.",
+      "steps": [
+        { "text": "Press Ctrl+End on each sheet: if it jumps far past your data, delete those empty rows/columns and save." },
+        { "text": "Compress pictures (Picture Format › Compress Pictures)." },
+        { "text": "Save as .xlsb for large data, or remove hidden sheets and old pivot caches." }
+      ],
+      "related": ["excel-slow"]
+    },
+    {
+      "id": "excel-print-area",
+      "os": ["windows", "macos"],
+      "title": "Excel prints on too many pages or cuts columns off",
+      "symptoms": ["excel print one page", "fit to page excel", "print area", "excel printing too many pages"],
+      "why": "Excel prints the used area at 100% unless told otherwise.",
+      "steps": [
+        { "text": "Page Layout › Print Area › Set Print Area on just what you need." },
+        { "text": "In Print, Scaling › Fit All Columns on One Page; Orientation › Landscape." },
+        { "text": "View › Page Break Preview lets you drag the page edges." }
+      ]
+    },
+    {
+      "id": "excel-vlookup-na",
+      "os": ["windows", "macos"],
+      "title": "VLOOKUP / XLOOKUP returns #N/A even though the value is there",
+      "symptoms": ["vlookup n/a", "xlookup not found", "lookup not working", "#n/a excel"],
+      "why": "Hidden spaces, numbers stored as text, or the wrong match type.",
+      "steps": [
+        { "text": "Use exact match: last argument FALSE in VLOOKUP (XLOOKUP is exact by default)." },
+        { "text": "Clean the values: TRIM() for spaces, VALUE() or Data › Text to Columns for numbers stored as text." },
+        { "text": "Check the lookup range covers the rows (use whole tables, Ctrl+T)." }
+      ]
+    },
+    {
+      "id": "excel-merged-sort",
+      "os": ["windows", "macos"],
+      "title": "Excel won't sort or filter (\"merged cells\" error)",
+      "symptoms": ["can't sort merged cells", "excel sort error", "filter not working excel", "all merged cells need to be the same size"],
+      "why": "Merged cells and blank rows break sorting and filtering.",
+      "steps": [
+        { "text": "Select the range › Home › Merge & Center › Unmerge Cells; use Center Across Selection instead." },
+        { "text": "Remove blank rows inside the data, or convert it to a table (Ctrl+T)." }
+      ]
+    },
+    {
+      "id": "word-page-numbers",
+      "os": ["windows", "macos"],
+      "title": "Page numbers, headers or a table of contents won't behave in Word",
+      "symptoms": ["word page numbers wrong", "header different first page", "table of contents not updating", "section break page numbers"],
+      "why": "Sections and fields control numbering and headers; they need updating after changes.",
+      "steps": [
+        { "text": "Insert › Page Number › Format Page Numbers to restart or continue numbering per section." },
+        { "text": "Double-click the header › tick Different First Page or unlink \"Link to Previous\" for a new section." },
+        { "text": "Right-click the table of contents › Update Field › Update entire table." }
+      ]
+    },
+    {
+      "id": "word-blank-page",
+      "os": ["windows", "macos"],
+      "title": "Can't delete a blank page in Word",
+      "symptoms": ["delete blank page word", "extra page word", "empty page at end word"],
+      "why": "A page break, section break or the paragraph after a table pushes text onto a new page.",
+      "steps": [
+        { "text": "Turn on ¶ (Home) to see the breaks, then delete them." },
+        { "text": "After a table at the end, select the last ¶ and set its font size to 1." }
+      ],
+      "related": ["word-formatting-mess"]
+    },
+    {
+      "id": "word-convert-pdf",
+      "os": ["windows", "macos"],
+      "title": "Convert Word to PDF, or edit a PDF in Word",
+      "symptoms": ["word to pdf", "pdf to word", "save as pdf word", "edit pdf in word"],
+      "why": "Word saves PDFs directly and can open PDFs as editable documents (layout may shift).",
+      "steps": [
+        { "text": "File › Save As › PDF (or Export › Create PDF)." },
+        { "text": "Open a PDF in Word to edit it; check the layout afterwards." },
+        { "text": "DeskFolio converts PDFs to Word and back offline." }
+      ]
+    },
+    {
+      "id": "powerpoint-presenter-view",
+      "os": ["windows", "macos"],
+      "title": "Presenter view shows on the projector (or not at all)",
+      "symptoms": ["presenter view wrong screen", "notes showing on projector", "swap displays powerpoint", "presenter view missing"],
+      "why": "PowerPoint guessed the wrong screen for the audience.",
+      "steps": [
+        { "text": "In the show, click ⋯ › Swap Presenter View and Slide Show (or Display Settings)." },
+        { "text": "Slide Show › Monitor: choose the projector; tick Use Presenter View." },
+        { "text": "Make sure the screens are set to Extend, not Duplicate." }
+      ],
+      "related": ["projector-tv-mirror"]
+    },
+    {
+      "id": "powerpoint-file-size",
+      "os": ["windows", "macos"],
+      "title": "PowerPoint file is too large to email",
+      "symptoms": ["powerpoint too big", "compress presentation", "pptx file size", "reduce powerpoint size"],
+      "why": "Full-size photos and embedded videos make presentations huge.",
+      "steps": [
+        { "text": "Picture Format › Compress Pictures › All pictures, Email (96 ppi) or Web (150 ppi)." },
+        { "text": "File › Info › Compress Media for videos." },
+        { "text": "Share a OneDrive link instead of attaching." }
+      ],
+      "related": ["attachment-too-big"]
+    },
+    {
+      "id": "onenote-missing-notebook",
+      "os": ["windows", "macos"],
+      "title": "OneNote notebook or pages are missing",
+      "symptoms": ["onenote notebook missing", "onenote pages gone", "onenote deleted pages", "find onenote notebook"],
+      "why": "The notebook was closed, is in another account, or pages were deleted.",
+      "steps": [
+        { "text": "File › Open › your account's notebooks to reopen it." },
+        { "text": "History › Deleted Notes (Windows) or Notebooks › Deleted Notes (Mac) keeps deleted pages ~60 days." },
+        { "text": "Check onenote.com with the right account." }
+      ],
+      "related": ["onenote-not-syncing"]
+    },
+    {
+      "id": "office-language-proofing",
+      "os": ["windows", "macos"],
+      "title": "Spell check uses the wrong language or doesn't work",
+      "symptoms": ["spell check not working", "wrong spelling language", "proofing language", "red underlines missing", "british english"],
+      "why": "Text is marked with another language or \"do not check spelling\".",
+      "steps": [
+        { "text": "Select all (Ctrl/⌘+A) › Review › Language › Set Proofing Language › choose yours, untick \"Do not check spelling\"." },
+        { "text": "Set the default for new documents in the same dialog." }
+      ]
+    },
+    {
+      "id": "office-templates",
+      "os": ["windows", "macos"],
+      "title": "Company templates or fonts are missing in Office",
+      "symptoms": ["company template missing", "office templates", "letterhead template", "branding fonts missing"],
+      "why": "Organisation templates come from SharePoint or a shared folder, set up by IT.",
+      "steps": [
+        { "text": "File › New › look under Organisation or Shared tabs." },
+        { "text": "Restart Office after signing in; organisation templates load on sign-in." }
+      ],
+      "escalate": "IT manages company templates and fonts."
+    }
+  ]
+}

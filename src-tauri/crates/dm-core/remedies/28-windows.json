@@ -1,0 +1,157 @@
+{
+  "id": "windows",
+  "title": "Windows itself",
+  "icon": "window",
+  "blurb": "Activation, accounts, features, Windows tools and settings.",
+  "remedies": [
+    {
+      "id": "windows-not-activated",
+      "os": ["windows"],
+      "title": "\"Activate Windows\" watermark or Windows isn't activated",
+      "symptoms": ["activate windows", "windows not activated", "activation watermark", "product key", "0xc004f213", "activation error"],
+      "why": "Windows can't confirm its licence: new hardware (especially a new motherboard), a wrong edition, or a key that wasn't applied.",
+      "steps": [
+        { "text": "Settings › System › Activation shows the state and error; run Troubleshoot there.", "open": "ms-settings:activation" },
+        { "text": "If you changed hardware, sign in with the Microsoft account that held the licence and choose \"I changed hardware on this device recently\"." },
+        { "text": "Enter the product key from the purchase if you have one." }
+      ],
+      "escalate": "Work PCs activate through the organisation; tell IT the error code."
+    },
+    {
+      "id": "windows-sandbox-features",
+      "os": ["windows"],
+      "title": "Turn Windows features on or off (Hyper-V, Sandbox, .NET 3.5, WSL)",
+      "symptoms": ["windows features", "turn on hyper-v", "windows sandbox", "enable wsl", ".net 3.5", "optional features"],
+      "why": "Some Windows parts are off until you turn them on.",
+      "steps": [
+        { "text": "Open Windows Features, tick the feature, OK, then restart if asked.", "open": "run:windows-features" },
+        { "text": "Optional features (fonts, language extras, tools): Settings › System › Optional features.", "open": "ms-settings:optionalfeatures" },
+        { "text": "Hyper-V and Sandbox need Pro/Enterprise and virtualization turned on in the BIOS." }
+      ]
+    },
+    {
+      "id": "windows-edition",
+      "os": ["windows"],
+      "title": "Home vs Pro: which Windows edition do I have?",
+      "symptoms": ["windows home or pro", "upgrade to pro", "windows edition", "bitlocker missing home"],
+      "why": "Some features (BitLocker, Remote Desktop host, Group Policy) need Pro.",
+      "steps": [
+        { "text": "Settings › System › About › Windows specifications › Edition.", "open": "ms-settings:about" },
+        { "text": "Upgrade from Settings › System › Activation › Upgrade your edition of Windows.", "open": "ms-settings:activation" },
+        { "text": "Home has Device encryption instead of full BitLocker on many PCs.", "open": "ms-settings:deviceencryption" }
+      ]
+    },
+    {
+      "id": "windows-reinstall-keep-files",
+      "os": ["windows"],
+      "title": "Repair Windows without losing files or apps",
+      "symptoms": ["repair windows keep files", "in place upgrade", "reinstall windows keep apps", "fix windows using windows update"],
+      "why": "Recent Windows 11 can reinstall itself over the top, keeping files, apps and settings.",
+      "steps": [
+        { "text": "Settings › System › Recovery › Fix problems using Windows Update › Reinstall now.", "open": "ms-settings:recovery" },
+        { "text": "Back up first, keep the PC plugged in; it takes about an hour." },
+        { "text": "Repair system files first if you haven't.", "fix": "sfc" }
+      ],
+      "related": ["reset-computer", "apps-crash-everything"]
+    },
+    {
+      "id": "group-policy-managed",
+      "os": ["windows"],
+      "title": "\"Some settings are managed by your organisation\"",
+      "symptoms": ["managed by your organization", "settings greyed out", "some settings are hidden or managed", "policy blocking setting"],
+      "why": "Work policies (or leftover ones from an old workplace or a tool) lock settings.",
+      "steps": [
+        { "text": "On a work PC, that's expected; ask IT." },
+        { "text": "See what's applied: Settings › Accounts › Access work or school, and run gpresult /r in Terminal." , "open": "ms-settings:workplace" },
+        { "text": "On a personal PC, \"tweak\" apps sometimes set policies; their own undo option removes them." }
+      ],
+      "escalate": "IT owns policies on work devices."
+    },
+    {
+      "id": "windows-terminal-admin",
+      "os": ["windows"],
+      "title": "Open a command prompt or PowerShell as administrator",
+      "symptoms": ["run as administrator", "admin command prompt", "elevated powershell", "terminal admin", "cmd admin"],
+      "why": "Some fixes need an administrator command window.",
+      "steps": [
+        { "text": "Right-click Start › Terminal (Admin), and approve the prompt." },
+        { "text": "Only paste commands from sources you trust; admin commands can change anything." }
+      ],
+      "related": ["admin-password-prompt"]
+    },
+    {
+      "id": "windows-copilot-recall",
+      "os": ["windows"],
+      "title": "Turn off Copilot, widgets or other built-in extras",
+      "symptoms": ["turn off copilot", "remove copilot key", "disable widgets", "windows recall", "bing in start"],
+      "why": "New Windows features can be hidden or removed if you don't want them.",
+      "steps": [
+        { "text": "Taskbar settings: turn off Copilot, Widgets and Task view buttons.", "open": "ms-settings:taskbar" },
+        { "text": "Uninstall the Copilot app from Installed apps if your version lists it.", "open": "ms-settings:appsfeatures" },
+        { "text": "Recall (Copilot+ PCs): Settings › Privacy & security › Recall & snapshots.", "open": "ms-settings:privacy" }
+      ],
+      "escalate": "On work PCs these are often set by IT."
+    },
+    {
+      "id": "windows-clipboard-history",
+      "os": ["windows"],
+      "title": "Paste something I copied earlier (clipboard history)",
+      "symptoms": ["clipboard history", "windows v", "paste earlier copy", "multiple clipboard"],
+      "why": "Clipboard history keeps the last 25 items you copied.",
+      "steps": [
+        { "text": "Turn it on, then press Windows+V to choose what to paste.", "open": "ms-settings:clipboard" }
+      ],
+      "related": ["clipboard-not-working"]
+    },
+    {
+      "id": "windows-storage-sense",
+      "os": ["windows"],
+      "title": "Free up space automatically with Storage Sense",
+      "symptoms": ["storage sense", "automatic cleanup", "delete temp files automatically", "recycle bin auto empty"],
+      "why": "Storage Sense deletes temporary files and old Recycle Bin items on a schedule.",
+      "steps": [
+        { "text": "Turn on Storage Sense and set its schedule.", "open": "ms-settings:storagesense" },
+        { "text": "DeskMedic can also remind you when temporary files pass a size you choose (Settings › Medic assistant)." }
+      ],
+      "related": ["low-disk-space"]
+    },
+    {
+      "id": "windows-tips-ads",
+      "os": ["windows"],
+      "title": "Stop tips, suggestions and \"finish setting up your PC\" screens",
+      "symptoms": ["finish setting up", "windows tips", "suggested content", "lets finish setting up your device", "windows welcome experience"],
+      "why": "Windows shows tips and setup reminders; they can be turned off.",
+      "steps": [
+        { "text": "Settings › System › Notifications › Additional settings: untick the three suggestion boxes.", "open": "ms-settings:notifications" },
+        { "text": "Settings › Privacy & security › General: turn off suggested content.", "open": "ms-settings:privacy" }
+      ],
+      "related": ["start-menu-search-web"]
+    },
+    {
+      "id": "windows-safe-uninstall-bloat",
+      "os": ["windows"],
+      "title": "Remove apps that came with the PC",
+      "symptoms": ["bloatware", "remove preinstalled apps", "uninstall mcafee", "candy crush", "trial antivirus"],
+      "why": "New PCs come with trials and extras that slow them down.",
+      "steps": [
+        { "text": "Settings › Apps › Installed apps: uninstall trials (antivirus trials, games) you don't use.", "open": "ms-settings:appsfeatures" },
+        { "text": "Some antivirus trials need their own removal tool from the maker's site." },
+        { "text": "Keep drivers and the PC maker's update tool." }
+      ],
+      "related": ["too-many-background-apps"]
+    },
+    {
+      "id": "windows-time-zone-wrong",
+      "os": ["windows"],
+      "title": "Windows picks the wrong time zone",
+      "symptoms": ["wrong time zone windows", "time zone keeps changing", "automatic time zone wrong"],
+      "why": "Automatic time zone uses location; with location off or wrong, it guesses.",
+      "steps": [
+        { "text": "Turn off \"Set time zone automatically\" and choose yours.", "open": "ms-settings:dateandtime" },
+        { "text": "Or turn on location services so it can detect it.", "open": "ms-settings:privacy-location" },
+        { "text": "Then sync the clock.", "fix": "time-sync" }
+      ],
+      "related": ["clock-wrong"]
+    }
+  ]
+}
