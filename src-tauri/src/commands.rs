@@ -730,6 +730,42 @@ pub async fn health_run(app: AppHandle) -> CmdResult<dm_core::health::Report> {
     result
 }
 
+// ---------- assistant (event logs) ----------
+
+/// Read-only look at the last 30 days of Windows' event logs; logged.
+#[tauri::command]
+pub async fn insights_run(app: AppHandle) -> CmdResult<dm_core::insights::Report> {
+    let result = blocking(dm_core::insights::run).await;
+    let state = app.state::<AppState>();
+    let g = state.lock();
+    match &result {
+        Ok(r) => g.record(
+            &LogEntry::new(
+                Area::Health,
+                "Assistant",
+                true,
+                format!(
+                    "{} problem(s), {} warning(s) in the event logs",
+                    r.problems, r.warnings
+                ),
+            )
+            .with_details(
+                r.findings
+                    .iter()
+                    .map(|x| format!("{:?} {}: {} time(s)", x.level, x.title, x.count))
+                    .collect(),
+            ),
+        ),
+        Err(e) => g.record(&LogEntry::new(
+            Area::Health,
+            "Assistant",
+            false,
+            e.clone(),
+        )),
+    }
+    result
+}
+
 // ---------- network doctor ----------
 
 /// Goes online (router ping, DNS lookup, Microsoft's test page); the page
@@ -780,9 +816,14 @@ pub async fn send_to_it(app: AppHandle, path: PathBuf) -> CmdResult<Vec<String>>
             Ok(r) => dm_core::health::to_text(&r),
             Err(e) => format!("The health check failed: {e}"),
         };
+        let events = match dm_core::insights::run() {
+            Ok(r) => dm_core::insights::to_text(&r),
+            Err(e) => format!("Reading the event logs failed: {e}"),
+        };
         let mut files = vec![
             ("system-info.txt", dm_core::bundle::system_info()),
             ("health-check.txt", health),
+            ("assistant.txt", events),
         ];
         if let Some(n) = network {
             files.push(("network-doctor.txt", n));

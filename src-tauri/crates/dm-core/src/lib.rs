@@ -7,6 +7,7 @@ pub mod disk;
 pub mod drives;
 pub mod fixes;
 pub mod health;
+pub mod insights;
 pub mod library;
 pub mod log;
 pub mod monitor;

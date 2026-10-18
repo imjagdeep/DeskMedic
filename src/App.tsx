@@ -10,6 +10,7 @@ import { api } from "./lib/api";
 import { runHealthCheck, startJobs } from "./lib/jobs";
 import { refreshAppInfo, toastError, useAppInfo } from "./lib/store";
 import { checkAndDownload, dailyCheckDue } from "./lib/updates";
+import { Assistant } from "./pages/Assistant";
 import { Cleanup } from "./pages/Cleanup";
 import { DiskMap } from "./pages/DiskMap";
 import { Health } from "./pages/Health";
@@ -109,7 +110,8 @@ export default function App() {
         <Sidebar page={page} onNavigate={setPage} />
         <main className="content" ref={content}>
           {page === "overview" && <Overview onNavigate={setPage} />}
-          {page === "health" && <Health onAction={onHealthAction} />}
+          {page === "assistant" && <Assistant onAction={onHealthAction} onNavigate={setPage} />}
+          {page === "health" && <Health onAction={onHealthAction} onAssistant={() => setPage("assistant")} />}
           {page === "network" && <Network onAction={onHealthAction} />}
           {page === "diskmap" && <DiskMap />}
           {page === "cleanup" && <Cleanup />}

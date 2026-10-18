@@ -153,6 +153,7 @@ pub fn run() {
             commands::remedy_open,
             commands::fix_run,
             commands::health_run,
+            commands::insights_run,
             commands::network_run,
             commands::send_to_it,
             commands::pc_summary,

@@ -13,7 +13,7 @@ const LABEL: Record<HealthStatus, string> = {
 // Problems first, then warnings; the rest keep their order.
 const RANK: Record<HealthStatus, number> = { problem: 0, warning: 1, good: 2, unknown: 3 };
 
-export function Health({ onAction }: { onAction: (a: HealthAction) => void }) {
+export function Health({ onAction, onAssistant }: { onAction: (a: HealthAction) => void; onAssistant?: () => void }) {
   // Kept outside the page so leaving it mid-check loses nothing.
   const { running, report, at } = useHealthJob();
   const checks = report ? [...report.checks].sort((a, b) => RANK[a.status] - RANK[b.status]) : [];
@@ -31,6 +31,12 @@ export function Health({ onAction }: { onAction: (a: HealthAction) => void }) {
         protection, internet, drives, crashes, memory and battery. Nothing is changed, and nothing goes online. Export
         report saves this with system details and the log as one zip for a ticket.
       </p>
+      {onAssistant && (
+        <p className="muted small">
+          For crashes, failing drives and errors over the last 30 days, see what Windows' own logs say:{" "}
+          <button className="link" onClick={onAssistant}>open the Assistant</button>.
+        </p>
+      )}
 
       {!report && !running && (
         <div className="empty">

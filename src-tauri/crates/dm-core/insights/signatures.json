@@ -1,0 +1,473 @@
+{
+  "signatures": [
+    {
+      "id": "blue-screen",
+      "title": "Blue screens",
+      "what": "Windows crashed with a blue screen and restarted.",
+      "impact": "Unsaved work is lost each time. Repeated blue screens usually mean a faulty driver, failing memory or damaged system files.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-WER-SystemErrorReporting"
+      ],
+      "ids": [
+        1001
+      ],
+      "severity": "critical",
+      "remedy": "blue-screen"
+    },
+    {
+      "id": "unexpected-shutdown",
+      "title": "Unexpected shutdowns",
+      "what": "The PC went off without shutting down properly: power loss, a held power button, a flat battery or a freeze.",
+      "impact": "Open work is lost and files can be damaged. If nobody caused it, it points at power, overheating or a crash.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-Kernel-Power"
+      ],
+      "ids": [
+        41
+      ],
+      "severity": "high",
+      "remedy": "restarts-by-itself"
+    },
+    {
+      "id": "disk-predicted-failure",
+      "title": "A drive predicts its own failure",
+      "what": "A drive's built-in health monitoring reports that it is likely to fail.",
+      "impact": "Back up now. The drive can stop working without further warning, taking its files with it.",
+      "log": "System",
+      "providers": [
+        "disk"
+      ],
+      "ids": [
+        52
+      ],
+      "severity": "critical",
+      "remedy": "disk-errors"
+    },
+    {
+      "id": "disk-errors",
+      "title": "Drive read and write errors",
+      "what": "Windows hit bad areas, or could not read the page file, on a drive.",
+      "impact": "Files can be lost or damaged and the PC may freeze. Often the first sign of a failing drive.",
+      "log": "System",
+      "providers": [
+        "disk"
+      ],
+      "ids": [
+        7,
+        51
+      ],
+      "severity": "critical",
+      "remedy": "disk-errors"
+    },
+    {
+      "id": "disk-stalls",
+      "title": "A drive keeps stalling",
+      "what": "Disk requests had to be retried, or the drive controller was reset.",
+      "impact": "Causes freezes of several seconds. The cause is usually a failing drive, a loose cable or a storage driver.",
+      "log": "System",
+      "providers": [
+        "disk",
+        "storahci",
+        "stornvme",
+        "iaStorA",
+        "iaStorAC",
+        "iaStorAVC"
+      ],
+      "ids": [
+        153,
+        129
+      ],
+      "severity": "high",
+      "min_count": 3,
+      "remedy": "disk-errors"
+    },
+    {
+      "id": "file-system",
+      "title": "File system damage",
+      "what": "Windows found damage in the file system on a drive.",
+      "impact": "Files or folders can become unreadable. Windows can usually repair it with a disk check at the next restart.",
+      "log": "System",
+      "providers": [
+        "Ntfs",
+        "Microsoft-Windows-Ntfs"
+      ],
+      "ids": [
+        55
+      ],
+      "severity": "high",
+      "remedy": "disk-errors"
+    },
+    {
+      "id": "hardware-fatal",
+      "title": "Serious hardware errors",
+      "what": "The processor, memory or a device reported an error Windows could not correct.",
+      "impact": "These cause blue screens and sudden restarts. Overheating, failing memory or a faulty device are the usual causes.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-WHEA-Logger"
+      ],
+      "ids": [
+        1,
+        18
+      ],
+      "severity": "critical",
+      "remedy": "check-crash-logs"
+    },
+    {
+      "id": "hardware-corrected",
+      "title": "Hardware errors Windows corrected",
+      "what": "The processor, memory or a PCIe device reported errors that Windows corrected.",
+      "impact": "Harmless now and then. Many in a row point at overheating, memory or a loose drive or card, and can turn into crashes.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-WHEA-Logger"
+      ],
+      "ids": [
+        17,
+        19,
+        47
+      ],
+      "severity": "medium",
+      "min_count": 5,
+      "remedy": "check-crash-logs"
+    },
+    {
+      "id": "graphics-driver",
+      "title": "Graphics driver crashes",
+      "what": "The graphics driver stopped responding and Windows restarted it (the screen goes black for a moment).",
+      "impact": "Flicker, black screens, and crashing games or video calls. Usually fixed by updating the graphics driver.",
+      "log": "System",
+      "providers": [
+        "Display"
+      ],
+      "ids": [
+        4101
+      ],
+      "severity": "high",
+      "remedy": "screen-flickering"
+    },
+    {
+      "id": "app-crash",
+      "title": "{name} keeps crashing",
+      "what": "{name} closed unexpectedly.",
+      "impact": "Work in that app is lost each time. Repeated crashes usually need an update, a repair or a reinstall of the app.",
+      "log": "Application",
+      "providers": [
+        "Application Error"
+      ],
+      "ids": [
+        1000
+      ],
+      "severity": "medium",
+      "group": true,
+      "min_count": 3,
+      "remedy": "check-crash-logs"
+    },
+    {
+      "id": "app-hang",
+      "title": "{name} keeps freezing",
+      "what": "{name} stopped responding and was closed.",
+      "impact": "Unsaved work in that app is lost. Often an add-in, an old version, or the PC running out of memory.",
+      "log": "Application",
+      "providers": [
+        "Application Hang"
+      ],
+      "ids": [
+        1002
+      ],
+      "severity": "low",
+      "group": true,
+      "min_count": 3,
+      "remedy": "check-crash-logs"
+    },
+    {
+      "id": "service-crash",
+      "title": "The {name} service keeps crashing",
+      "what": "The Windows service \"{name}\" stopped unexpectedly.",
+      "impact": "Whatever relies on it (printing, sound, sign-in, sync) stops working until it restarts.",
+      "log": "System",
+      "providers": [
+        "Service Control Manager"
+      ],
+      "ids": [
+        7024,
+        7031,
+        7034
+      ],
+      "severity": "medium",
+      "group": true,
+      "min_count": 3,
+      "remedy": "check-crash-logs"
+    },
+    {
+      "id": "update-failed",
+      "title": "Windows updates are failing",
+      "what": "Windows Update could not install one or more updates.",
+      "impact": "The PC misses security fixes and keeps retrying in the background, which slows it down.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-WindowsUpdateClient"
+      ],
+      "ids": [
+        20
+      ],
+      "severity": "high",
+      "remedy": "updates-failing"
+    },
+    {
+      "id": "dns-timeouts",
+      "title": "Website names keep failing to look up",
+      "what": "The DNS server didn't answer when Windows looked up a name.",
+      "impact": "Pages and apps fail to load at random although the connection is up.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-DNS-Client"
+      ],
+      "ids": [
+        1014
+      ],
+      "severity": "low",
+      "min_count": 20,
+      "remedy": "dns-site-wont-load"
+    },
+    {
+      "id": "clock-sync",
+      "title": "The clock can't sync",
+      "what": "Windows could not set the clock from a time server.",
+      "impact": "A wrong clock breaks secure websites, sign-ins, Teams and Outlook.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-Time-Service"
+      ],
+      "ids": [
+        129,
+        134,
+        36
+      ],
+      "severity": "medium",
+      "min_count": 3,
+      "remedy": "clock-wrong"
+    },
+    {
+      "id": "restore-points-deleted",
+      "title": "Restore points were deleted",
+      "what": "Windows deleted restore points (shadow copies) because space ran out.",
+      "impact": "Fewer ways back if an update or a new program breaks something.",
+      "log": "System",
+      "providers": [
+        "volsnap"
+      ],
+      "ids": [
+        25,
+        36
+      ],
+      "severity": "medium",
+      "remedy": "low-disk-space"
+    },
+    {
+      "id": "restore-point-failed",
+      "title": "Restore points can't be created",
+      "what": "System Restore tried to create a restore point and failed.",
+      "impact": "There is no way back if an update, a driver or a new program breaks something, and DeskMedic can't make one before its riskier fixes.",
+      "log": "Application",
+      "providers": [
+        "System Restore"
+      ],
+      "ids": [
+        8193
+      ],
+      "severity": "medium",
+      "min_count": 3,
+      "remedy": "system-restore"
+    },
+    {
+      "id": "low-memory",
+      "title": "Ran out of memory",
+      "what": "Windows ran low on memory and warned that programs might close.",
+      "impact": "Everything slows down and apps can close without saving.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-Resource-Exhaustion-Detector"
+      ],
+      "ids": [
+        2004
+      ],
+      "severity": "high",
+      "remedy": "high-memory"
+    },
+    {
+      "id": "group-policy",
+      "title": "Company settings aren't applying",
+      "what": "Group Policy could not be processed, usually because the company network or a server wasn't reachable.",
+      "impact": "Drive mappings, printers and security settings from IT may be missing or out of date.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-GroupPolicy"
+      ],
+      "ids": [
+        1030,
+        1055,
+        1058,
+        1129
+      ],
+      "severity": "medium",
+      "min_count": 2,
+      "remedy": "group-policy-managed",
+      "fix": "gpupdate"
+    },
+    {
+      "id": "cpu-throttled",
+      "title": "The processor is being slowed down",
+      "what": "The firmware limited the processor's speed, usually because of heat or the power supply.",
+      "impact": "Everything feels slow. Often dust, a blocked vent, or a charger that's too weak.",
+      "log": "System",
+      "providers": [
+        "Microsoft-Windows-Kernel-Processor-Power"
+      ],
+      "ids": [
+        37
+      ],
+      "severity": "medium",
+      "min_count": 3,
+      "remedy": "laptop-overheating"
+    },
+    {
+      "id": "threat-found",
+      "title": "Microsoft Defender found threats",
+      "what": "Microsoft Defender detected malware or a potentially unwanted app.",
+      "impact": "Usually blocked or removed already. Worth a full scan and a look at where it came from.",
+      "log": "Microsoft-Windows-Windows Defender/Operational",
+      "providers": [
+        "Microsoft-Windows-Windows Defender"
+      ],
+      "ids": [
+        1116,
+        1117
+      ],
+      "severity": "high",
+      "remedy": "virus-suspected"
+    },
+    {
+      "id": "threat-not-removed",
+      "title": "A threat could not be removed",
+      "what": "Microsoft Defender found a threat but failed to remove it.",
+      "impact": "Malware may still be active on this PC. Disconnect from the network and ask IT.",
+      "log": "Microsoft-Windows-Windows Defender/Operational",
+      "providers": [
+        "Microsoft-Windows-Windows Defender"
+      ],
+      "ids": [
+        1118,
+        1119
+      ],
+      "severity": "critical",
+      "remedy": "virus-suspected"
+    }
+  ],
+  "harmless": [
+    {
+      "providers": [
+        "Microsoft-Windows-DistributedCOM"
+      ],
+      "ids": [
+        10005,
+        10010,
+        10016
+      ],
+      "why": "DCOM permission messages logged on almost every PC; Microsoft says to ignore them."
+    },
+    {
+      "providers": [
+        "EventLog"
+      ],
+      "ids": [
+        6008
+      ],
+      "why": "The same unexpected shutdown, already counted from Kernel-Power."
+    },
+    {
+      "providers": [
+        "Schannel"
+      ],
+      "ids": [
+        36874,
+        36882,
+        36887,
+        36888
+      ],
+      "why": "A secure connection to a website or service was refused; normal."
+    },
+    {
+      "providers": [
+        "Microsoft-Windows-Security-SPP"
+      ],
+      "ids": [
+        8198,
+        8200
+      ],
+      "why": "Licence checks that are retried later."
+    },
+    {
+      "providers": [
+        "Microsoft-Windows-Perflib"
+      ],
+      "ids": [
+        1008,
+        1023
+      ],
+      "why": "Performance counters that didn't load."
+    },
+    {
+      "providers": [
+        "ESENT"
+      ],
+      "ids": [
+        455,
+        489
+      ],
+      "why": "Logs from Windows' own small databases, usually harmless."
+    },
+    {
+      "providers": [
+        "Microsoft-Windows-Kernel-EventTracing"
+      ],
+      "ids": [
+        2,
+        3
+      ],
+      "why": "Diagnostic logging sessions."
+    },
+    {
+      "providers": [
+        "Microsoft-Windows-WMI"
+      ],
+      "ids": [
+        10
+      ],
+      "why": "An old app or script asked Windows for something it no longer has."
+    },
+    {
+      "providers": [
+        "SideBySide"
+      ],
+      "ids": [
+        33,
+        35,
+        59,
+        63
+      ],
+      "why": "Leftover pieces of apps."
+    },
+    {
+      "providers": [
+        "Microsoft-Windows-Kernel-PnP"
+      ],
+      "ids": [
+        219
+      ],
+      "why": "A driver for an unplugged device didn't load at startup."
+    }
+  ]
+}

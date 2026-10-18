@@ -53,6 +53,9 @@ export function SendToIt() {
               <li>
                 <strong>Health check</strong>, run fresh now.
               </li>
+              <li>
+                <strong>Assistant</strong>: problems found in Windows' event logs over the last 30 days, read fresh now.
+              </li>
               {network && (
                 <li>
                   <strong>Network doctor</strong> result from earlier.

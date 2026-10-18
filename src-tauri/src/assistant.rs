@@ -1,6 +1,7 @@
-//! The Medic assistant: a background health check every so often (same
-//! read-only check as the Health check page, no network), a popup when
-//! something new looks wrong, and the tray status line kept current.
+//! The Medic assistant: a background health check and a read of the event
+//! logs every so often (the same read-only checks as the Health check and
+//! Assistant pages, no network), a popup when something new looks wrong,
+//! and the tray status line kept current.
 
 use crate::state::AppState;
 use crate::tray;
@@ -34,6 +35,10 @@ pub fn start(app: AppHandle) {
                     Ok(r) => after_check(&app, &r, true),
                     Err(e) => tracing::warn!("background health check failed: {e}"),
                 }
+                match dm_core::insights::run() {
+                    Ok(r) => after_insights(&app, &r),
+                    Err(e) => tracing::warn!("background event log check failed: {e}"),
+                }
                 if let Some(limit) = temp_limit {
                     check_temp(&app, limit);
                 }
@@ -66,6 +71,25 @@ pub fn after_check(app: &AppHandle, r: &Report, background: bool) {
         if let Some((title, body)) = monitor::summarize(&alerts) {
             notify(app, &title, &body);
         }
+    }
+}
+
+/// After a background read of the event logs: pop up only problems that
+/// are new or happened again since their last popup.
+fn after_insights(app: &AppHandle, r: &dm_core::insights::Report) {
+    let alerts = {
+        let s = app.state::<AppState>();
+        let g = s.lock();
+        let mut seen = Seen::load(&g.data_dir);
+        let alerts = dm_core::insights::alerts(&mut seen, r, chrono::Utc::now());
+        if let Err(e) = seen.save(&g.data_dir) {
+            tracing::warn!("could not save {}: {e}", monitor::FILE_NAME);
+        }
+        alerts
+    };
+    let _ = app.emit("insights-updated", r);
+    if let Some((title, body)) = monitor::summarize(&alerts) {
+        notify(app, &title, &body);
     }
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AdminNotice, PageHeader, UsageBar } from "../components/Common";
-import { BroomIcon, DiskIcon, GlobeIcon, MapIcon, PulseIcon, WrenchIcon } from "../components/Icons";
+import { BroomIcon, DiskIcon, GlobeIcon, MapIcon, PulseIcon, SparkleIcon, WrenchIcon } from "../components/Icons";
 import { SendToIt } from "../components/SendToIt";
 import type { Page } from "../components/Sidebar";
 import { api } from "../lib/api";
@@ -20,6 +20,7 @@ const KIND: Record<DriveKind, string> = {
 
 type Tile = { page: Page; title: string; text: string; Icon: (p: { size?: number }) => React.ReactElement };
 const TILES: Tile[] = [
+  { page: "assistant", title: "Assistant", text: "What Windows' logs say is hurting this PC", Icon: SparkleIcon },
   { page: "health", title: "Health check", text: "What usually sits behind a slow or odd PC", Icon: PulseIcon },
   { page: "network", title: "Network doctor", text: "Find where the internet breaks", Icon: GlobeIcon },
   { page: "cleanup", title: "Cleanup", text: "Clear temp files and caches safely", Icon: BroomIcon },

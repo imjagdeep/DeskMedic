@@ -528,6 +528,23 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .health-tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 9px; color: var(--c, var(--text)); background: color-mix(in srgb, var(--c, var(--text)) 12%, transparent); }
 .health-row > button { flex: none; }
 
+/* Assistant: findings from the event logs, styled like health rows. */
+.insight-list { display: flex; flex-direction: column; gap: 10px; }
+.insight { margin: 0; display: flex; align-items: flex-start; gap: 14px; }
+.insight > .health-dot { margin-top: 6px; }
+.insight h2 { margin: 0; }
+.insight p { margin: 4px 0 0; }
+.insight-facts { font-variant-numeric: tabular-nums; }
+.insight-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.insight-guide { margin-top: 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--group); box-shadow: inset 0 0 0 0.5px var(--group-border); }
+.insight-guide .remedy-steps { margin: 8px 0 4px; }
+.insight-more { margin-top: 18px; }
+.insight-more > summary { cursor: pointer; font-weight: 500; padding: 6px 0; }
+.insight-more > .insight-list { margin-top: 8px; }
+.insight-unknown { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.insight-unknown-row { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--group-border); }
+.insight-foot { margin-top: 18px; }
+
 /* Network doctor: the links drawn as a chain */
 .net-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; }
 .net-link { margin: 0; display: flex; align-items: center; gap: 14px; position: relative; }

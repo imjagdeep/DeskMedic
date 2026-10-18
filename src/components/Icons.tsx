@@ -52,6 +52,14 @@ export const DiskIcon = (p: IconProps) => (
   </Svg>
 );
 
+/** Assistant: a sparkle, for the page that reads the event logs for you. */
+export const SparkleIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M11 3.5l1.7 4.6 4.6 1.7-4.6 1.7L11 16.1l-1.7-4.6-4.6-1.7 4.6-1.7z" />
+    <path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" />
+  </Svg>
+);
+
 export const PulseIcon = (p: IconProps) => (
   <Svg {...p}>
     <path d="M20.2 12.6A5 5 0 0 0 12 6.6a5 5 0 0 0-8.2 6l8.2 7.7 3-2.8" />
