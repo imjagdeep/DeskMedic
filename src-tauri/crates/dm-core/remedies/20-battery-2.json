@@ -1,0 +1,59 @@
+{
+  "id": "battery",
+  "title": "Battery & power",
+  "icon": "battery",
+  "blurb": "Not charging, draining fast, sleep and wake problems.",
+  "remedies": [
+    {
+      "id": "battery-health-check",
+      "os": ["windows", "macos"],
+      "title": "Check my laptop battery's health",
+      "symptoms": ["battery health", "battery report", "battery cycle count", "battery capacity", "service battery"],
+      "why": "Batteries lose capacity over time; the system can report how much is left.",
+      "steps": [
+        { "text": "Run DeskMedic's Health check: it reads the battery's design vs. full-charge capacity.", "os": ["windows"], "page": "health" },
+        { "text": "In Terminal (cmd) run powercfg /batteryreport for a detailed history.", "os": ["windows"] },
+        { "text": "System Settings › Battery › Battery Health (ⓘ); System Information › Power shows the cycle count.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Below ~80% of the original capacity, a battery replacement is worth considering." }
+      ],
+      "related": ["battery-drains-fast"]
+    },
+    {
+      "id": "hibernate",
+      "os": ["windows"],
+      "title": "Add Hibernate to the power menu",
+      "symptoms": ["hibernate option missing", "enable hibernate", "hibernate vs sleep", "power menu hibernate"],
+      "why": "Hibernate saves everything to disk and uses no battery, unlike Sleep.",
+      "steps": [
+        { "text": "Power options › Choose what the power buttons do › Change settings that are currently unavailable › tick Hibernate.", "open": "run:power-options" }
+      ],
+      "related": ["battery-drains-asleep"]
+    },
+    {
+      "id": "charger-warm-noise",
+      "os": ["windows", "macos"],
+      "title": "Charger gets hot, whines or the plug sparks",
+      "symptoms": ["charger hot", "charger whine", "charger smell", "adapter sparks", "frayed cable"],
+      "why": "Warm is normal; very hot, burning smells, sparks or damaged cables are not.",
+      "steps": [
+        { "text": "Unplug a charger that smells, sparks or has a damaged cable, and stop using it." },
+        { "text": "Use the maker's charger or a certified replacement of the right wattage." },
+        { "text": "Keep chargers in open air, not under blankets." }
+      ],
+      "escalate": "Ask IT for a replacement charger for work laptops."
+    },
+    {
+      "id": "battery-80-percent",
+      "os": ["windows", "macos"],
+      "title": "Battery stops charging at 80%",
+      "symptoms": ["stops at 80", "charging on hold", "optimized charging", "battery limit", "won't charge to 100"],
+      "why": "Battery care features hold the charge at 80% to make the battery last longer.",
+      "steps": [
+        { "text": "This is usually on purpose. Mac: Battery › ⓘ next to Battery Health › Optimized Battery Charging.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Windows laptops: the maker's app (Lenovo Vantage, MyASUS, Dell Power Manager, HP) or Settings › Power & battery › Smart charging.", "os": ["windows"], "open": "ms-settings:batterysaver" },
+        { "text": "Turn it off before a trip if you need the full charge." }
+      ],
+      "related": ["battery-not-charging"]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "id": "apps",
+  "title": "Apps & installing",
+  "icon": "apps",
+  "blurb": "Installing and removing apps, Store problems, apps that won't start.",
+  "remedies": [
+    {
+      "id": "adobe-reader-acrobat",
+      "os": ["windows", "macos"],
+      "title": "Adobe Acrobat or Reader problems (sign-in, crashes, protected mode)",
+      "symptoms": ["adobe reader not working", "acrobat crash", "adobe sign in", "acrobat protected mode", "adobe license"],
+      "why": "Acrobat needs sign-in for licences, and its Protected Mode can clash with some setups.",
+      "steps": [
+        { "text": "Help › Check for Updates; Help › Repair Installation (Windows).", "os": ["windows"] },
+        { "text": "Edit › Preferences › Security (Enhanced) › turn off Protected Mode at startup, if PDFs won't open at all (turn back on later)." },
+        { "text": "Sign out and in via Help or the Creative Cloud app for licence errors." },
+        { "text": "For everyday PDF jobs offline, DeskFolio is a free alternative." }
+      ],
+      "related": ["pdf-wont-open"]
+    },
+    {
+      "id": "java-runtime",
+      "os": ["windows", "macos"],
+      "title": "An app says Java is missing or the wrong version",
+      "symptoms": ["java not found", "install java", "jre missing", "java version error", "jar file won't open"],
+      "why": "Older business apps need a Java runtime installed.",
+      "steps": [
+        { "text": "Install the Java version the app's maker names (often an OpenJDK build like Eclipse Temurin)." },
+        { "text": "Uninstall old Java versions you don't need; they're a security risk." }
+      ],
+      "escalate": "Work apps: IT usually packages the right Java."
+    },
+    {
+      "id": "app-permissions-mac",
+      "os": ["macos"],
+      "title": "An app says it needs permission (Accessibility, Full Disk Access, Screen Recording)",
+      "symptoms": ["app needs accessibility permission", "full disk access", "grant permission mac", "allow app control computer"],
+      "why": "macOS asks you to approve apps that control the computer, read protected folders or record the screen.",
+      "steps": [
+        { "text": "Privacy & Security › the category the app names › turn it on (unlock with your password).", "open": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" },
+        { "text": "Quit and reopen the app afterwards." },
+        { "text": "If it's already on but still asks, turn it off and on, or remove it with − and add again." }
+      ]
+    },
+    {
+      "id": "wrong-architecture-mac",
+      "os": ["macos"],
+      "title": "App says it doesn't support this Mac, or needs Rosetta",
+      "symptoms": ["rosetta", "intel app on m1", "app not supported on this mac", "apple silicon compatibility"],
+      "why": "Some apps are built only for Intel Macs; Rosetta lets them run on Apple silicon.",
+      "steps": [
+        { "text": "Accept the prompt to install Rosetta when it appears." },
+        { "text": "Download the Apple silicon (or Universal) version from the maker if there is one." }
+      ]
+    },
+    {
+      "id": "app-keeps-asking-update",
+      "os": ["windows", "macos"],
+      "title": "An app keeps asking to update (or won't update)",
+      "symptoms": ["app keeps asking to update", "update loop", "app update failed", "can't update app"],
+      "why": "The updater lacks rights, the app is open, or a copy in another folder is the one running.",
+      "steps": [
+        { "text": "Quit the app fully and run its update again." },
+        { "text": "Download the latest installer from the maker and install over it." },
+        { "text": "Check you don't have two copies (e.g. in Downloads and Applications).", "os": ["macos"] }
+      ],
+      "related": ["app-wont-install"]
+    },
+    {
+      "id": "winget-install",
+      "os": ["windows"],
+      "title": "Install common apps safely (without dodgy download sites)",
+      "symptoms": ["where to download apps safely", "winget", "safe download", "install chrome safely", "download site malware"],
+      "why": "Download sites often bundle adware; the Store or the maker's site are safe.",
+      "steps": [
+        { "text": "Use the Microsoft Store, the maker's own website, or winget (e.g. winget install Mozilla.Firefox in Terminal)." },
+        { "text": "Avoid \"free download\" sites and ads that look like download buttons." }
+      ],
+      "related": ["browser-hijacked"]
+    },
+    {
+      "id": "app-tiny-blurry",
+      "os": ["windows"],
+      "title": "An old app looks blurry or tiny on a high-resolution screen",
+      "symptoms": ["blurry app", "app tiny on 4k", "dpi scaling app", "fuzzy text one app"],
+      "why": "Older apps don't understand display scaling.",
+      "steps": [
+        { "text": "Right-click the app's shortcut › Properties › Compatibility › Change high DPI settings › Override high DPI scaling: System (Enhanced)." },
+        { "text": "Turn on \"Let Windows try to fix apps so they're not blurry\" in Display › Scale.", "open": "ms-settings:display" }
+      ],
+      "related": ["text-too-small"]
+    }
+  ]
+}

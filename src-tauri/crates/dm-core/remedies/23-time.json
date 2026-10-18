@@ -1,0 +1,47 @@
+{
+  "id": "time",
+  "title": "Date, time & language",
+  "icon": "clock",
+  "blurb": "Wrong clock, time zone, date format, language.",
+  "remedies": [
+    {
+      "id": "clock-wrong",
+      "os": ["windows", "macos"],
+      "title": "Clock or date is wrong",
+      "symptoms": ["clock wrong", "time wrong", "date incorrect", "time off by an hour", "clock not syncing", "time zone wrong"],
+      "why": "Automatic time is off, the time zone is wrong, or the sync with the time server failed. A wrong clock breaks sign-ins and secure websites.",
+      "steps": [
+        { "text": "Sync the clock with the internet time server now.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Turn on \"Set time automatically\" and \"Set time zone automatically\".", "os": ["windows"], "open": "ms-settings:dateandtime" },
+        { "text": "Turn on \"Set time and date automatically\" and \"Set time zone automatically\".", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" },
+        { "text": "If the clock resets every time the computer is unplugged (desktops), its small motherboard battery is flat." }
+      ],
+      "related": ["meeting-wrong-time", "browser-certificate-error"]
+    },
+    {
+      "id": "date-format",
+      "os": ["windows", "macos"],
+      "title": "Dates show in the wrong format (day/month vs month/day)",
+      "symptoms": ["date format", "dd/mm/yyyy", "mm/dd/yyyy", "24 hour clock", "region format", "decimal comma"],
+      "why": "Date, number and currency formats follow the region setting.",
+      "steps": [
+        { "text": "Settings › Time & language › Language & region › Regional format.", "os": ["windows"], "open": "ms-settings:regionformatting" },
+        { "text": "System Settings › General › Language & Region › Region and Date format.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Localization-Settings.extension" },
+        { "text": "Excel uses the region too; restart Excel after changing it." }
+      ]
+    },
+    {
+      "id": "display-language",
+      "os": ["windows", "macos"],
+      "title": "Change the language of the computer",
+      "symptoms": ["change language", "display language", "computer in wrong language", "install language pack", "menus in another language"],
+      "why": "The system's display language is separate from the keyboard layout and the region.",
+      "steps": [
+        { "text": "Settings › Time & language › Language & region › Add a language › tick \"Set as my Windows display language\"; sign out to finish.", "os": ["windows"], "open": "ms-settings:regionlanguage" },
+        { "text": "System Settings › General › Language & Region › add the language and drag it to the top; restart apps.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Localization-Settings.extension" },
+        { "text": "A single app can use its own language (Mac: Language & Region › Applications).", "os": ["macos"] }
+      ],
+      "related": ["keyboard-wrong-characters"]
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "id": "network",
+  "title": "Network & Wi-Fi",
+  "icon": "wifi",
+  "blurb": "No internet, slow or dropping Wi-Fi, can't see other computers.",
+  "remedies": [
+    {
+      "id": "wifi-connected-no-internet",
+      "os": ["windows", "macos"],
+      "title": "Wi-Fi says connected, but nothing loads",
+      "symptoms": ["connected no internet", "no internet access", "yellow triangle", "globe icon", "wifi works but no internet", "pages won't load", "limited connectivity"],
+      "why": "The computer reached the Wi-Fi box but not the internet beyond it. Usually the router or internet line is down, the computer kept an old address, or a VPN or proxy is in the way.",
+      "steps": [
+        { "text": "Run the Network doctor: it checks Wi-Fi, the router, name lookup and the internet in turn and tells you which link is broken.", "page": "network" },
+        { "text": "Check another device (a phone on the same Wi-Fi). If it has no internet either, restart the router: unplug it for 30 seconds, plug it back in and wait 2–3 minutes." },
+        { "text": "Turn Wi-Fi off and on again on this computer." },
+        { "text": "Clear the computer's list of remembered website addresses.", "os": ["windows"], "fix": "flush-dns" },
+        { "text": "If you use a VPN or a proxy, turn it off and try again.", "os": ["windows"], "open": "ms-settings:network-proxy" },
+        { "text": "If you use a VPN, disconnect it and try again; check Network settings for a proxy you don't expect.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Still nothing: reset the network settings (needs a restart).", "os": ["windows"], "fix": "reset-network" }
+      ],
+      "escalate": "If other devices work and this one doesn't after a reset, tell IT what the Network doctor reported and whether a VPN or security app is installed.",
+      "related": ["wifi-drops", "dns-site-wont-load", "ethernet-not-working"]
+    },
+    {
+      "id": "wifi-drops",
+      "os": ["windows", "macos"],
+      "title": "Wi-Fi keeps dropping or disconnecting",
+      "symptoms": ["wifi disconnects", "wifi drops", "keeps losing connection", "unstable wifi", "wifi cuts out", "connection drops every few minutes"],
+      "why": "Weak signal, interference from other networks, power saving turning the Wi-Fi card off, or an old Wi-Fi driver.",
+      "steps": [
+        { "text": "Move closer to the router, or away from microwaves, thick walls and metal. If the router has separate 2.4 GHz and 5 GHz names, try the other one." },
+        { "text": "Forget the network and join it again: Settings › Network & internet › Wi-Fi › Manage known networks › Forget.", "os": ["windows"], "open": "ms-settings:network-wifi" },
+        { "text": "Forget the network and join it again: Wi-Fi settings › the ⓘ next to the network › Forget This Network.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" },
+        { "text": "Stop Windows turning the Wi-Fi card off to save power: Device Manager › Network adapters › your Wi-Fi adapter › Properties › Power Management › untick \"Allow the computer to turn off this device\".", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Update the Wi-Fi driver from the PC maker's support site (or Windows Update › Optional updates).", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" },
+        { "text": "Run Wireless Diagnostics (hold Option and click the Wi-Fi icon › Open Wireless Diagnostics) to see interference and signal.", "os": ["macos"], "open": "app:Wireless Diagnostics" },
+        { "text": "Restart the router; if it's several years old or drops for every device, it may need replacing." }
+      ],
+      "escalate": "Tell IT whether it happens to every device or only this one, in which room, and roughly how often.",
+      "related": ["wifi-slow", "wifi-connected-no-internet"]
+    },
+    {
+      "id": "wifi-slow",
+      "os": ["windows", "macos"],
+      "title": "Internet is slow",
+      "symptoms": ["slow internet", "slow wifi", "downloads slow", "buffering", "speed test low", "laggy internet"],
+      "why": "Weak Wi-Fi signal, something else using the connection (updates, cloud sync, other people streaming), or the internet plan itself.",
+      "steps": [
+        { "text": "Run a speed test close to the router, then where you usually sit. A big drop means the Wi-Fi signal, not the internet." },
+        { "text": "Pause big uploads and downloads: cloud backup, OneDrive/iCloud/Dropbox sync, game or system updates." },
+        { "text": "Check what's using the network: Task Manager › Processes › sort by Network.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Check what's using the network: Activity Monitor › Network tab, sort by Sent/Received.", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Use the 5 GHz network if your router has one; it's faster at short range." },
+        { "text": "Plug in a network cable if you can; if it's fast on the cable, the problem is Wi-Fi coverage." },
+        { "text": "Restart the router. If speeds are still far below your plan on a cable, call your internet provider." }
+      ],
+      "escalate": "Give IT or the provider the speed test results (on cable and on Wi-Fi) and the time of day.",
+      "related": ["wifi-drops", "browser-slow"]
+    },
+    {
+      "id": "wifi-not-showing",
+      "os": ["windows", "macos"],
+      "title": "My Wi-Fi network doesn't show in the list",
+      "symptoms": ["can't see wifi", "wifi network missing", "network not listed", "no wifi networks found", "wifi not showing"],
+      "why": "Wi-Fi or airplane mode is off, the network is hidden or 5 GHz-only on an older card, or the Wi-Fi adapter is switched off.",
+      "steps": [
+        { "text": "Make sure airplane mode is off and Wi-Fi is on.", "os": ["windows"], "open": "ms-settings:network-airplanemode" },
+        { "text": "Make sure Wi-Fi is on in Control Center or Wi-Fi settings.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" },
+        { "text": "Check that other devices see the network. If none do, restart the router." },
+        { "text": "If the network is hidden, add it by name: Wi-Fi › Manage known networks › Add network.", "os": ["windows"], "open": "ms-settings:network-wifi" },
+        { "text": "If the network is hidden, use Wi-Fi settings › Other… (at the bottom) and type its name.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" },
+        { "text": "Some laptops have a Wi-Fi key or switch (often Fn + a key with an antenna icon); press it." },
+        { "text": "Check the Wi-Fi adapter is enabled: Network Connections › right-click Wi-Fi › Enable.", "os": ["windows"], "open": "run:network-connections" }
+      ],
+      "escalate": "If no networks show at all and the adapter is missing from Device Manager, the Wi-Fi hardware or driver has failed: tell IT the computer model.",
+      "related": ["wifi-no-adapter"]
+    },
+    {
+      "id": "wifi-no-adapter",
+      "os": ["windows"],
+      "title": "The Wi-Fi option is gone completely",
+      "symptoms": ["no wifi option", "wifi disappeared", "wifi button missing", "no wireless adapter", "only ethernet shows"],
+      "why": "Windows can't see the Wi-Fi adapter: its driver failed after an update, it's disabled, or (rarely) the hardware failed.",
+      "steps": [
+        { "text": "Restart the computer fully: Start › Power › Restart (not Shut down; fast startup can keep the problem)." },
+        { "text": "Open Device Manager › View › Show hidden devices › Network adapters. If the Wi-Fi adapter has a down arrow, right-click › Enable device. If it has a warning sign, right-click › Uninstall device, then restart.", "open": "run:device-manager" },
+        { "text": "Reset the network settings (needs a restart).", "fix": "reset-network" },
+        { "text": "Install the Wi-Fi driver from the PC maker's support site using another computer or a cable." }
+      ],
+      "escalate": "Tell IT the computer model and whether the adapter appears in Device Manager.",
+      "related": ["wifi-not-showing"]
+    },
+    {
+      "id": "wifi-wrong-password",
+      "os": ["windows", "macos"],
+      "title": "Wi-Fi says the password is wrong (but it's right)",
+      "symptoms": ["wifi password incorrect", "can't connect to wifi", "authentication failed", "network security key isn't correct", "incorrect password wifi"],
+      "why": "The computer remembers an old password, the password was changed on the router, or Caps Lock / keyboard layout is changing the letters.",
+      "steps": [
+        { "text": "Check Caps Lock and the keyboard language (a different layout can swap letters like Y and Z or symbols)." },
+        { "text": "Forget the network, then join it again and type the password fresh.", "os": ["windows"], "open": "ms-settings:network-wifi" },
+        { "text": "Forget the network, then join it again and type the password fresh.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" },
+        { "text": "On a Mac, an old saved password can also live in Keychain Access: search for the network name and delete the entry.", "os": ["macos"], "open": "app:Keychain Access" },
+        { "text": "Ask whoever runs the router whether the password changed. Work networks may need a username as well, not just a password." }
+      ],
+      "escalate": "For a work network that asks for a username, IT has to check your account or certificate.",
+      "related": ["wifi-enterprise-certificate"]
+    },
+    {
+      "id": "wifi-enterprise-certificate",
+      "os": ["windows", "macos"],
+      "title": "Work Wi-Fi asks about a certificate or keeps asking to sign in",
+      "symptoms": ["wifi certificate", "trust certificate wifi", "802.1x", "eduroam", "corporate wifi keeps asking password", "enterprise wifi"],
+      "why": "Work and school networks check your account (and often a certificate) every time. A changed password or an expired certificate stops it working.",
+      "steps": [
+        { "text": "If you changed your work password recently, forget the network and join again with the new password." },
+        { "text": "Only accept a certificate if IT told you to expect it; a fake network can show one too." },
+        { "text": "Check the date and time are right: a wrong clock makes certificates look expired.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Check the date and time are set automatically.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" },
+        { "text": "Use the guest or setup network your workplace provides to install their Wi-Fi profile, if they have one." }
+      ],
+      "escalate": "IT needs to check your account and the network's certificate; tell them the exact message.",
+      "related": ["wifi-wrong-password", "clock-wrong"]
+    },
+    {
+      "id": "ethernet-not-working",
+      "os": ["windows", "macos"],
+      "title": "Network cable plugged in, but no connection",
+      "symptoms": ["ethernet not working", "cable unplugged", "network cable", "lan not working", "wired internet not working", "unidentified network"],
+      "why": "A loose or damaged cable, a dead wall port, a USB/dock adapter that isn't working, or the computer preferring a different connection.",
+      "steps": [
+        { "text": "Check both ends of the cable click in, and that the light by the port blinks. Try another cable and another port on the router or wall." },
+        { "text": "If you use a dock or USB network adapter, unplug it and plug it back in; try it on another USB port." },
+        { "text": "Check Ethernet is enabled: Network Connections › right-click Ethernet › Enable.", "os": ["windows"], "open": "run:network-connections" },
+        { "text": "Check the Ethernet service in Network settings and its status; for a USB adapter, see that it's listed.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Run the Network doctor to see which link fails.", "page": "network" },
+        { "text": "Reset the network settings (needs a restart).", "os": ["windows"], "fix": "reset-network" }
+      ],
+      "escalate": "Tell IT which wall port number you used and whether a laptop works on the same cable.",
+      "related": ["wifi-connected-no-internet", "dock-not-working"]
+    },
+    {
+      "id": "dns-site-wont-load",
+      "os": ["windows", "macos"],
+      "title": "One website won't load, others do",
+      "symptoms": ["site can't be reached", "dns_probe_finished_nxdomain", "server ip address could not be found", "website not loading", "err_name_not_resolved", "one site not working"],
+      "why": "The site may be down, or the computer remembers an old address for it. Browser extensions and security software can also block single sites.",
+      "steps": [
+        { "text": "Try the site on your phone using mobile data. If it fails there too, the site itself is down: wait a while." },
+        { "text": "Try a private window (it skips extensions and old cookies)." },
+        { "text": "Clear the computer's address cache.", "os": ["windows"], "fix": "flush-dns" },
+        { "text": "Restart the Mac or turn Wi-Fi off and on to clear the address cache." , "os": ["macos"] },
+        { "text": "Turn off a VPN, ad blocker or web filter for a moment and try again." }
+      ],
+      "escalate": "Tell IT the exact address and error message, and whether it works on your phone.",
+      "related": ["browser-certificate-error", "wifi-connected-no-internet"]
+    },
+    {
+      "id": "network-drive-missing",
+      "os": ["windows", "macos"],
+      "title": "Shared drive or network folder disappeared",
+      "symptoms": ["mapped drive missing", "network drive disconnected", "red x drive", "can't access shared folder", "server not found", "smb share"],
+      "why": "The computer isn't on the work network (or VPN), the server is down, or your saved login for the server is out of date.",
+      "steps": [
+        { "text": "If you're away from the office, connect the VPN first; shared drives only work on the work network." },
+        { "text": "Open the drive in File Explorer; a red X often clears when you click it once it can reach the server." , "os": ["windows"] },
+        { "text": "If you changed your password, update the saved one: Credential Manager › Windows Credentials › the server's entry › Edit (or Remove, then reconnect).", "os": ["windows"], "open": "run:credential-manager" },
+        { "text": "Reconnect: Finder › Go › Connect to Server (⌘K) and type the address IT gave you (smb://server/share).", "os": ["macos"] },
+        { "text": "If you changed your password, delete the old server entry in Keychain Access and reconnect.", "os": ["macos"], "open": "app:Keychain Access" },
+        { "text": "Make sure the network is marked Private on Windows (Public hides the PC and blocks sharing).", "os": ["windows"], "open": "ms-settings:network-status" }
+      ],
+      "escalate": "Give IT the server or drive path and the exact error; check whether coworkers can reach it.",
+      "related": ["vpn-wont-connect", "password-changed-prompts"]
+    },
+    {
+      "id": "cant-see-other-computers",
+      "os": ["windows"],
+      "title": "Can't see other computers or share files on the home network",
+      "symptoms": ["network discovery", "can't see computers on network", "file sharing not working", "network places empty", "turn on network discovery"],
+      "why": "Windows hides this PC and blocks sharing on networks marked Public.",
+      "steps": [
+        { "text": "Set the network to Private: Settings › Network & internet › your network › Private network.", "open": "ms-settings:network-status" },
+        { "text": "Turn on network discovery and file sharing: Network & internet › Advanced network settings › Advanced sharing settings.", "open": "ms-settings:network-advancedsettings" },
+        { "text": "Reach the other computer by name or address directly: in File Explorer's address bar type \\\\computername or \\\\192.168.1.20." }
+      ],
+      "escalate": "On a work network, sharing is often blocked on purpose; ask IT.",
+      "related": ["network-drive-missing"]
+    },
+    {
+      "id": "ip-conflict",
+      "os": ["windows", "macos"],
+      "title": "\"IP address conflict\" or \"self-assigned IP\"",
+      "symptoms": ["ip address conflict", "self-assigned ip", "169.254", "apipa", "another device using ip", "no valid ip configuration"],
+      "why": "The router didn't hand this computer an address (169.254… is a stand-in), or two devices were given the same one.",
+      "steps": [
+        { "text": "Turn Wi-Fi off and on (or unplug and replug the cable) to ask for a new address." },
+        { "text": "Restart the router; it hands out the addresses." },
+        { "text": "Reset the network settings (needs a restart).", "os": ["windows"], "fix": "reset-network" },
+        { "text": "Network settings › your connection › Details › TCP/IP › Renew DHCP Lease.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "If someone set a fixed address on this computer, set it back to automatic (DHCP) unless IT asked for it." }
+      ],
+      "escalate": "Tell IT the address shown and whether other devices on the same network get online.",
+      "related": ["wifi-connected-no-internet"]
+    },
+    {
+      "id": "hotspot-not-working",
+      "os": ["windows", "macos"],
+      "title": "Can't connect to my phone's hotspot",
+      "symptoms": ["phone hotspot", "tethering not working", "personal hotspot", "mobile hotspot not connecting"],
+      "why": "The hotspot switches itself off after a while, the phone's plan blocks tethering, or the computer remembers an old hotspot password.",
+      "steps": [
+        { "text": "Keep the phone's hotspot screen open while connecting; many phones hide it when idle." },
+        { "text": "On iPhone turn on \"Maximize Compatibility\" in Personal Hotspot; on Android try the 2.4 GHz band." },
+        { "text": "Forget the hotspot on the computer and join again." },
+        { "text": "Check your phone plan includes hotspot use." },
+        { "text": "Try USB tethering with the phone's charging cable instead." }
+      ],
+      "related": ["wifi-wrong-password"]
+    },
+    {
+      "id": "proxy-unexpected",
+      "os": ["windows", "macos"],
+      "title": "Internet only works with the proxy off (or a proxy appeared)",
+      "symptoms": ["proxy server", "unable to connect to proxy", "err_proxy_connection_failed", "proxy settings changed"],
+      "why": "A proxy routes web traffic through another server. One left over from work, a VPN, or unwanted software breaks browsing.",
+      "steps": [
+        { "text": "Open proxy settings. Unless IT set one up, turn off \"Use a proxy server\" and setup scripts; keep \"Automatically detect settings\" on.", "os": ["windows"], "open": "ms-settings:network-proxy" },
+        { "text": "Network settings › your connection › Details › Proxies: turn off proxies you didn't set up.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "If it comes back by itself, check for unwanted software (see Security).", "os": ["windows"], "open": "run:windows-security" }
+      ],
+      "escalate": "On a work computer, the proxy may be required; ask IT before removing it.",
+      "related": ["browser-hijacked"]
+    }
+  ]
+}

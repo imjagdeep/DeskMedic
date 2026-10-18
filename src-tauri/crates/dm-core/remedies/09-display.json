@@ -1,0 +1,123 @@
+{
+  "id": "display",
+  "title": "Display & monitors",
+  "icon": "monitor",
+  "blurb": "Second monitor, docks, blurry or tiny text, flicker, projectors.",
+  "remedies": [
+    {
+      "id": "external-monitor-not-detected",
+      "os": ["windows", "macos"],
+      "title": "Second monitor not detected or shows \"No signal\"",
+      "symptoms": ["second monitor not detected", "no signal", "external monitor not working", "hdmi not working", "monitor black", "displayport not working"],
+      "why": "A loose or wrong cable, the monitor set to another input, the adapter or dock not passing video, or the computer not looking for it.",
+      "steps": [
+        { "text": "Check the monitor is on and set to the right input (HDMI 1, DisplayPort…) with its own buttons." },
+        { "text": "Reseat both cable ends, try another cable or port. USB-C ports only carry video if they have a display or Thunderbolt symbol." },
+        { "text": "Press Windows+P and pick Extend; then Settings › Display › Multiple displays › Detect.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Open Displays settings; hold Option and a Detect Displays button appears.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Base M1/M2 MacBooks drive only one external monitor (without special software).", "os": ["macos"] },
+        { "text": "Update the graphics driver.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" }
+      ],
+      "related": ["dock-not-working", "monitor-wrong-resolution"]
+    },
+    {
+      "id": "dock-not-working",
+      "os": ["windows", "macos"],
+      "title": "Dock or USB-C hub not working (screens, network, USB)",
+      "symptoms": ["dock not working", "docking station", "usb-c hub not working", "dock monitors not working", "thunderbolt dock"],
+      "why": "The dock lost power, needs a firmware/driver update, or the laptop's port doesn't support everything the dock needs.",
+      "steps": [
+        { "text": "Unplug the dock's power for 30 seconds, plug it back, then reconnect the laptop." },
+        { "text": "Use the laptop's Thunderbolt/USB-C port marked for display or the one the dock maker recommends." },
+        { "text": "Install the dock's driver or firmware update from its maker (DisplayLink docks need the DisplayLink app)." },
+        { "text": "DisplayLink docks on a Mac need Screen Recording permission for the DisplayLink app.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture" },
+        { "text": "Restart the laptop with the dock connected." }
+      ],
+      "escalate": "Tell IT the dock model and laptop model; some combinations need specific firmware.",
+      "related": ["external-monitor-not-detected", "ethernet-not-working"]
+    },
+    {
+      "id": "monitor-wrong-resolution",
+      "os": ["windows", "macos"],
+      "title": "Screen looks blurry, stretched or the wrong size",
+      "symptoms": ["blurry screen", "wrong resolution", "screen stretched", "text fuzzy", "monitor resolution", "display not sharp"],
+      "why": "The resolution isn't the monitor's native one, or the cable/adapter limits it.",
+      "steps": [
+        { "text": "Settings › Display › choose the monitor › Display resolution: pick the one marked (Recommended).", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Displays › choose the monitor › pick \"Default for display\" or the sharpest option.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Old HDMI cables and cheap adapters cap the resolution or refresh rate; try a better cable." },
+        { "text": "Run ClearType text tuning for sharper text.", "os": ["windows"] }
+      ],
+      "related": ["text-too-small"]
+    },
+    {
+      "id": "text-too-small",
+      "os": ["windows", "macos"],
+      "title": "Text and icons are too small or too big",
+      "symptoms": ["text too small", "icons too big", "scaling", "make text bigger", "display zoom", "everything tiny"],
+      "why": "High-resolution screens need scaling to keep text readable.",
+      "steps": [
+        { "text": "Settings › Display › Scale: try 125% or 150%. For text only: Accessibility › Text size.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Displays › choose a \"Larger Text\" size, or Accessibility › Display › Text size.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "In browsers, Ctrl/⌘ and + makes one site bigger." }
+      ]
+    },
+    {
+      "id": "screen-flickering",
+      "os": ["windows", "macos"],
+      "title": "Screen flickers or goes black for a moment",
+      "symptoms": ["screen flickering", "monitor flicker", "screen blinking", "display goes black briefly", "flashing screen"],
+      "why": "A loose cable, refresh-rate mismatch, an app that clashes with the graphics driver, or failing hardware.",
+      "steps": [
+        { "text": "Reseat or swap the cable." },
+        { "text": "Open Task Manager; if it flickers too, it's the display/driver, if not, an app causes it.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Set the refresh rate to the monitor's standard (often 60 Hz): Settings › Display › Advanced display.", "os": ["windows"], "open": "ms-settings:display-advanced" },
+        { "text": "Set the refresh rate in Displays to the monitor's standard.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Update the graphics driver.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" }
+      ],
+      "escalate": "If the laptop's own screen flickers with nothing connected, it may be a hardware fault: tell IT.",
+      "related": ["external-monitor-not-detected"]
+    },
+    {
+      "id": "screen-yellow-dim",
+      "os": ["windows", "macos"],
+      "title": "Screen looks yellow, too dim or changes brightness",
+      "symptoms": ["screen yellow", "night light", "night shift", "brightness changes by itself", "screen too dark", "auto brightness"],
+      "why": "Night Light/Night Shift warms the colours, and automatic brightness or battery saver dims the screen.",
+      "steps": [
+        { "text": "Turn off Night light or set its schedule.", "os": ["windows"], "open": "ms-settings:nightlight" },
+        { "text": "Turn off \"Change brightness automatically\" and content-adaptive brightness in Display settings.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Displays › Night Shift, and turn off \"Automatically adjust brightness\" and True Tone if colours shift.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Battery saver / Low Power Mode dims the screen; plug in or turn it off." }
+      ]
+    },
+    {
+      "id": "projector-tv-mirror",
+      "os": ["windows", "macos"],
+      "title": "Show my screen on a projector or TV",
+      "symptoms": ["projector", "mirror screen", "duplicate display", "presentation screen", "cast to tv", "airplay", "miracast"],
+      "why": "The computer can mirror (same picture) or extend (extra desktop), by cable or wirelessly.",
+      "steps": [
+        { "text": "Cable: connect HDMI, then press Windows+P and choose Duplicate (same picture) or Extend.", "os": ["windows"] },
+        { "text": "Wireless: Windows+K connects to Miracast TVs and adapters on the same network.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Cable: connect HDMI/USB-C; in Displays pick Mirror or Extended.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Wireless: Control Center › Screen Mirroring for AirPlay TVs and Apple TV.", "os": ["macos"] },
+        { "text": "In PowerPoint, Slide Show › Monitor chooses which screen shows the slides." }
+      ],
+      "related": ["external-monitor-not-detected"]
+    },
+    {
+      "id": "windows-off-screen",
+      "os": ["windows", "macos"],
+      "title": "A window opened off the screen",
+      "symptoms": ["window off screen", "can't see window", "app opens off screen", "window on missing monitor"],
+      "why": "The app remembers a monitor that's no longer connected.",
+      "steps": [
+        { "text": "Click the app in the taskbar, then press Windows+Shift+Left or Right to move it to another screen.", "os": ["windows"] },
+        { "text": "Or press Alt+Space › Move, then any arrow key, and move the mouse to bring it back.", "os": ["windows"] },
+        { "text": "Choose Window › Move to … in the app's menu, or Window › Zoom; or hold Option while clicking the green button.", "os": ["macos"] },
+        { "text": "Changing the display arrangement briefly (Mirror, then back) also pulls windows home." }
+      ]
+    }
+  ]
+}

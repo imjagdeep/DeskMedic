@@ -1,0 +1,73 @@
+{
+  "id": "updates",
+  "title": "Updates",
+  "icon": "update",
+  "blurb": "Updates failing, stuck, or asking to restart.",
+  "remedies": [
+    {
+      "id": "windows-version-check",
+      "os": ["windows", "macos"],
+      "title": "Which version of Windows or macOS do I have?",
+      "symptoms": ["windows version", "which windows", "macos version", "winver", "about this mac", "os build"],
+      "why": "IT and app makers ask for the exact version and build.",
+      "steps": [
+        { "text": "Settings › System › About shows edition, version (e.g. 24H2) and OS build. Or run winver.", "os": ["windows"], "open": "ms-settings:about" },
+        { "text": "Apple menu › About This Mac shows the macOS name and version.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "feature-update-upgrade",
+      "os": ["windows", "macos"],
+      "title": "Upgrade to the latest Windows or macOS version",
+      "symptoms": ["upgrade windows 11", "feature update", "new macos", "upgrade os", "windows 10 end of support"],
+      "why": "Big yearly versions bring new features and keep security support going.",
+      "steps": [
+        { "text": "Settings › Windows Update: the feature update appears when your PC is ready. Check compatibility with PC Health Check.", "os": ["windows"], "open": "ms-settings:windowsupdate" },
+        { "text": "Software Update offers the new macOS when your Mac supports it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" },
+        { "text": "Back up first and keep the computer plugged in." }
+      ],
+      "escalate": "Work computers: IT controls the timing; ask before upgrading.",
+      "related": ["backup-setup"]
+    },
+    {
+      "id": "driver-updates",
+      "os": ["windows"],
+      "title": "Update drivers safely",
+      "symptoms": ["update drivers", "driver update", "graphics driver", "chipset driver", "driver booster"],
+      "why": "Drivers from Windows Update or the PC maker are tested; \"driver updater\" apps often cause trouble.",
+      "steps": [
+        { "text": "Windows Update › Advanced options › Optional updates › Driver updates.", "open": "ms-settings:windowsupdate-optionalupdates" },
+        { "text": "Or the PC maker's own tool (Dell Command Update, Lenovo Vantage, HP Support Assistant)." },
+        { "text": "Avoid third-party \"driver updater\" programs." },
+        { "text": "If a new driver causes trouble, roll it back in Device Manager.", "open": "run:device-manager" }
+      ],
+      "related": ["update-broke-something"]
+    },
+    {
+      "id": "update-space-needed",
+      "os": ["windows", "macos"],
+      "title": "\"Not enough space\" to install an update",
+      "symptoms": ["not enough space update", "update needs more space", "insufficient storage update", "free space for update"],
+      "why": "Updates need room to download and unpack, often 10–30 GB.",
+      "steps": [
+        { "text": "Free up space with DeskMedic's Cleanup (includes old update files).", "page": "cleanup" },
+        { "text": "See what's big in the Disk map.", "page": "diskmap" },
+        { "text": "Windows can use a USB drive for extra room during the update when it asks.", "os": ["windows"] }
+      ],
+      "related": ["low-disk-space"]
+    },
+    {
+      "id": "pause-updates",
+      "os": ["windows", "macos"],
+      "title": "Pause or delay updates for a while",
+      "symptoms": ["pause updates", "delay update", "stop automatic updates", "postpone update"],
+      "why": "You can delay updates for a short time, for example before a presentation.",
+      "steps": [
+        { "text": "Settings › Windows Update › Pause updates (up to a few weeks).", "os": ["windows"], "open": "ms-settings:windowsupdate" },
+        { "text": "Software Update › Automatic updates (i): turn off automatic install for now.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" },
+        { "text": "Don't leave updates off for long; they carry security fixes." }
+      ],
+      "escalate": "Work devices may not allow pausing."
+    }
+  ]
+}

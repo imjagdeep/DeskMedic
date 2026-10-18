@@ -1,0 +1,113 @@
+{
+  "id": "files",
+  "title": "Files, folders & cloud sync",
+  "icon": "folder",
+  "blurb": "OneDrive, iCloud, Dropbox, lost or deleted files, search, file types.",
+  "remedies": [
+    {
+      "id": "find-lost-file",
+      "os": ["windows", "macos"],
+      "title": "I saved a file but can't find it",
+      "symptoms": ["can't find file", "where did my file save", "lost file", "find recent files", "file saved somewhere"],
+      "why": "Apps save to their last-used folder, often Documents, Downloads or OneDrive.",
+      "steps": [
+        { "text": "Search by name from the taskbar or File Explorer's search box; File Explorer › Home shows Recent files.", "os": ["windows"] },
+        { "text": "Spotlight (⌘Space) by name; Finder › Recents.", "os": ["macos"] },
+        { "text": "In the app, File › Open › Recent shows where it went." },
+        { "text": "Check Downloads, Documents, Desktop and OneDrive/iCloud." }
+      ],
+      "related": ["windows-search-broken", "spotlight-broken"]
+    },
+    {
+      "id": "show-file-extensions",
+      "os": ["windows", "macos"],
+      "title": "Show file extensions (.pdf, .docx) and hidden files",
+      "symptoms": ["show file extensions", "hidden files", "show hidden folders", "file type extension", "appdata hidden"],
+      "why": "Extensions are hidden by default, which hides the real file type.",
+      "steps": [
+        { "text": "File Explorer › View › Show › File name extensions and Hidden items.", "os": ["windows"] },
+        { "text": "Finder › Settings › Advanced › Show all filename extensions; ⌘+Shift+. shows hidden files.", "os": ["macos"] }
+      ],
+      "related": ["file-wont-open"]
+    },
+    {
+      "id": "dropbox-google-drive-sync",
+      "os": ["windows", "macos"],
+      "title": "Dropbox or Google Drive isn't syncing",
+      "symptoms": ["dropbox not syncing", "google drive not syncing", "drive for desktop", "dropbox stuck", "sync paused"],
+      "why": "Sync is paused, signed out, out of storage, or a file can't be uploaded.",
+      "steps": [
+        { "text": "Open its icon in the taskbar/menu bar: resume, and read the error." },
+        { "text": "Check storage left in the account." },
+        { "text": "Quit and reopen the app; sign out and in if needed." },
+        { "text": "On a Mac, allow it in Login Items & Extensions › File Providers.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" }
+      ],
+      "related": ["onedrive-not-syncing"]
+    },
+    {
+      "id": "sharepoint-sync-library",
+      "os": ["windows", "macos"],
+      "title": "Sync a SharePoint or Teams folder to my computer",
+      "symptoms": ["sync sharepoint", "teams files in file explorer", "add shortcut to my files", "sharepoint library sync"],
+      "why": "OneDrive can show SharePoint/Teams libraries in File Explorer or Finder.",
+      "steps": [
+        { "text": "In SharePoint or Teams › Files, choose \"Add shortcut to My files\" (preferred) or Sync." },
+        { "text": "The folder appears under OneDrive in File Explorer / Finder." },
+        { "text": "Remove it later from OneDrive settings › Account, or delete the shortcut." }
+      ],
+      "related": ["onedrive-not-syncing"]
+    },
+    {
+      "id": "file-in-use",
+      "os": ["windows", "macos"],
+      "title": "Can't delete, move or rename a file: \"in use\"",
+      "symptoms": ["file in use", "the action can't be completed because the file is open", "can't delete file", "file locked", "folder in use"],
+      "why": "An app (sometimes the preview pane, antivirus or sync) still has the file open.",
+      "steps": [
+        { "text": "Close apps that might have it open, and close File Explorer's preview pane." },
+        { "text": "Resource Monitor › CPU › Associated Handles: search the file name to see which app holds it.", "os": ["windows"], "open": "run:resource-monitor" },
+        { "text": "Pause OneDrive/Dropbox for a moment." },
+        { "text": "Restart if nothing else works." }
+      ]
+    },
+    {
+      "id": "copy-slow",
+      "os": ["windows", "macos"],
+      "title": "Copying files is very slow",
+      "symptoms": ["copy slow", "file transfer slow", "usb copy slow", "copying takes forever", "network copy slow"],
+      "why": "Many tiny files, a slow USB stick or port, or copying over Wi-Fi.",
+      "steps": [
+        { "text": "Zip many small files into one first." },
+        { "text": "Use a USB 3 port (often blue or marked SS) and a USB 3 drive." },
+        { "text": "Copy over a cable rather than Wi-Fi for large network copies." },
+        { "text": "Pause sync and antivirus scans during big copies." }
+      ]
+    },
+    {
+      "id": "pdf-wont-open",
+      "os": ["windows", "macos"],
+      "title": "PDF won't open, prints wrong, or asks for a password",
+      "symptoms": ["pdf won't open", "pdf password", "pdf damaged", "pdf blank", "can't fill pdf form"],
+      "why": "The PDF is protected, damaged, or uses features the viewer doesn't support.",
+      "steps": [
+        { "text": "Open it in another viewer: a browser, Preview (Mac), Adobe Reader, or DeskFolio." },
+        { "text": "Password-protected PDFs need the password from the sender." },
+        { "text": "Forms work best in Adobe Reader or DeskFolio; some browsers can't save filled forms." }
+      ],
+      "related": ["browser-pdf-opens", "file-wont-open"]
+    },
+    {
+      "id": "file-history-versions",
+      "os": ["windows", "macos"],
+      "title": "Get an older version of a file",
+      "symptoms": ["previous version", "version history", "older version of document", "undo changes file", "restore earlier version"],
+      "why": "OneDrive, SharePoint, iCloud, Time Machine and File History keep older versions.",
+      "steps": [
+        { "text": "OneDrive/SharePoint: right-click the file › Version history." },
+        { "text": "File History: right-click › Restore previous versions.", "os": ["windows"] },
+        { "text": "In Pages/Numbers/Keynote/Preview: File › Revert To › Browse All Versions; or Time Machine.", "os": ["macos"] }
+      ],
+      "related": ["file-deleted-by-mistake", "restore-time-machine"]
+    }
+  ]
+}

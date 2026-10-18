@@ -1,0 +1,158 @@
+{
+  "id": "meetings",
+  "title": "Teams, Zoom & meetings",
+  "icon": "video",
+  "blurb": "Can't hear or be heard, camera off, screen share, Teams won't start.",
+  "remedies": [
+    {
+      "id": "teams-wont-start",
+      "os": ["windows", "macos"],
+      "title": "Teams won't open, is blank, or keeps loading",
+      "symptoms": ["teams not opening", "teams white screen", "teams stuck loading", "teams black screen", "teams crash", "new teams not starting"],
+      "why": "Teams' saved data got damaged, or an old and a new Teams are fighting.",
+      "steps": [
+        { "text": "Quit Teams completely (right-click its icon in the taskbar/menu bar › Quit) and open it again." },
+        { "text": "Clear Teams' cache and settings (you stay signed in to your account; chats are on the server).", "os": ["windows"], "fix": "reset-teams" },
+        { "text": "Clear the cache: quit Teams, then in Finder › Go › Go to Folder open ~/Library/Group Containers/UBF8T346G9.com.microsoft.teams and move the folder to the Bin; reopen Teams.", "os": ["macos"] },
+        { "text": "Try Teams in the browser (teams.microsoft.com); if it works there, reinstall the app." }
+      ],
+      "escalate": "Tell IT whether Teams in the browser works.",
+      "related": ["teams-sign-in", "m365-sign-in-loop"]
+    },
+    {
+      "id": "teams-sign-in",
+      "os": ["windows", "macos"],
+      "title": "Teams sign-in error or wrong account",
+      "symptoms": ["teams sign in error", "teams wrong account", "teams personal and work", "teams caa", "can't sign in teams"],
+      "why": "Teams keeps your Microsoft sign-in shared with Office; a damaged or mixed-up sign-in breaks it.",
+      "steps": [
+        { "text": "Click your picture in Teams › Add another account, or Sign out and sign in with the right one." },
+        { "text": "Clear Teams' cache.", "os": ["windows"], "fix": "reset-teams" },
+        { "text": "See \"Microsoft 365 sign-in loops\" for removing saved sign-ins." }
+      ],
+      "related": ["m365-sign-in-loop", "teams-wont-start"]
+    },
+    {
+      "id": "meeting-others-cant-hear-me",
+      "os": ["windows", "macos"],
+      "title": "People in the meeting can't hear me",
+      "symptoms": ["they can't hear me", "mic not working teams", "zoom microphone not working", "muted", "no one can hear me", "microphone not detected"],
+      "why": "You're muted (in the app or on the headset), the wrong microphone is picked, or the system blocks apps from the microphone.",
+      "steps": [
+        { "text": "Check the mute button in the meeting and on your headset or its cable." },
+        { "text": "In the meeting's device settings (Teams: ⋯ › Settings › Device settings; Zoom: ^ next to Mute), pick the microphone you're actually using." },
+        { "text": "Allow apps to use the microphone: Privacy & security › Microphone › on for desktop apps.", "os": ["windows"], "open": "ms-settings:privacy-microphone" },
+        { "text": "Allow the app: Privacy & Security › Microphone › turn on Teams/Zoom, then restart it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone" },
+        { "text": "Speak and watch the input level in Sound settings; if it doesn't move, the microphone isn't picking you up.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Speak and watch the input level in Sound settings › Input.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" }
+      ],
+      "related": ["mic-not-working", "bluetooth-headset-bad-sound"]
+    },
+    {
+      "id": "meeting-cant-hear-others",
+      "os": ["windows", "macos"],
+      "title": "I can't hear anyone in the meeting",
+      "symptoms": ["can't hear meeting", "no sound teams", "zoom no audio", "can't hear others", "speaker not working meeting"],
+      "why": "The meeting app plays to a different speaker or headset, or the app's own volume is down.",
+      "steps": [
+        { "text": "In the meeting's device settings pick the speaker or headset you're using, and play the test sound." },
+        { "text": "Check the app isn't muted in the volume mixer.", "os": ["windows"], "open": "ms-settings:apps-volume" },
+        { "text": "Pick the right output in Sound settings › Output.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Unplug and replug the headset; for Bluetooth, see the Bluetooth headset remedy." }
+      ],
+      "related": ["no-sound", "bluetooth-headset-bad-sound"]
+    },
+    {
+      "id": "meeting-camera-off",
+      "os": ["windows", "macos"],
+      "title": "Camera doesn't work in Teams or Zoom",
+      "symptoms": ["camera not working teams", "zoom camera not working", "no video", "camera greyed out", "black camera meeting"],
+      "why": "Another app holds the camera, the system blocks the app, or a privacy shutter/switch is closed.",
+      "steps": [
+        { "text": "Check for a sliding cover or camera key on the laptop (often F8 or F10 with a camera icon)." },
+        { "text": "Close other apps that might use the camera, then pick the right camera in the meeting's device settings." },
+        { "text": "Allow apps to use the camera.", "os": ["windows"], "open": "ms-settings:privacy-webcam" },
+        { "text": "Allow the app: Privacy & Security › Camera › turn on Teams/Zoom, then restart it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera" }
+      ],
+      "related": ["camera-not-working"]
+    },
+    {
+      "id": "screen-share-not-working",
+      "os": ["windows", "macos"],
+      "title": "Screen sharing shows black or doesn't work",
+      "symptoms": ["screen share black", "can't share screen", "screen sharing not working", "share screen permission mac", "others see black screen"],
+      "why": "On a Mac the app needs Screen Recording permission; on Windows protected video or graphics settings can black out the share.",
+      "steps": [
+        { "text": "Allow the app: Privacy & Security › Screen & System Audio Recording › turn on Teams/Zoom, then quit and reopen it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture" },
+        { "text": "Share one window instead of the whole screen, or the whole screen instead of a window." },
+        { "text": "Streaming video sites and some secure apps black themselves out on purpose." },
+        { "text": "On laptops with two graphics chips, setting the meeting app to the power-saving GPU can fix black shares: Settings › System › Display › Graphics.", "os": ["windows"], "open": "ms-settings:display-advancedgraphics" }
+      ]
+    },
+    {
+      "id": "meeting-echo",
+      "os": ["windows", "macos"],
+      "title": "Echo or feedback in a meeting",
+      "symptoms": ["echo in meeting", "feedback noise", "hearing myself", "howling sound teams"],
+      "why": "Someone's speakers are playing into their microphone, or two devices in the same room joined with audio.",
+      "steps": [
+        { "text": "Use a headset instead of laptop speakers." },
+        { "text": "If several people are in one room, only one device should join with audio; the others join with audio off." },
+        { "text": "Turn down speaker volume and turn on noise suppression in the meeting app's settings." }
+      ]
+    },
+    {
+      "id": "meeting-poor-quality",
+      "os": ["windows", "macos"],
+      "title": "Meeting video freezes or audio breaks up",
+      "symptoms": ["video freezing", "choppy audio", "poor connection teams", "zoom unstable connection", "meeting lag"],
+      "why": "The internet connection can't keep up (often Wi-Fi), or the computer is overloaded.",
+      "steps": [
+        { "text": "Turn off your video when quality drops; it frees a lot of bandwidth." },
+        { "text": "Move closer to the router, or use a cable." },
+        { "text": "Pause cloud sync and big downloads during calls." },
+        { "text": "Close other heavy apps and browser tabs." }
+      ],
+      "related": ["wifi-slow", "computer-slow"]
+    },
+    {
+      "id": "teams-notifications-missing",
+      "os": ["windows", "macos"],
+      "title": "Teams notifications don't show",
+      "symptoms": ["teams notifications not working", "no teams alerts", "missed messages teams", "teams banner not showing"],
+      "why": "Teams' own notification settings, the system's Focus / Do Not Disturb, or the system blocking Teams' notifications.",
+      "steps": [
+        { "text": "Teams › Settings › Notifications and activity: check chats and mentions are set to Banner." },
+        { "text": "Turn off Do not disturb / Focus, and check Teams is allowed to notify.", "os": ["windows"], "open": "ms-settings:notifications" },
+        { "text": "Turn off Focus and allow Microsoft Teams in Notifications.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Notifications-Settings.extension" },
+        { "text": "Make sure your Teams status isn't set to Do not disturb." }
+      ],
+      "related": ["notifications-missing"]
+    },
+    {
+      "id": "teams-meeting-button-missing",
+      "os": ["windows", "macos"],
+      "title": "\"Teams Meeting\" button missing in Outlook",
+      "symptoms": ["teams meeting button missing outlook", "teams add-in outlook", "can't schedule teams meeting outlook"],
+      "why": "The Teams add-in for Outlook didn't load or was disabled.",
+      "steps": [
+        { "text": "Make sure the Teams app is installed and you're signed in, then restart Outlook." },
+        { "text": "In classic Outlook: File › Options › Add-ins › Manage COM Add-ins › tick Microsoft Teams Meeting Add-in.", "os": ["windows"] },
+        { "text": "Schedule from Teams' own Calendar, or Outlook on the web, meanwhile." }
+      ],
+      "related": ["office-add-in-missing"]
+    },
+    {
+      "id": "zoom-update",
+      "os": ["windows", "macos"],
+      "title": "Zoom says I need to update to join",
+      "symptoms": ["zoom update required", "zoom version too old", "can't join zoom meeting update"],
+      "why": "Zoom requires a recent version to join meetings.",
+      "steps": [
+        { "text": "Open Zoom › your picture › Check for Updates." },
+        { "text": "If the update fails, download the latest from zoom.us/download and install over it." },
+        { "text": "Join from the browser instead: in the meeting link page choose \"Join from your browser\"." }
+      ]
+    }
+  ]
+}

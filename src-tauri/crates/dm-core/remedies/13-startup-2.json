@@ -1,0 +1,77 @@
+{
+  "id": "startup",
+  "title": "Startup, shutdown & crashes",
+  "icon": "power",
+  "blurb": "Won't turn on, slow to start, blue screens, restarts by itself, won't shut down.",
+  "remedies": [
+    {
+      "id": "safe-mode",
+      "os": ["windows", "macos"],
+      "title": "Start in Safe Mode",
+      "symptoms": ["safe mode", "start safe mode", "boot safe mode", "safe boot", "f8"],
+      "why": "Safe Mode starts with the minimum of drivers and apps, to fix a problem that stops normal startup.",
+      "steps": [
+        { "text": "Settings › System › Recovery › Advanced startup › Restart now › Troubleshoot › Advanced options › Startup Settings › Restart › press 4.", "os": ["windows"], "open": "ms-settings:recovery" },
+        { "text": "From the sign-in screen: hold Shift and click Restart.", "os": ["windows"] },
+        { "text": "Apple silicon: shut down, hold the power button until Options, pick the disk, hold Shift › Continue in Safe Mode. Intel: hold Shift at startup.", "os": ["macos"] },
+        { "text": "Restart normally to leave Safe Mode." }
+      ],
+      "related": ["boot-repair", "mac-wont-start"]
+    },
+    {
+      "id": "stuck-on-logo",
+      "os": ["windows"],
+      "title": "Stuck on the Windows logo or spinning dots",
+      "symptoms": ["stuck on windows logo", "spinning dots forever", "stuck on loading", "windows won't load past logo"],
+      "why": "An update is finishing, a driver hangs, or startup files are damaged.",
+      "steps": [
+        { "text": "Wait 30 minutes if an update just installed." },
+        { "text": "Unplug all USB devices and docks; restart." },
+        { "text": "Turn it off with the power button three times during startup to reach Recovery › Startup Repair." },
+        { "text": "Then Safe Mode, or Uninstall Updates, or System Restore." }
+      ],
+      "related": ["boot-repair", "safe-mode"]
+    },
+    {
+      "id": "check-crash-logs",
+      "os": ["windows", "macos"],
+      "title": "Find out why my computer or an app crashed",
+      "symptoms": ["crash log", "event viewer", "why did it crash", "reliability history", "crash report"],
+      "why": "The system keeps a history of crashes with the app or driver involved.",
+      "steps": [
+        { "text": "Reliability Monitor: red X's per day, click for details.", "os": ["windows"], "open": "run:reliability-monitor" },
+        { "text": "Event Viewer › Windows Logs › System for detailed errors around the time.", "os": ["windows"], "open": "run:event-viewer" },
+        { "text": "Console › Crash Reports and Log Reports.", "os": ["macos"], "open": "app:Console" },
+        { "text": "Export DeskMedic's report to share with IT.", "page": "health" }
+      ],
+      "related": ["apps-crash-everything", "blue-screen"]
+    },
+    {
+      "id": "fans-loud-at-startup",
+      "os": ["windows", "macos"],
+      "title": "Computer is noisy or slow for a while after starting",
+      "symptoms": ["slow after startup", "fan loud after boot", "busy after login", "takes minutes to be usable"],
+      "why": "Updates, sync, antivirus and indexing all run right after you sign in.",
+      "steps": [
+        { "text": "Give it 5–10 minutes after starting; it settles down." },
+        { "text": "Turn off startup apps you don't need.", "os": ["windows"], "open": "ms-settings:startupapps" },
+        { "text": "Turn off login items you don't need.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Restart rather than shutting down for weeks; long uptime makes the catch-up worse." }
+      ],
+      "related": ["startup-slow"]
+    },
+    {
+      "id": "computer-beeps",
+      "os": ["windows", "macos"],
+      "title": "Computer beeps or flashes lights and won't start",
+      "symptoms": ["computer beeping", "beep codes", "caps lock flashing", "power light blinking", "won't post"],
+      "why": "Beeps and light patterns are hardware error codes (often memory, graphics or battery).",
+      "steps": [
+        { "text": "Count the beeps or flashes and look the pattern up for your model on the maker's support site." },
+        { "text": "Unplug everything, hold power 30 seconds, plug in only the charger and try again." }
+      ],
+      "escalate": "Beep codes usually mean hardware; tell IT the pattern and the model.",
+      "related": ["wont-turn-on"]
+    }
+  ]
+}

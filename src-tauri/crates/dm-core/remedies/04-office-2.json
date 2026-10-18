@@ -1,0 +1,135 @@
+{
+  "id": "office",
+  "title": "Microsoft 365 & Office",
+  "icon": "apps",
+  "blurb": "Word, Excel, PowerPoint: activation, sign-in, crashes, files that won't open.",
+  "remedies": [
+    {
+      "id": "office-protected-view",
+      "os": ["windows", "macos"],
+      "title": "Document opens read-only in \"Protected View\"",
+      "symptoms": ["protected view", "enable editing", "read only document", "opened in protected view", "can't edit attachment"],
+      "why": "Files from email or the internet open in Protected View so a harmful file can't run anything.",
+      "steps": [
+        { "text": "If you trust the file, click Enable Editing in the yellow bar." },
+        { "text": "Save it to your own folder first; files opened straight from an email are temporary copies." },
+        { "text": "Files that \"can't be opened in Protected View\" at all: save, right-click › Properties › Unblock, then open.", "os": ["windows"] }
+      ],
+      "related": ["office-macros-blocked"]
+    },
+    {
+      "id": "word-track-changes",
+      "os": ["windows", "macos"],
+      "title": "Red lines and comments appear in my Word document",
+      "symptoms": ["track changes", "red text word", "remove comments word", "accept all changes", "markup showing"],
+      "why": "Track Changes records edits; they stay in the file until accepted or rejected.",
+      "steps": [
+        { "text": "Review › Track Changes: turn it off to stop recording." },
+        { "text": "Review › Accept › Accept All Changes (or Reject All) to clean the document." },
+        { "text": "Review › Delete › Delete All Comments in Document." },
+        { "text": "Before sending outside, File › Info › Check for Issues › Inspect Document." }
+      ]
+    },
+    {
+      "id": "excel-csv-wrong",
+      "os": ["windows", "macos"],
+      "title": "CSV opens in Excel with everything in one column or broken dates",
+      "symptoms": ["csv one column", "csv excel wrong", "leading zeros removed", "dates changed excel", "semicolon csv", "import csv excel"],
+      "why": "Excel guesses separators and formats from your region; leading zeros and long numbers get changed.",
+      "steps": [
+        { "text": "Use Data › From Text/CSV instead of double-clicking, and choose the separator and column types (Text for IDs and phone numbers)." },
+        { "text": "Excel › File › Options › Data: turn off automatic data conversions you don't want (Windows Excel).", "os": ["windows"] },
+        { "text": "If commas vs semicolons is the problem, check the region's list separator.", "os": ["windows"], "open": "run:region" }
+      ],
+      "related": ["date-format"]
+    },
+    {
+      "id": "excel-formula-shows",
+      "os": ["windows", "macos"],
+      "title": "Excel shows the formula instead of the result, or doesn't recalculate",
+      "symptoms": ["formula showing as text", "excel not calculating", "formulas not updating", "show formulas", "#name", "#value"],
+      "why": "The cell is formatted as Text, Show Formulas is on, or calculation is set to Manual.",
+      "steps": [
+        { "text": "Formulas › Show Formulas off (Ctrl+`)." },
+        { "text": "Format the cell as General, then click in it and press Enter." },
+        { "text": "Formulas › Calculation Options › Automatic." },
+        { "text": "#NAME? means a misspelt function; #VALUE! a wrong kind of value; #REF! a deleted cell reference." }
+      ]
+    },
+    {
+      "id": "powerpoint-video-wont-play",
+      "os": ["windows", "macos"],
+      "title": "Video or audio in PowerPoint won't play",
+      "symptoms": ["powerpoint video not playing", "media can't be played", "audio not working powerpoint", "embedded video"],
+      "why": "The video is linked (not embedded) and the file moved, or its format isn't supported on this computer.",
+      "steps": [
+        { "text": "File › Info › Optimize Compatibility / Compress Media (Windows) to fix most formats.", "os": ["windows"] },
+        { "text": "Insert videos as MP4 (H.264 + AAC) for any computer." },
+        { "text": "Online videos need internet during the show." }
+      ]
+    },
+    {
+      "id": "office-dark-mode",
+      "os": ["windows", "macos"],
+      "title": "Office is dark (or white) and I want the other",
+      "symptoms": ["office dark mode", "word black background", "office theme", "white page dark mode"],
+      "why": "Office follows its own theme setting or the system's.",
+      "steps": [
+        { "text": "File › Account › Office Theme (Windows) or Word › Settings › General › Personalize (Mac)." },
+        { "text": "Word can keep the page white in dark mode: \"Turn off dark mode\" for the page under the same setting." }
+      ]
+    },
+    {
+      "id": "office-share-link",
+      "os": ["windows", "macos"],
+      "title": "Share an Office file so others can edit it at the same time",
+      "symptoms": ["share document", "coauthor", "edit together", "share link onedrive", "collaborate word"],
+      "why": "Files saved in OneDrive or SharePoint can be edited by several people at once.",
+      "steps": [
+        { "text": "Save the file to OneDrive/SharePoint (AutoSave on, top left)." },
+        { "text": "Click Share, choose who can edit or view, and send the link instead of an attachment." },
+        { "text": "Everyone sees each other's edits live." }
+      ],
+      "related": ["file-locked-by-another-user"]
+    },
+    {
+      "id": "office-uninstall-clean",
+      "os": ["windows", "macos"],
+      "title": "Remove Office completely to reinstall it",
+      "symptoms": ["uninstall office completely", "office reinstall", "office won't uninstall", "remove office"],
+      "why": "A clean reinstall fixes a damaged Office install that repairs can't.",
+      "steps": [
+        { "text": "Settings › Apps › Microsoft 365 › Uninstall. If that fails, use Microsoft's \"Get Help\" uninstall troubleshooter.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Drag the Office apps to the Bin, then reinstall from microsoft365.com.", "os": ["macos"] },
+        { "text": "Reinstall from microsoft365.com › Install apps, signed in with the licensed account." }
+      ],
+      "related": ["office-repair"]
+    },
+    {
+      "id": "word-formatting-mess",
+      "os": ["windows", "macos"],
+      "title": "Word formatting is a mess (spacing, numbering, pasted text)",
+      "symptoms": ["word formatting", "line spacing word", "numbering broken", "paste formatting", "clear formatting"],
+      "why": "Pasted text brings its own styles, and manual formatting fights the document's styles.",
+      "steps": [
+        { "text": "Select the text and Clear All Formatting (Home › the A with an eraser), then apply a style." },
+        { "text": "Paste with Keep Text Only (right-click › paste options) or Ctrl+Shift+V." },
+        { "text": "Home › ¶ shows hidden marks so you see stray breaks and spaces." },
+        { "text": "Fix numbering by restarting it: right-click the number › Restart at 1." }
+      ]
+    },
+    {
+      "id": "office-cant-save",
+      "os": ["windows", "macos"],
+      "title": "Office can't save the file (\"Upload failed\", \"Document not saved\")",
+      "symptoms": ["can't save document", "upload failed", "document not saved", "save error", "file is read only can't save"],
+      "why": "The file is on OneDrive/SharePoint and couldn't sync, the folder is read-only, or the disk is full.",
+      "steps": [
+        { "text": "Save As to your Documents/Desktop first so nothing is lost." },
+        { "text": "Check the OneDrive icon for sign-in or sync errors." },
+        { "text": "Check free disk space.", "page": "cleanup" }
+      ],
+      "related": ["onedrive-not-syncing", "access-denied-folder"]
+    }
+  ]
+}

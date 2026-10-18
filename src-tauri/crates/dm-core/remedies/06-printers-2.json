@@ -1,0 +1,96 @@
+{
+  "id": "printers",
+  "title": "Printers & scanners",
+  "icon": "printer",
+  "blurb": "Offline, stuck jobs, wrong printer, scanning.",
+  "remedies": [
+    {
+      "id": "print-double-sided",
+      "os": ["windows", "macos"],
+      "title": "Print double-sided, in black and white, or several pages per sheet",
+      "symptoms": ["double sided", "duplex", "print both sides", "black and white printing", "grayscale", "pages per sheet"],
+      "why": "These are print-dialog options; their names vary by printer.",
+      "steps": [
+        { "text": "In the print dialog open Printer properties / More settings: Print on both sides, Color › Black & white, Pages per sheet." },
+        { "text": "Mac: the Layout section has Two-Sided and Pages per Sheet; Printer Options for colour.", "os": ["macos"] },
+        { "text": "Set them as defaults in the printer's Printing preferences.", "os": ["windows"], "open": "ms-settings:printers" }
+      ]
+    },
+    {
+      "id": "print-pdf",
+      "os": ["windows", "macos"],
+      "title": "Save as PDF instead of printing",
+      "symptoms": ["print to pdf", "save as pdf", "make a pdf", "microsoft print to pdf"],
+      "why": "Both systems can \"print\" to a PDF file.",
+      "steps": [
+        { "text": "Pick \"Microsoft Print to PDF\" as the printer.", "os": ["windows"] },
+        { "text": "Click PDF › Save as PDF in the print dialog.", "os": ["macos"] },
+        { "text": "If Microsoft Print to PDF is missing, turn it on in Windows features.", "os": ["windows"], "open": "run:windows-features" },
+        { "text": "DeskFolio (a sister DeskLab app) can merge, compress and sign the result." }
+      ]
+    },
+    {
+      "id": "printer-wifi-setup",
+      "os": ["windows", "macos"],
+      "title": "Connect a new printer to Wi-Fi",
+      "symptoms": ["printer wifi setup", "connect printer to wifi", "wps printer", "printer network setup", "new router printer"],
+      "why": "Printers join Wi-Fi from their own screen, a button (WPS), or the maker's app.",
+      "steps": [
+        { "text": "On the printer's screen: Settings › Wireless › Setup wizard › pick the network and type its password." },
+        { "text": "No screen: use the maker's app (HP Smart, Epson Smart Panel, Canon PRINT, Brother iPrint) which walks through it." },
+        { "text": "Or press WPS on the router, then the printer's Wi-Fi button within 2 minutes." },
+        { "text": "After a new router, every printer has to join the new network." }
+      ],
+      "related": ["printer-add"]
+    },
+    {
+      "id": "printer-ink-warning",
+      "os": ["windows", "macos"],
+      "title": "Printer refuses to print: ink, cartridge or \"unsupported supply\"",
+      "symptoms": ["cartridge not recognized", "low ink won't print", "incompatible cartridge", "cartridge error", "supply problem"],
+      "why": "Printers stop for empty or unrecognised cartridges; some reject non-original ones after firmware updates.",
+      "steps": [
+        { "text": "Take the cartridge out, check the protective tape is off and the contacts are clean, and click it back in." },
+        { "text": "Check the exact cartridge model fits the printer." },
+        { "text": "Some printers let you continue in black only or ignore low-ink warnings from their menu." }
+      ]
+    },
+    {
+      "id": "print-slow",
+      "os": ["windows", "macos"],
+      "title": "Printing is very slow",
+      "symptoms": ["printing slow", "takes long to print", "print spooling slowly", "first page slow"],
+      "why": "Large or image-heavy documents, high-quality mode, or a weak Wi-Fi link to the printer.",
+      "steps": [
+        { "text": "Choose Draft/Normal quality instead of Best for everyday printing." },
+        { "text": "Print large PDFs as images only if needed (Advanced › Print as image)." },
+        { "text": "Clear the queue and restart the spooler.", "os": ["windows"], "fix": "print-queue" },
+        { "text": "Move the printer closer to the router or connect it by cable." }
+      ]
+    },
+    {
+      "id": "scan-to-email-folder",
+      "os": ["windows", "macos"],
+      "title": "Office copier \"scan to email\" or \"scan to folder\" stopped working",
+      "symptoms": ["scan to email not working", "scan to folder failed", "smb scan", "copier scan error", "scan to network folder"],
+      "why": "The copier's saved email or folder login no longer works (a password changed or older security was turned off).",
+      "steps": [
+        { "text": "Note the error on the copier's screen." },
+        { "text": "Use scan to USB stick as a stopgap." }
+      ],
+      "escalate": "IT or the copier company must update the copier's saved login or folder settings."
+    },
+    {
+      "id": "printer-mac-add-ip",
+      "os": ["macos"],
+      "title": "Add a printer by IP address on a Mac",
+      "symptoms": ["add printer ip mac", "printer not listed mac", "ipp printer", "airprint not showing"],
+      "why": "Printers on another network segment don't appear automatically.",
+      "steps": [
+        { "text": "Printers & Scanners › Add Printer › the globe (IP) tab › type the address, Protocol: AirPrint or IPP.", "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "Choose the right driver under Use if it doesn't pick one." }
+      ],
+      "related": ["printer-add"]
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "id": "network",
+  "title": "Network & Wi-Fi",
+  "icon": "wifi",
+  "blurb": "No internet, slow or dropping Wi-Fi, can't see other computers.",
+  "remedies": [
+    {
+      "id": "wifi-sign-in-page",
+      "os": ["windows", "macos"],
+      "title": "Hotel or café Wi-Fi sign-in page doesn't appear",
+      "symptoms": ["captive portal", "hotel wifi login page", "airport wifi sign in", "wifi needs sign in", "guest wifi terms page not showing"],
+      "why": "Public Wi-Fi shows a sign-in page before letting you online; a VPN, a custom DNS or an open secure site can stop it appearing.",
+      "steps": [
+        { "text": "Open a plain web address like http://neverssl.com in the browser; it redirects to the sign-in page." },
+        { "text": "Turn off the VPN and any custom DNS (like 1.1.1.1 apps) until you've signed in." },
+        { "text": "Forget the network and join again to trigger the sign-in prompt." },
+        { "text": "If the page still won't appear, try another browser or a private window." }
+      ],
+      "related": ["wifi-connected-no-internet", "dns-change-server"]
+    },
+    {
+      "id": "dns-change-server",
+      "os": ["windows", "macos"],
+      "title": "Change the DNS server (for example to 1.1.1.1 or 8.8.8.8)",
+      "symptoms": ["change dns", "dns server", "1.1.1.1", "8.8.8.8", "set dns", "custom dns"],
+      "why": "DNS turns names into addresses. Your provider's DNS is used by default; a public one can be faster or fix name lookup failures.",
+      "steps": [
+        { "text": "Settings › Network & internet › Wi-Fi (or Ethernet) › Hardware properties › DNS server assignment › Edit › Manual, add 1.1.1.1 and 8.8.8.8.", "os": ["windows"], "open": "ms-settings:network-status" },
+        { "text": "Network › your connection › Details › DNS › + to add 1.1.1.1 and 8.8.8.8.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Clear the old answers afterwards.", "os": ["windows"], "fix": "flush-dns" },
+        { "text": "On work computers leave DNS alone: company sites often only resolve through the company's DNS." }
+      ],
+      "escalate": "Work devices: ask IT before changing DNS.",
+      "related": ["dns-site-wont-load"]
+    },
+    {
+      "id": "find-ip-address",
+      "os": ["windows", "macos"],
+      "title": "Find my computer's IP address or MAC address",
+      "symptoms": ["what is my ip", "ip address", "mac address", "find ip", "physical address", "hardware address"],
+      "why": "IT or a router setting often needs this computer's network address (IP) or hardware address (MAC).",
+      "steps": [
+        { "text": "Settings › Network & internet › Wi-Fi (or Ethernet) › Hardware properties: IPv4 address and Physical address (MAC).", "os": ["windows"], "open": "ms-settings:network-status" },
+        { "text": "Network › your connection › Details: IP address under TCP/IP, MAC under Hardware.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Your public (internet) IP is different; search \"what is my IP\" to see it." },
+        { "text": "Wi-Fi may show a private (random) MAC per network; turn it off for that network if IT needs the real one." }
+      ]
+    },
+    {
+      "id": "wifi-show-password",
+      "os": ["windows", "macos"],
+      "title": "See the password of the Wi-Fi I'm connected to",
+      "symptoms": ["show wifi password", "forgot wifi password", "view wifi key", "share wifi password", "wifi password on computer"],
+      "why": "The computer remembers the password of networks you joined; you can look it up to share it.",
+      "steps": [
+        { "text": "Settings › Network & internet › Wi-Fi › your network's properties › View Wi-Fi security key.", "os": ["windows"], "open": "ms-settings:network-wifi" },
+        { "text": "Wi-Fi settings › ⋯ next to the network › Copy Password, or Keychain Access › search the network › Show password.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" },
+        { "text": "Phones can share it: iPhone near a Mac with the same Apple Account offers Share Password; Android shows a QR code." }
+      ]
+    },
+    {
+      "id": "metered-connection",
+      "os": ["windows"],
+      "title": "Updates or OneDrive won't download (metered connection)",
+      "symptoms": ["metered connection", "updates paused metered", "onedrive paused metered", "data limit", "set as metered"],
+      "why": "On a connection marked as metered, Windows and OneDrive hold back big downloads to save data.",
+      "steps": [
+        { "text": "Turn off Metered connection for this network unless you're on a phone hotspot or limited plan.", "open": "ms-settings:network-status" },
+        { "text": "Check data limits: Settings › Network & internet › Data usage.", "open": "ms-settings:datausage" }
+      ],
+      "related": ["onedrive-not-syncing", "updates-stuck"]
+    },
+    {
+      "id": "wifi-wrong-network",
+      "os": ["windows", "macos"],
+      "title": "Computer keeps joining the wrong Wi-Fi",
+      "symptoms": ["connects to wrong wifi", "joins guest wifi", "auto connect wrong network", "wifi priority", "prefers other network"],
+      "why": "It auto-joins every network it remembers; a weak or guest network can win.",
+      "steps": [
+        { "text": "Turn off \"Connect automatically\" for the network you don't want, or forget it.", "os": ["windows"], "open": "ms-settings:network-wifi" },
+        { "text": "Wi-Fi settings › ⓘ next to the network › turn off Auto-Join, or Forget it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.wifi-settings-extension" }
+      ],
+      "related": ["wifi-drops"]
+    },
+    {
+      "id": "wifi-dead-spots",
+      "os": ["windows", "macos"],
+      "title": "Wi-Fi is weak in some rooms",
+      "symptoms": ["weak wifi", "wifi dead zone", "bad signal upstairs", "one bar wifi", "extend wifi range"],
+      "why": "Walls, floors and distance weaken Wi-Fi, especially 5 GHz.",
+      "steps": [
+        { "text": "Place the router high and central, out of cupboards and away from TVs and metal." },
+        { "text": "Use 2.4 GHz for range, 5 GHz for speed near the router." },
+        { "text": "A mesh Wi-Fi system covers bigger homes far better than a range extender." },
+        { "text": "For a fixed desk, a network cable or powerline adapter beats any Wi-Fi." }
+      ],
+      "related": ["wifi-slow", "wifi-drops"]
+    },
+    {
+      "id": "router-admin",
+      "os": ["windows", "macos"],
+      "title": "Log in to my router's settings",
+      "symptoms": ["router login", "192.168.1.1", "192.168.0.1", "router admin page", "change wifi name", "change wifi password router"],
+      "why": "The router has its own settings page or app for the Wi-Fi name, password and connected devices.",
+      "steps": [
+        { "text": "Look at the sticker on the router for its address (often 192.168.1.1 or 192.168.0.1), login and app name." },
+        { "text": "Many routers now use an app (Eero, Google Home, Deco, your provider's app)." },
+        { "text": "Find the router's address (the Default gateway / Router) in your network details.", "os": ["windows"], "open": "ms-settings:network-status" },
+        { "text": "Find the router's address in Network › Details › TCP/IP › Router.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "If you change the Wi-Fi password, every device has to join again." }
+      ],
+      "escalate": "Office routers and firewalls belong to IT; don't change them."
+    },
+    {
+      "id": "ethernet-slow-100",
+      "os": ["windows", "macos"],
+      "title": "Wired connection stuck at 100 Mbps",
+      "symptoms": ["ethernet 100mbps", "slow wired connection", "link speed 100", "gigabit not working", "cable slow"],
+      "why": "An old or damaged cable (only 4 of 8 wires working), an old switch, or a dock limits the link to 100 Mbps.",
+      "steps": [
+        { "text": "Check the link speed: Network & internet › Ethernet › Link speed.", "os": ["windows"], "open": "ms-settings:network-ethernet" },
+        { "text": "Check the link speed: Network › Ethernet › Details › Hardware.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Swap the cable for a Cat5e or Cat6 one; check the plug's clips and wires." },
+        { "text": "Try another port on the router/switch, or plug in without the dock." }
+      ],
+      "related": ["wifi-slow", "dock-not-working"]
+    },
+    {
+      "id": "airplane-mode-stuck",
+      "os": ["windows"],
+      "title": "Airplane mode is stuck on or greyed out",
+      "symptoms": ["airplane mode stuck", "airplane mode won't turn off", "airplane mode greyed out", "flight mode on"],
+      "why": "A hardware wireless switch, a stopped radio service, or a driver hiccup holds airplane mode on.",
+      "steps": [
+        { "text": "Press the laptop's wireless key or switch (often Fn + a key with an aeroplane or antenna)." },
+        { "text": "Turn airplane mode off in Settings.", "open": "ms-settings:network-airplanemode" },
+        { "text": "Services › Radio Management Service › Restart.", "open": "run:services" },
+        { "text": "Restart the computer (Restart, not Shut down)." }
+      ],
+      "related": ["wifi-no-adapter"]
+    },
+    {
+      "id": "network-printer-ip-changed",
+      "os": ["windows", "macos"],
+      "title": "Devices on the network stop working after the router restarts",
+      "symptoms": ["ip changed after router restart", "dhcp reservation", "static ip printer", "nas not found after restart", "device address changed"],
+      "why": "The router hands out addresses that can change; printers, NAS drives and cameras set up by address then can't be found.",
+      "steps": [
+        { "text": "In the router's settings, give the device a reserved address (DHCP reservation)." },
+        { "text": "Or add the device by its name instead of its address, if it has one." },
+        { "text": "Remove and re-add the printer so it picks up the new address." }
+      ],
+      "related": ["printer-offline", "router-admin"]
+    },
+    {
+      "id": "mac-wifi-reset-preferences",
+      "os": ["macos"],
+      "title": "Mac Wi-Fi misbehaves on every network",
+      "symptoms": ["mac wifi problems", "mac wifi not working any network", "reset network settings mac", "delete wifi preferences"],
+      "why": "Damaged network settings on the Mac affect every network.",
+      "steps": [
+        { "text": "Turn Wi-Fi off and on, then restart the Mac." },
+        { "text": "Network › Wi-Fi › ⋯ (bottom) › remove the Wi-Fi service, add it back with +, and join again.", "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" },
+        { "text": "Remove VPN, proxy and security tool network extensions you don't use (Login Items & Extensions › Network Extensions).", "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Run Wireless Diagnostics.", "open": "app:Wireless Diagnostics" }
+      ],
+      "related": ["wifi-drops"]
+    }
+  ]
+}

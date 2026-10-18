@@ -146,3 +146,47 @@ export const CheckCircleIcon = (p: IconProps) => (
     <path d="m8.3 12.2 2.5 2.5 5-5" />
   </Svg>
 );
+
+// Remedies library categories (the `icon` name in remedies/*.json).
+const CATEGORY_PATHS: Record<string, string[]> = {
+  wifi: ["M2.5 9a14 14 0 0 1 19 0", "M5.5 12.3a9.5 9.5 0 0 1 13 0", "M8.6 15.6a5 5 0 0 1 6.8 0", "M12 19.2h.01"],
+  mail: ["M3.5 6.5h17v11h-17z", "m3.8 7 8.2 6.2L20.2 7"],
+  video: ["M3.5 7h11v10h-11z", "m14.5 10.5 6-3.5v10l-6-3.5"],
+  sound: ["M4 9.5h3.5L12 5.5v13l-4.5-4H4z", "M15.5 9a4 4 0 0 1 0 6", "M18 6.5a7.5 7.5 0 0 1 0 11"],
+  camera: ["M3.5 8h4l1.5-2.5h6L16.5 8h4v11h-17z", "M12 16.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"],
+  monitor: ["M3.5 4.5h17v11.5h-17z", "M8.5 20h7", "M12 16v4"],
+  bluetooth: ["m7 7.5 10 9-5 4v-17l5 4-10 9"],
+  keyboard: ["M2.5 6.5h19v11h-19z", "M6 10h.01M9.5 10h.01M13 10h.01M16.5 10h.01M7.5 14h9"],
+  power: ["M12 3.5v8", "M7 6.2a7.5 7.5 0 1 0 10 0"],
+  update: ["M19.5 12a7.5 7.5 0 0 1-13 5.1", "M4.5 12a7.5 7.5 0 0 1 13-5.1", "M17.5 3.5v3.4h-3.4", "M6.5 20.5v-3.4h3.4"],
+  battery: ["M3 7.5h15.5v9H3z", "M21 10.5v3", "M6 10.5v3M9 10.5v3"],
+  remote: ["M3.5 4.5h17v11h-17z", "M8.5 20h7", "m10 8 3 2-3 2"],
+  clock: ["M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17z", "M12 7.5V12l3 2"],
+  phone: ["M7.5 2.5h9v19h-9z", "M11 18.5h2"],
+  backup: ["M12 20.5a8.5 8.5 0 1 1 8.2-6.3", "M20.5 9.5v4.7h-4.7", "M12 7.5V12l3 2"],
+  eye: ["M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z", "M12 14.8a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6z"],
+};
+
+export function CategoryIcon({ name, size = 18 }: { name: string; size?: number }) {
+  const known: Record<string, (p: IconProps) => React.ReactElement> = {
+    globe: GlobeIcon,
+    printer: PrinterIcon,
+    apps: AppsIcon,
+    pulse: PulseIcon,
+    disk: DiskIcon,
+    folder: FolderIcon,
+    lock: LockIcon,
+    shield: ShieldIcon,
+    window: WindowIcon,
+    wrench: WrenchIcon,
+  };
+  const Known = known[name];
+  if (Known) return <Known size={size} />;
+  return (
+    <Svg size={size}>
+      {(CATEGORY_PATHS[name] ?? CATEGORY_PATHS.update).map((d) => (
+        <path key={d} d={d} />
+      ))}
+    </Svg>
+  );
+}

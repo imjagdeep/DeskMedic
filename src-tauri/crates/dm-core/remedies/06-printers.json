@@ -1,0 +1,131 @@
+{
+  "id": "printers",
+  "title": "Printers & scanners",
+  "icon": "printer",
+  "blurb": "Offline, stuck jobs, wrong printer, scanning.",
+  "remedies": [
+    {
+      "id": "printer-offline",
+      "os": ["windows", "macos"],
+      "title": "Printer says \"Offline\"",
+      "symptoms": ["printer offline", "printer not responding", "can't print", "printer unavailable", "printer not found"],
+      "why": "The computer can't reach the printer: it's asleep, on another Wi-Fi, got a new network address, or a job is stuck.",
+      "steps": [
+        { "text": "Wake the printer and check its screen for errors (paper, toner, jam). Turn it off and on." },
+        { "text": "Make sure the printer and computer are on the same Wi-Fi network (printers often fall back to a setup network)." },
+        { "text": "Clear stuck jobs and restart the print service.", "os": ["windows"], "fix": "print-queue" },
+        { "text": "Open Printers & scanners › the printer › Open print queue; if it shows \"Use printer offline\" ticked, untick it.", "os": ["windows"], "open": "ms-settings:printers" },
+        { "text": "Open Printers & Scanners, select the printer › Printer Queue › Resume.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "Remove the printer and add it again; the system will find its new address." }
+      ],
+      "escalate": "For an office printer, tell IT its name/number and whether others can print to it.",
+      "related": ["print-jobs-stuck", "printer-add"]
+    },
+    {
+      "id": "print-jobs-stuck",
+      "os": ["windows", "macos"],
+      "title": "Print jobs are stuck in the queue",
+      "symptoms": ["print queue stuck", "jobs stuck printing", "can't delete print job", "spooler", "deleting print job forever", "printing stuck"],
+      "why": "A damaged job blocks everything behind it.",
+      "steps": [
+        { "text": "Clear the whole queue and restart the print spooler (one click).", "os": ["windows"], "fix": "print-queue" },
+        { "text": "Open the printer's queue, delete the jobs, and press Resume.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "Turn the printer off and on, then print again." }
+      ],
+      "related": ["printer-offline"]
+    },
+    {
+      "id": "printer-add",
+      "os": ["windows", "macos"],
+      "title": "Add a printer",
+      "symptoms": ["add printer", "install printer", "connect printer", "set up printer", "new printer"],
+      "why": "Most printers on the same network are found automatically; older ones need their driver.",
+      "steps": [
+        { "text": "Connect the printer to the same Wi-Fi as the computer (using its own screen or app)." },
+        { "text": "Settings › Bluetooth & devices › Printers & scanners › Add device.", "os": ["windows"], "open": "ms-settings:printers" },
+        { "text": "Printers & Scanners › Add Printer, Scanner or Fax… and pick it from the list.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "If it isn't listed, add it by its IP address (print a network configuration page from the printer to find it)." },
+        { "text": "At work, add shared printers the way IT tells you (a print server address or a company portal)." }
+      ],
+      "related": ["printer-offline"]
+    },
+    {
+      "id": "printer-wrong-default",
+      "os": ["windows", "macos"],
+      "title": "Prints go to the wrong printer",
+      "symptoms": ["wrong printer", "default printer keeps changing", "change default printer", "printing to pdf instead"],
+      "why": "Windows can switch the default to the last printer used; or another printer was set as the default.",
+      "steps": [
+        { "text": "Turn off \"Let Windows manage my default printer\", then choose the printer › Set as default.", "os": ["windows"], "open": "ms-settings:printers" },
+        { "text": "Printers & Scanners › Default printer.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "Check the printer chosen in each app's print dialog; apps remember the last one." }
+      ]
+    },
+    {
+      "id": "printer-prints-blank",
+      "os": ["windows", "macos"],
+      "title": "Printer prints blank, faded or streaky pages",
+      "symptoms": ["printing blank pages", "faded print", "streaks", "missing colour", "print quality bad", "lines on paper"],
+      "why": "Empty or dried ink/toner, clogged print heads, or the wrong paper setting.",
+      "steps": [
+        { "text": "Check ink or toner levels on the printer's screen or app; replace empties." },
+        { "text": "Run the printer's own cleaning or alignment tool (from its menu or app); repeat once if needed." },
+        { "text": "Gently shake a laser toner cartridge side to side." },
+        { "text": "Print a test page from the printer itself; if that's bad too, the printer needs service." }
+      ]
+    },
+    {
+      "id": "paper-jam",
+      "os": ["windows", "macos"],
+      "title": "Paper jam (even when there's no paper stuck)",
+      "symptoms": ["paper jam", "paper jam error", "jam but no paper", "paper stuck in printer"],
+      "why": "A torn scrap stays inside, or paper is loaded crooked or too full.",
+      "steps": [
+        { "text": "Turn the printer off before reaching inside. Open every door and tray, pull paper out slowly in the direction it travels." },
+        { "text": "Look with a torch for small torn pieces near the rollers." },
+        { "text": "Reload fewer sheets, squared up, with the guides snug, and use the paper type the tray is set to." }
+      ]
+    },
+    {
+      "id": "scanner-not-working",
+      "os": ["windows", "macos"],
+      "title": "Scanner not found or scanning doesn't start",
+      "symptoms": ["scanner not working", "can't scan", "scan to computer", "no scanners detected", "scan button not working"],
+      "why": "The scanner part needs its own driver or app, or it's on a different network.",
+      "steps": [
+        { "text": "Scan with the Windows Scan app or the printer maker's app (HP Smart, Epson ScanSmart, Canon PRINT…).", "os": ["windows"] },
+        { "text": "Use Printers & Scanners › the printer › Scan, or Image Capture / Preview › File › Import from Scanner.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Print-Scanner-Settings.extension" },
+        { "text": "Remove and re-add the printer so the scanner driver installs too.", "os": ["windows"], "open": "ms-settings:printers" },
+        { "text": "Scan to email or a USB stick from the printer's screen as a workaround." }
+      ],
+      "related": ["printer-add"]
+    },
+    {
+      "id": "print-wrong-size",
+      "os": ["windows", "macos"],
+      "title": "Printout is the wrong size, cut off or tiny",
+      "symptoms": ["print cut off", "print too small", "wrong paper size", "letter vs a4", "margins wrong"],
+      "why": "The paper size in the document, the print dialog and the printer tray don't match (often A4 vs Letter).",
+      "steps": [
+        { "text": "In the print dialog set the paper size to what's in the tray, and Scale to Fit." },
+        { "text": "Set the tray's paper size on the printer's own screen to match." },
+        { "text": "Check the document's own page size (Word: Layout › Size)." }
+      ],
+      "related": ["browser-printing"]
+    },
+    {
+      "id": "printer-driver-problem",
+      "os": ["windows"],
+      "title": "Printer prints gibberish or a driver error",
+      "symptoms": ["printing gibberish", "random characters printing", "printer driver unavailable", "driver is unavailable", "prints symbols"],
+      "why": "The wrong or a damaged printer driver is installed.",
+      "steps": [
+        { "text": "Clear the print queue.", "fix": "print-queue" },
+        { "text": "Remove the printer: Printers & scanners › the printer › Remove.", "open": "ms-settings:printers" },
+        { "text": "Remove its driver too: Print Management › All Drivers › delete the printer's driver (if available), or Print server properties › Drivers.", "open": "run:print-management" },
+        { "text": "Add the printer again, using the driver from the maker's website for your exact model." }
+      ],
+      "related": ["printer-add"]
+    }
+  ]
+}

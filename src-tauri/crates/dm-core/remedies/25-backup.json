@@ -1,0 +1,77 @@
+{
+  "id": "backup",
+  "title": "Backup & restore",
+  "icon": "backup",
+  "blurb": "Back up files, restore from backup, move to a new computer, start fresh.",
+  "remedies": [
+    {
+      "id": "backup-setup",
+      "os": ["windows", "macos"],
+      "title": "Back up my computer",
+      "symptoms": ["backup", "how to back up", "file history", "time machine", "back up files", "backup external drive"],
+      "why": "A disk can fail, a laptop can be lost and ransomware can lock files; a backup elsewhere is the only fix for all of them.",
+      "steps": [
+        { "text": "Turn on OneDrive folder backup (Desktop, Documents, Pictures).", "os": ["windows"], "open": "ms-settings:backup" },
+        { "text": "Plug in an external drive and turn on File History (Control Panel › File History) for versions of every file.", "os": ["windows"] },
+        { "text": "Plug in an external drive and turn on Time Machine.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Time-Machine-Settings.extension" },
+        { "text": "Turn on iCloud Drive Desktop & Documents if you use iCloud.", "os": ["macos"] },
+        { "text": "Keep one copy away from the computer (cloud, or a drive stored elsewhere) and test restoring one file now and then." }
+      ],
+      "related": ["file-deleted-by-mistake", "disk-errors"]
+    },
+    {
+      "id": "move-to-new-computer",
+      "os": ["windows", "macos"],
+      "title": "Move my files to a new computer",
+      "symptoms": ["new computer transfer", "migrate files", "move to new laptop", "migration assistant", "windows backup restore new pc"],
+      "why": "Built-in tools carry files, settings and apps across.",
+      "steps": [
+        { "text": "Windows 11: Windows Backup on the old PC (signed in with your Microsoft account), then restore during setup of the new one; OneDrive carries your files.", "os": ["windows"], "open": "ms-settings:backup" },
+        { "text": "Migration Assistant on both Macs (new Mac during setup), over Wi-Fi or cable, or from a Time Machine backup.", "os": ["macos"], "open": "app:Migration Assistant" },
+        { "text": "Before wiping the old computer, check you can open important files on the new one." },
+        { "text": "Sign out of apps with licences (Adobe, Office) on the old computer." }
+      ],
+      "related": ["backup-setup", "reset-computer"]
+    },
+    {
+      "id": "reset-computer",
+      "os": ["windows", "macos"],
+      "title": "Start fresh: reset the computer",
+      "symptoms": ["reset pc", "factory reset", "reinstall windows", "erase mac", "start fresh", "wipe computer", "sell laptop"],
+      "why": "A reset fixes deep problems or prepares the computer for someone else. Back up first.",
+      "steps": [
+        { "text": "Back up your files and check the backup opens." },
+        { "text": "Settings › System › Recovery › Reset this PC: Keep my files (fixes Windows) or Remove everything (to give it away).", "os": ["windows"], "open": "ms-settings:recovery" },
+        { "text": "System Settings › General › Transfer or Reset › Erase All Content and Settings.", "os": ["macos"] },
+        { "text": "Have your Microsoft/Apple account password and Wi-Fi password ready." }
+      ],
+      "escalate": "Work computers: ask IT first; they usually reset them with company tools.",
+      "related": ["backup-setup"]
+    },
+    {
+      "id": "system-restore",
+      "os": ["windows"],
+      "title": "Undo a recent change with System Restore",
+      "symptoms": ["system restore", "restore point", "roll back windows", "undo changes", "go back to yesterday"],
+      "why": "System Restore takes system settings, drivers and apps back to a restore point; your documents stay.",
+      "steps": [
+        { "text": "Open System Restore and pick a point from before the problem.", "open": "run:system-restore" },
+        { "text": "Turn on restore points for drive C: (System Properties › System Protection › Configure) so you have them next time.", "open": "run:system-properties" }
+      ],
+      "related": ["update-broke-something"]
+    },
+    {
+      "id": "restore-time-machine",
+      "os": ["macos"],
+      "title": "Get a file back from Time Machine",
+      "symptoms": ["restore time machine", "time machine restore file", "older version of file mac", "recover file mac backup"],
+      "why": "Time Machine keeps hourly, daily and weekly copies on the backup drive.",
+      "steps": [
+        { "text": "Connect the backup drive, open the folder the file was in, then click Time Machine in the menu bar › Browse Time Machine Backups." },
+        { "text": "Scroll back in time, select the file and click Restore." },
+        { "text": "Turn on \"Show Time Machine in menu bar\" if it's not there.", "open": "x-apple.systempreferences:com.apple.Time-Machine-Settings.extension" }
+      ],
+      "related": ["file-deleted-by-mistake"]
+    }
+  ]
+}

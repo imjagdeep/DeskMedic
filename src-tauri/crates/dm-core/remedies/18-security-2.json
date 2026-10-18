@@ -1,0 +1,83 @@
+{
+  "id": "security",
+  "title": "Security & viruses",
+  "icon": "shield",
+  "blurb": "Viruses, scam pop-ups, firewall, encryption, safe browsing.",
+  "remedies": [
+    {
+      "id": "scam-call",
+      "os": ["windows", "macos"],
+      "title": "Someone called saying they're from Microsoft, Apple or my bank",
+      "symptoms": ["scam call", "microsoft called me", "remote access scam", "bank called install app", "anydesk scam"],
+      "why": "Real companies don't call to fix your computer or ask you to install remote-access apps.",
+      "steps": [
+        { "text": "Hang up. Call the company back on a number from their real website or your card." },
+        { "text": "If you installed a remote app (AnyDesk, TeamViewer, etc.) for them, uninstall it and disconnect from the internet." },
+        { "text": "If you gave bank details or passwords, call your bank and change passwords from another device." }
+      ],
+      "escalate": "Tell IT if this happened on a work computer.",
+      "related": ["scam-pop-up", "virus-suspected"]
+    },
+    {
+      "id": "usb-found",
+      "os": ["windows", "macos"],
+      "title": "I found a USB stick: should I plug it in?",
+      "symptoms": ["found usb drive", "unknown usb stick", "usb from stranger", "free usb"],
+      "why": "Unknown USB devices can carry malware or pretend to be a keyboard.",
+      "steps": [
+        { "text": "Don't plug it in. Hand it to IT or lost property." }
+      ],
+      "escalate": "IT can check it safely."
+    },
+    {
+      "id": "public-wifi-safety",
+      "os": ["windows", "macos"],
+      "title": "Is it safe to use public Wi-Fi?",
+      "symptoms": ["public wifi safe", "hotel wifi security", "airport wifi", "coffee shop wifi safe"],
+      "why": "Most sites are encrypted now, but fake hotspots and file sharing are risks.",
+      "steps": [
+        { "text": "Mark it as a Public network so file sharing stays off.", "os": ["windows"], "open": "ms-settings:network-status" },
+        { "text": "Use the work VPN for work; check site addresses carefully." },
+        { "text": "Use your phone's hotspot for anything sensitive." }
+      ],
+      "related": ["vpn-wont-connect"]
+    },
+    {
+      "id": "data-breach-email",
+      "os": ["windows", "macos"],
+      "title": "My email was in a data breach",
+      "symptoms": ["data breach", "have i been pwned", "password leaked", "breach notification", "credentials exposed"],
+      "why": "A site you used leaked passwords; attackers try them on other sites.",
+      "steps": [
+        { "text": "Change the password on that site and anywhere you used the same one." },
+        { "text": "Turn on two-step sign-in for email, bank and work accounts." },
+        { "text": "Use a password manager so every site has its own password." }
+      ],
+      "related": ["account-hacked", "password-manager"]
+    },
+    {
+      "id": "fake-update-prompt",
+      "os": ["windows", "macos"],
+      "title": "A website says my browser or Flash needs updating",
+      "symptoms": ["fake update", "update chrome popup", "flash player update", "your browser is out of date site", "download codec"],
+      "why": "Websites that push \"updates\" are a common way to install malware. Real updates come from the browser or system itself.",
+      "steps": [
+        { "text": "Close the page; don't download anything from it." },
+        { "text": "Update only through the browser's own menu (Help › About) or system updates." },
+        { "text": "If you ran the download, run a full scan and tell IT.", "os": ["windows"], "open": "run:windows-security" }
+      ],
+      "related": ["virus-suspected", "scam-pop-up"]
+    },
+    {
+      "id": "screen-lock-security",
+      "os": ["windows", "macos"],
+      "title": "Lock my computer when I step away",
+      "symptoms": ["lock computer", "lock screen shortcut", "auto lock", "dynamic lock", "screen lock"],
+      "why": "An unlocked computer lets anyone nearby read your mail or act as you.",
+      "steps": [
+        { "text": "Windows+L locks instantly. Dynamic lock locks when your paired phone walks away.", "os": ["windows"], "open": "ms-settings:signinoptions" },
+        { "text": "Ctrl+⌘+Q locks; set \"Require password after screen saver\" to immediately.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension" }
+      ]
+    }
+  ]
+}

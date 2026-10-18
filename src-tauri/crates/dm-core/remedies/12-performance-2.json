@@ -1,0 +1,102 @@
+{
+  "id": "performance",
+  "title": "Slow computer & freezes",
+  "icon": "pulse",
+  "blurb": "Slow, frozen, fan loud, high CPU or memory, apps not responding.",
+  "remedies": [
+    {
+      "id": "antivirus-slowing",
+      "os": ["windows", "macos"],
+      "title": "Antivirus scan slows everything down",
+      "symptoms": ["antivirus slow", "msmpeng high cpu", "antimalware service executable", "scan slowing computer", "defender high cpu"],
+      "why": "A full scan or real-time scanning of many files (builds, sync folders) uses a lot of disk and CPU.",
+      "steps": [
+        { "text": "Let a running scan finish, or schedule full scans for when you're away.", "os": ["windows"], "open": "run:task-scheduler" },
+        { "text": "Two antivirus products at once slow everything; keep one." },
+        { "text": "Don't turn protection off; ask IT about excluding big development or sync folders." }
+      ],
+      "related": ["high-cpu"]
+    },
+    {
+      "id": "kernel-task-mac",
+      "os": ["macos"],
+      "title": "\"kernel_task\" or \"WindowServer\" uses lots of CPU on a Mac",
+      "symptoms": ["kernel_task high cpu", "windowserver high cpu", "mac fans loud kernel_task", "mac slow kernel task"],
+      "why": "kernel_task takes CPU on purpose to cool a hot Mac; WindowServer gets busy with many screens, windows or effects.",
+      "steps": [
+        { "text": "Let the Mac cool: hard surface, unblocked vents, unplug a hot charger for a moment." },
+        { "text": "Close windows and apps you aren't using; fewer external displays help WindowServer." },
+        { "text": "Turn on Reduce Motion and Reduce Transparency in Accessibility › Display.", "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" },
+        { "text": "Watch it in Activity Monitor.", "open": "app:Activity Monitor" }
+      ],
+      "related": ["high-cpu"]
+    },
+    {
+      "id": "search-indexer-busy",
+      "os": ["windows", "macos"],
+      "title": "Indexing (SearchIndexer / mds) keeps the computer busy",
+      "symptoms": ["searchindexer high cpu", "mds_stores high cpu", "indexing slow computer", "spotlight indexing", "windows search indexer"],
+      "why": "After big changes (new computer, update, lots of new files) search indexing runs for hours, then calms down.",
+      "steps": [
+        { "text": "Leave the computer on and plugged in for a few hours to let indexing finish." },
+        { "text": "If it never stops, rebuild the index.", "os": ["windows"], "fix": "rebuild-search" },
+        { "text": "Exclude big folders you never search (Spotlight Privacy).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Spotlight-Settings.extension" }
+      ],
+      "related": ["windows-search-broken", "spotlight-broken"]
+    },
+    {
+      "id": "too-many-background-apps",
+      "os": ["windows", "macos"],
+      "title": "Lots of apps run in the background",
+      "symptoms": ["background apps", "system tray full", "menu bar icons", "apps running in background", "too many programs"],
+      "why": "Updaters, sync tools and helpers start with the computer and keep running.",
+      "steps": [
+        { "text": "Quit tray icons you don't need, then stop them starting.", "os": ["windows"], "open": "ms-settings:startupapps" },
+        { "text": "Turn off background items you don't recognise in Login Items & Extensions.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Uninstall trial antivirus and \"PC optimizers\" that came with the computer." }
+      ],
+      "related": ["startup-apps", "computer-slow"]
+    },
+    {
+      "id": "games-slow",
+      "os": ["windows", "macos"],
+      "title": "Games or graphics apps run slowly",
+      "symptoms": ["games lag", "low fps", "game slow", "graphics card not used", "integrated graphics"],
+      "why": "The app runs on the power-saving graphics chip, the driver is old, or the laptop is on battery saver.",
+      "steps": [
+        { "text": "Plug in and choose Best performance.", "os": ["windows"], "open": "ms-settings:powersleep" },
+        { "text": "Settings › System › Display › Graphics: set the game to High performance.", "os": ["windows"], "open": "ms-settings:display-advancedgraphics" },
+        { "text": "Update the graphics driver from NVIDIA/AMD/Intel.", "os": ["windows"] },
+        { "text": "Turn on Game Mode.", "os": ["windows"], "open": "ms-settings:gaming-gamemode" },
+        { "text": "Turn off Low Power Mode; lower the game's resolution.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" }
+      ]
+    },
+    {
+      "id": "pc-old-upgrade",
+      "os": ["windows", "macos"],
+      "title": "Is it time to upgrade or replace my computer?",
+      "symptoms": ["old computer", "upgrade ram", "replace laptop", "add ssd", "computer too old"],
+      "why": "Most slowness on older PCs comes from a spinning hard disk or too little memory, both often fixable.",
+      "steps": [
+        { "text": "Check memory and disk type: Task Manager › Performance (Memory, Disk type SSD/HDD).", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "System Information shows memory and storage.", "os": ["macos"], "open": "app:System Information" },
+        { "text": "Windows PCs: an SSD and 16 GB memory revive most machines from the last ~8 years." },
+        { "text": "Macs can't be upgraded inside; Apple silicon Macs stay fast for many years." }
+      ],
+      "related": ["computer-slow", "high-memory"]
+    },
+    {
+      "id": "mac-beachball",
+      "os": ["macos"],
+      "title": "Spinning beach ball all the time",
+      "symptoms": ["beach ball", "spinning wheel mac", "rainbow wheel", "mac keeps freezing"],
+      "why": "An app is waiting (on disk, network or memory). Often full storage or memory pressure.",
+      "steps": [
+        { "text": "Check free storage (keep 20 GB+ free).", "open": "x-apple.systempreferences:com.apple.settings.Storage" },
+        { "text": "Check Memory Pressure and which app is \"Not Responding\" in Activity Monitor.", "open": "app:Activity Monitor" },
+        { "text": "Restart; update macOS and the app." }
+      ],
+      "related": ["computer-slow", "low-disk-space"]
+    }
+  ]
+}

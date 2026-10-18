@@ -1,0 +1,137 @@
+{
+  "id": "email",
+  "title": "Email & calendar",
+  "icon": "mail",
+  "blurb": "Outlook, Apple Mail and webmail: not sending, not syncing, password prompts, calendar trouble.",
+  "remedies": [
+    {
+      "id": "email-signature",
+      "os": ["windows", "macos"],
+      "title": "Set up or fix my email signature",
+      "symptoms": ["email signature", "add signature outlook", "signature missing", "signature images broken", "signature not showing"],
+      "why": "Signatures are saved per app and device; the new Outlook and Outlook on the web keep theirs online.",
+      "steps": [
+        { "text": "Outlook: Settings (gear) › Mail › Signatures (new Outlook / web); classic: File › Options › Mail › Signatures." },
+        { "text": "Apple Mail: Mail › Settings › Signatures.", "os": ["macos"] },
+        { "text": "Pick it as default for new messages and replies." },
+        { "text": "Logos sent as attachments often show as files; use small hosted images or none." }
+      ],
+      "escalate": "Some workplaces add signatures centrally; IT manages those."
+    },
+    {
+      "id": "outlook-pst-ost-large",
+      "os": ["windows"],
+      "title": "Outlook data file is too large or damaged",
+      "symptoms": ["ost file", "pst file", "outlook data file", "scanpst", "inbox repair tool", "data file corrupt", "outlook data file reached maximum size"],
+      "why": "Classic Outlook keeps mail in .ost/.pst files that can grow huge or get damaged.",
+      "steps": [
+        { "text": "For a work account (.ost), close Outlook and delete or rename the .ost in %LOCALAPPDATA%\\Microsoft\\Outlook; Outlook downloads it again." },
+        { "text": "For a .pst, run the Inbox Repair Tool (SCANPST.EXE in the Office install folder) on a copy first." },
+        { "text": "Archive old mail or move it to the online archive to keep the file smaller." }
+      ],
+      "escalate": "Back up any .pst before repairs; IT can help import it into your mailbox.",
+      "related": ["outlook-slow", "mailbox-full"]
+    },
+    {
+      "id": "email-autocomplete-wrong",
+      "os": ["windows", "macos"],
+      "title": "Outlook suggests an old or wrong email address",
+      "symptoms": ["autocomplete wrong address", "remove suggested address", "nk2", "auto complete list", "old email suggestion"],
+      "why": "Outlook remembers addresses you typed before, including old ones.",
+      "steps": [
+        { "text": "Start typing the name, highlight the wrong suggestion and click its X (or press Delete)." },
+        { "text": "Classic Outlook: File › Options › Mail › Empty Auto-Complete List clears all." }
+      ]
+    },
+    {
+      "id": "email-rules-not-working",
+      "os": ["windows", "macos"],
+      "title": "Email rules don't run",
+      "symptoms": ["outlook rules not working", "rules not running", "mail rule", "filter not working", "rules client-only"],
+      "why": "Some rules only run while Outlook on this computer is open (client-only), or a rule above stops later ones.",
+      "steps": [
+        { "text": "Make rules in Outlook on the web; those run on the server even when your computer is off." },
+        { "text": "Check rule order and \"stop processing more rules\" ticks." },
+        { "text": "Mailboxes have a size limit for rules; delete old ones." }
+      ],
+      "related": ["outlook-not-receiving"]
+    },
+    {
+      "id": "recall-email",
+      "os": ["windows", "macos"],
+      "title": "I sent an email by mistake: can I recall it?",
+      "symptoms": ["recall email", "unsend email", "undo send", "sent wrong person", "retract message"],
+      "why": "Recall only works inside the same organisation and before it's read; undo-send gives a few seconds to cancel.",
+      "steps": [
+        { "text": "Outlook: open the sent message › ⋯ › Recall message (works best inside your organisation)." },
+        { "text": "Turn on Undo send for next time: Outlook › Settings › Mail › Compose and reply; Gmail › Settings › Undo Send." },
+        { "text": "If it held sensitive data sent outside, tell IT/your manager rather than relying on recall." }
+      ],
+      "escalate": "Personal or confidential data sent to the wrong person is a data incident; report it."
+    },
+    {
+      "id": "calendar-share",
+      "os": ["windows", "macos"],
+      "title": "Share my calendar or open someone else's",
+      "symptoms": ["share calendar", "open shared calendar", "see coworker calendar", "calendar permissions", "delegate calendar"],
+      "why": "Calendars are shared with permissions from Outlook or the web.",
+      "steps": [
+        { "text": "Share: Outlook calendar › Share › add the person › choose what they can see or edit." },
+        { "text": "Open someone's: Calendar › Add calendar › From directory (or open the invitation they sent)." },
+        { "text": "Apple Calendar shares iCloud calendars: right-click the calendar › Share Calendar.", "os": ["macos"] }
+      ],
+      "related": ["calendar-not-syncing"]
+    },
+    {
+      "id": "meeting-invite-not-received",
+      "os": ["windows", "macos"],
+      "title": "People don't get my meeting invitations (or I don't get theirs)",
+      "symptoms": ["meeting invite not received", "calendar invite missing", "invitation didn't arrive", "accepted meeting not showing"],
+      "why": "Invitations are emails; junk filters, rules, or a delegate handling invites can catch them.",
+      "steps": [
+        { "text": "Check Junk and any rule that moves mail." },
+        { "text": "Check Outlook's delegate settings: if someone manages your calendar, invites may go to them." },
+        { "text": "Resend as a fresh invite; send outside guests a link too." }
+      ],
+      "related": ["email-in-junk"]
+    },
+    {
+      "id": "gmail-in-outlook",
+      "os": ["windows", "macos"],
+      "title": "Add Gmail, iCloud or Yahoo mail to Outlook or Apple Mail",
+      "symptoms": ["add gmail to outlook", "icloud mail outlook", "app password", "imap setup", "add email account"],
+      "why": "These services want modern sign-in or an app-specific password, not your normal password.",
+      "steps": [
+        { "text": "Add the account and let it open the provider's sign-in page; approve it there." },
+        { "text": "If it asks for a password and refuses yours, create an app password in the provider's account security settings (iCloud, Yahoo; Gmail with 2-step)." },
+        { "text": "Add accounts to Apple Mail through Internet Accounts.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension" }
+      ]
+    },
+    {
+      "id": "email-bounced",
+      "os": ["windows", "macos"],
+      "title": "Email bounced back (\"undeliverable\" / \"delivery failed\")",
+      "symptoms": ["undeliverable", "delivery failed", "mail delivery subsystem", "550", "address not found", "bounce back"],
+      "why": "The address is wrong, the other mailbox is full, or the other side rejected your mail.",
+      "steps": [
+        { "text": "Read the code in the bounce: 550/5.1.1 usually means the address doesn't exist; check the spelling." },
+        { "text": "\"Mailbox full\": the recipient must clear space; try later." },
+        { "text": "Rejected as spam/policy: send without large attachments or links, or contact them another way." }
+      ],
+      "escalate": "Forward the bounce to IT if many messages to different people bounce.",
+      "related": ["attachment-too-big", "email-in-junk"]
+    },
+    {
+      "id": "new-outlook-toggle",
+      "os": ["windows"],
+      "title": "Outlook changed to the \"new Outlook\" (or I want to switch)",
+      "symptoms": ["new outlook", "switch back to classic outlook", "try the new outlook", "outlook looks different", "missing features new outlook"],
+      "why": "Microsoft is moving people to the new Outlook; some features (PST files, some add-ins) work differently.",
+      "steps": [
+        { "text": "Switch with the \"New Outlook\" toggle at the top right of Outlook." },
+        { "text": "In the new Outlook, Settings › General › About Outlook offers going back to classic while it's allowed." }
+      ],
+      "escalate": "Your organisation may control which Outlook you get."
+    }
+  ]
+}

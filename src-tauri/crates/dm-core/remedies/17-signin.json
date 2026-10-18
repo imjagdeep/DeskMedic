@@ -1,0 +1,160 @@
+{
+  "id": "signin",
+  "title": "Sign-in, passwords & accounts",
+  "icon": "lock",
+  "blurb": "Forgotten passwords, locked accounts, two-step sign-in, Windows Hello and Touch ID.",
+  "remedies": [
+    {
+      "id": "forgot-password",
+      "os": ["windows", "macos"],
+      "title": "I forgot my password",
+      "symptoms": ["forgot password", "reset password", "can't remember password", "password reset", "forgot windows password", "forgot mac password"],
+      "why": "Which reset works depends on the account: a work/school account, a Microsoft or Apple account, or a local account on this computer.",
+      "steps": [
+        { "text": "Work or school account: use your organisation's self-service reset (Microsoft: aka.ms/sspr) or call IT." },
+        { "text": "Microsoft account (Outlook.com, Hotmail): on the sign-in screen choose \"I forgot my password\", or account.live.com/password/reset from another device.", "os": ["windows"] },
+        { "text": "Local Windows account: answer the security questions on the sign-in screen, or use a password reset disk.", "os": ["windows"] },
+        { "text": "Mac: after a few wrong tries, the login window offers to reset with your Apple Account or recovery key.", "os": ["macos"] },
+        { "text": "Afterwards, update the password on your phone and other devices so they don't lock the account." }
+      ],
+      "escalate": "IT can reset work passwords after checking who you are.",
+      "related": ["account-locked-out", "password-changed-prompts"]
+    },
+    {
+      "id": "account-locked-out",
+      "os": ["windows", "macos"],
+      "title": "My account is locked",
+      "symptoms": ["account locked", "referenced account is currently locked out", "too many attempts", "locked out", "account disabled", "try again later"],
+      "why": "Too many wrong passwords, often from an old password still saved on a phone or another device.",
+      "steps": [
+        { "text": "Wait: many locks lift after 15–30 minutes." },
+        { "text": "Find the device with the old password: phone mail app, a second computer, a mapped drive or Wi-Fi profile. Update or remove it." },
+        { "text": "Don't keep retrying; each wrong try can extend the lock." }
+      ],
+      "escalate": "IT can unlock work accounts and see which device keeps sending the wrong password.",
+      "related": ["password-changed-prompts", "forgot-password"]
+    },
+    {
+      "id": "password-changed-prompts",
+      "os": ["windows", "macos"],
+      "title": "After changing my password, everything asks for it again",
+      "symptoms": ["changed password prompts", "new password not working", "password change", "old password saved", "after password change outlook teams onedrive"],
+      "why": "Apps and devices remember the old password until you sign in again.",
+      "steps": [
+        { "text": "Lock and unlock the computer (Windows+L / Ctrl+⌘+Q) while on the work network or VPN, so it learns the new password.", "os": ["windows"] },
+        { "text": "Sign in again in Outlook, Teams and OneDrive when they ask." },
+        { "text": "Update saved passwords: Credential Manager › Windows Credentials.", "os": ["windows"], "open": "run:credential-manager" },
+        { "text": "Update saved passwords in Keychain Access, or delete the old entries.", "os": ["macos"], "open": "app:Keychain Access" },
+        { "text": "Update your phone's mail and Wi-Fi so it doesn't lock the account." }
+      ],
+      "related": ["account-locked-out", "outlook-password-prompt", "keychain-prompts"]
+    },
+    {
+      "id": "mfa-not-working",
+      "os": ["windows", "macos"],
+      "title": "Two-step sign-in (MFA) code or approval doesn't arrive",
+      "symptoms": ["mfa not working", "authenticator not getting notification", "2fa code not received", "verification code", "new phone authenticator", "lost phone mfa"],
+      "why": "The phone has no data, notifications are off, the clock is wrong, or the authenticator was set up on an old phone.",
+      "steps": [
+        { "text": "Open the Authenticator app yourself; approvals often wait inside the app even without a notification." },
+        { "text": "Use the code shown in the app instead (choose \"Use a verification code\")." },
+        { "text": "Check the phone's date and time are automatic; codes depend on the clock." },
+        { "text": "New phone? Move accounts with the app's backup, or sign in at mysignins.microsoft.com / your provider's security page from a working device to add the new phone." }
+      ],
+      "escalate": "Lost or replaced phone with no backup: IT (or the provider's account recovery) must reset your two-step sign-in.",
+      "related": ["m365-sign-in-loop"]
+    },
+    {
+      "id": "windows-hello-pin",
+      "os": ["windows"],
+      "title": "Windows Hello PIN, fingerprint or face sign-in not working",
+      "symptoms": ["pin not working", "windows hello", "fingerprint not working", "face recognition not working", "something happened and your pin isn't available"],
+      "why": "The Hello data got damaged, the sensor driver failed, or the PIN was reset by your organisation.",
+      "steps": [
+        { "text": "Sign in with your password instead (Sign-in options under the PIN box)." },
+        { "text": "Settings › Accounts › Sign-in options › PIN › I forgot my PIN, or Remove and set it up again.", "open": "ms-settings:signinoptions" },
+        { "text": "Set up fingerprint or face again in the same place; clean the sensor or camera." },
+        { "text": "Check the sensor in Device Manager › Biometric devices.", "open": "run:device-manager" }
+      ]
+    },
+    {
+      "id": "touch-id-not-working",
+      "os": ["macos"],
+      "title": "Touch ID doesn't work",
+      "symptoms": ["touch id not working", "fingerprint mac", "touch id unlock not working", "touch id apple pay"],
+      "why": "Dry or wet fingers, a dirty sensor, or a fingerprint that needs adding again. After a restart, your password is always needed once.",
+      "steps": [
+        { "text": "After a restart, type your password once; Touch ID works after that." },
+        { "text": "Clean the sensor and your finger." },
+        { "text": "Delete and add the fingerprint again; add the same finger twice for better matching.", "open": "x-apple.systempreferences:com.apple.Touch-ID-Settings.extension" }
+      ]
+    },
+    {
+      "id": "keychain-prompts",
+      "os": ["macos"],
+      "title": "Mac keeps asking for the keychain password",
+      "symptoms": ["keychain password", "login keychain", "keychain prompts", "accountsd wants to use the login keychain", "keychain password not matching"],
+      "why": "The login keychain still uses an old password after the Mac password changed.",
+      "steps": [
+        { "text": "Type your old Mac password if you know it; that unlocks and updates it." },
+        { "text": "Otherwise Keychain Access › Settings › Reset Default Keychains (saved passwords in it are lost, iCloud Keychain passwords stay).", "open": "app:Keychain Access" }
+      ],
+      "related": ["password-changed-prompts"]
+    },
+    {
+      "id": "account-hacked",
+      "os": ["windows", "macos"],
+      "title": "I think my account was hacked",
+      "symptoms": ["account hacked", "someone logged into my account", "password stolen", "sent spam from my email", "unknown sign in", "compromised account"],
+      "why": "Someone got your password (phishing, reuse from a leaked site, or malware).",
+      "steps": [
+        { "text": "From a device you trust, change the password now, and anywhere you used the same one." },
+        { "text": "Turn on two-step sign-in (MFA)." },
+        { "text": "Check sign-in activity and sign out all other sessions (Microsoft: account.microsoft.com/security; Google: myaccount.google.com/security; Apple: Devices list)." },
+        { "text": "Check mail rules and forwarding: attackers add rules that hide or forward your mail." },
+        { "text": "Warn contacts not to open odd messages from you." }
+      ],
+      "escalate": "For a work account, tell IT immediately; they can block the attacker and check what was accessed.",
+      "related": ["suspicious-email", "virus-suspected"]
+    },
+    {
+      "id": "bitlocker-recovery-key",
+      "os": ["windows"],
+      "title": "BitLocker asks for a recovery key",
+      "symptoms": ["bitlocker recovery key", "enter the recovery key", "bitlocker locked", "recovery key screen", "48 digit key"],
+      "why": "BitLocker saw a change (firmware update, new hardware, a dock at startup, BIOS settings) and wants proof it's still you.",
+      "steps": [
+        { "text": "Unplug docks and USB devices and restart once; sometimes that's all it was." },
+        { "text": "Find the key: aka.ms/myrecoverykey on another device, sign in with the account used on this PC (personal Microsoft account or work account), match the Key ID shown." },
+        { "text": "Look for a printout or saved file from when BitLocker was turned on." }
+      ],
+      "escalate": "Work PCs: IT has the key in your organisation's directory; give them the Key ID shown on screen."
+    },
+    {
+      "id": "local-vs-microsoft-account",
+      "os": ["windows"],
+      "title": "Add a user, or switch between local and Microsoft account",
+      "symptoms": ["add user", "new user account", "local account", "switch to local account", "microsoft account sign in windows", "family account"],
+      "why": "Each person should have their own account; Microsoft accounts sync settings, local accounts stay on this PC.",
+      "steps": [
+        { "text": "Add someone: Settings › Accounts › Other users › Add account.", "open": "ms-settings:otherusers" },
+        { "text": "Switch your account type: Settings › Accounts › Your info.", "open": "ms-settings:yourinfo" },
+        { "text": "Change account type (Standard/Administrator): Settings › Accounts › Other users › the account › Change account type." }
+      ]
+    },
+    {
+      "id": "admin-password-prompt",
+      "os": ["windows", "macos"],
+      "title": "Asks for an administrator password I don't have",
+      "symptoms": ["administrator password", "need admin rights", "uac prompt", "enter admin name and password", "you need administrator permission"],
+      "why": "The change affects the whole computer, and your account is a standard (non-admin) one, which is safer.",
+      "steps": [
+        { "text": "Ask the computer's owner or IT to approve it, or to install the app for you." },
+        { "text": "Look for a version of the app that installs for your user only (many installers offer \"just me\")." },
+        { "text": "At work, use the company's app portal (Company Portal, Self Service) to install approved apps." }
+      ],
+      "escalate": "IT decides admin rights on work computers.",
+      "related": ["app-wont-install"]
+    }
+  ]
+}

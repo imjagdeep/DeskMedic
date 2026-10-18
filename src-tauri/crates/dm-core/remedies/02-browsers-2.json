@@ -1,0 +1,136 @@
+{
+  "id": "browsers",
+  "title": "Web browsers",
+  "icon": "globe",
+  "blurb": "Chrome, Edge, Safari and Firefox: slow, crashing, pop-ups, certificate warnings.",
+  "remedies": [
+    {
+      "id": "browser-video-wont-play",
+      "os": ["windows", "macos"],
+      "title": "Videos won't play in the browser (black, spinning or no sound)",
+      "symptoms": ["youtube not playing", "video black screen browser", "video won't load", "netflix error browser", "video stutters"],
+      "why": "An extension, hardware acceleration, an old browser, or a site that needs DRM blocks playback.",
+      "steps": [
+        { "text": "Try a private window (no extensions) and another browser." },
+        { "text": "Turn off \"Use graphics acceleration when available\" (Chrome/Edge › Settings › System) and restart the browser." },
+        { "text": "Update the browser." },
+        { "text": "For streaming services, check Protected content is allowed in site settings." },
+        { "text": "Check the tab isn't muted (right-click the tab)." }
+      ],
+      "related": ["browser-crashing", "no-sound"]
+    },
+    {
+      "id": "browser-tabs-lost",
+      "os": ["windows", "macos"],
+      "title": "My tabs disappeared after closing the browser",
+      "symptoms": ["lost tabs", "restore tabs", "reopen closed tabs", "tabs gone after restart", "recover browser session"],
+      "why": "The browser didn't restore the last session, or it was closed in another window.",
+      "steps": [
+        { "text": "Press Ctrl+Shift+T (⌘+Shift+T) repeatedly to reopen closed tabs and windows." },
+        { "text": "History › Recently closed shows whole windows to reopen." },
+        { "text": "Set the browser to continue where you left off: Chrome/Edge › Settings › On startup." },
+        { "text": "Bookmark important tab groups so they survive crashes." }
+      ]
+    },
+    {
+      "id": "browser-bookmarks-missing",
+      "os": ["windows", "macos"],
+      "title": "Bookmarks or favourites disappeared",
+      "symptoms": ["bookmarks gone", "favorites missing", "lost bookmarks", "bookmark bar missing", "import bookmarks"],
+      "why": "You're in another profile, the bookmarks bar is hidden, or sync isn't on.",
+      "steps": [
+        { "text": "Show the bookmarks bar: Ctrl+Shift+B (⌘+Shift+B)." },
+        { "text": "Check the profile picture: bookmarks belong to a profile." },
+        { "text": "Sign in and turn on sync to bring them back from the cloud." },
+        { "text": "Moving browsers: Import bookmarks from the other browser in Settings." }
+      ],
+      "related": ["browser-passwords"]
+    },
+    {
+      "id": "browser-site-blocked-work",
+      "os": ["windows", "macos"],
+      "title": "\"This site is blocked\" by my organisation",
+      "symptoms": ["site blocked by administrator", "blocked by your organization", "web filter", "access denied website work", "category blocked"],
+      "why": "Your workplace filters some websites for security or policy.",
+      "steps": [
+        { "text": "Check the address is spelled right (look-alike sites get blocked)." },
+        { "text": "If you need it for work, ask IT to review the site; include the address and why." }
+      ],
+      "escalate": "Only IT can unblock sites on work devices; don't use a VPN to get around it."
+    },
+    {
+      "id": "browser-autofill-wrong",
+      "os": ["windows", "macos"],
+      "title": "Browser fills in old addresses or card details",
+      "symptoms": ["autofill wrong", "old address autofill", "remove saved card", "delete autofill entry", "form fills wrong info"],
+      "why": "The browser saved details you've since changed.",
+      "steps": [
+        { "text": "Chrome/Edge › Settings › Autofill: edit or delete addresses and payment methods." },
+        { "text": "In a form, highlight the wrong suggestion and press Shift+Delete to remove it." },
+        { "text": "Safari › Settings › AutoFill › Edit next to each kind.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "browser-zoom-wrong",
+      "os": ["windows", "macos"],
+      "title": "Website text is too big or too small",
+      "symptoms": ["browser zoom", "page too big", "page too small", "text size website", "reset zoom"],
+      "why": "The browser remembers a zoom level per site.",
+      "steps": [
+        { "text": "Press Ctrl+0 (⌘+0) to reset, Ctrl/⌘ + plus or minus to change." },
+        { "text": "Set a default zoom: Chrome/Edge › Settings › Appearance › Page zoom." }
+      ],
+      "related": ["text-too-small"]
+    },
+    {
+      "id": "browser-extension-install-blocked",
+      "os": ["windows", "macos"],
+      "title": "Can't install a browser extension",
+      "symptoms": ["extension blocked", "can't add extension", "blocked by admin extension", "chrome web store blocked"],
+      "why": "Your organisation controls extensions, or the extension was removed for safety.",
+      "steps": [
+        { "text": "Check chrome://management (Edge: edge://management); if it says the browser is managed, IT decides." },
+        { "text": "Install extensions only from the official stores." }
+      ],
+      "escalate": "Ask IT to approve the extension for work use."
+    },
+    {
+      "id": "browser-reset-profile",
+      "os": ["windows", "macos"],
+      "title": "Start the browser fresh (new profile) without losing bookmarks",
+      "symptoms": ["new browser profile", "reset chrome", "browser corrupt profile", "start browser fresh"],
+      "why": "A damaged profile causes odd problems; a new one with sync brings your things back.",
+      "steps": [
+        { "text": "Make sure sync is on, or export bookmarks (Bookmarks manager › ⋮ › Export)." },
+        { "text": "Add a new profile (picture at the top › Add), sign in, turn on sync." },
+        { "text": "Use it for a day; if the problem is gone, remove the old profile." }
+      ],
+      "related": ["browser-crashing", "browser-hijacked"]
+    },
+    {
+      "id": "safari-website-issues",
+      "os": ["macos"],
+      "title": "A site works in Chrome but not Safari",
+      "symptoms": ["safari not working site", "website broken in safari", "safari compatibility", "safari blocks"],
+      "why": "Safari's tracking protection and pop-up blocking can break some sites, and a few sites only test in Chrome.",
+      "steps": [
+        { "text": "Safari › Settings for This Website: allow Pop-up Windows, turn off content blockers for it." },
+        { "text": "Safari › Settings › Privacy: try turning off \"Prevent cross-site tracking\" for a moment (turn it back on after)." },
+        { "text": "Clear that site's data: Settings › Privacy › Manage Website Data." },
+        { "text": "Use Chrome or Edge for that one site." }
+      ]
+    },
+    {
+      "id": "browser-popups-blocked",
+      "os": ["windows", "macos"],
+      "title": "A site needs pop-ups but the browser blocks them",
+      "symptoms": ["allow pop ups", "popup blocked", "payment window won't open", "login popup blocked", "pop-up blocker"],
+      "why": "Pop-up blockers also stop windows that work sites and payment pages need.",
+      "steps": [
+        { "text": "Click the blocked pop-up icon in the address bar › Always allow from this site." },
+        { "text": "Chrome/Edge › Settings › Site permissions › Pop-ups and redirects › Allowed sites." },
+        { "text": "Safari › Settings for This Website › Pop-up Windows: Allow.", "os": ["macos"] }
+      ]
+    }
+  ]
+}

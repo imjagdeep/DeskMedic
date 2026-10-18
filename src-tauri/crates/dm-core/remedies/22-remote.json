@@ -1,0 +1,69 @@
+{
+  "id": "remote",
+  "title": "VPN & remote access",
+  "icon": "remote",
+  "blurb": "VPN won't connect, remote desktop, working from home.",
+  "remedies": [
+    {
+      "id": "vpn-wont-connect",
+      "os": ["windows", "macos"],
+      "title": "VPN won't connect",
+      "symptoms": ["vpn not connecting", "vpn error", "vpn timeout", "globalprotect", "anyconnect", "forticlient", "vpn authentication failed"],
+      "why": "No internet first, a wrong or expired password/MFA, the clock is off, or the network (hotel, café) blocks VPNs.",
+      "steps": [
+        { "text": "Check the internet works without the VPN (open any website)." },
+        { "text": "Re-enter your password, and approve the MFA prompt quickly; many VPNs time out after a minute." },
+        { "text": "Correct the clock.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Correct the clock.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" },
+        { "text": "Quit the VPN app completely and reopen it; restart the computer if it still fails." },
+        { "text": "Try a different network (phone hotspot); some guest Wi-Fi blocks VPNs." }
+      ],
+      "escalate": "Give IT the VPN app's exact error and the time; they can check its logs.",
+      "related": ["vpn-connected-no-access", "mfa-not-working"]
+    },
+    {
+      "id": "vpn-connected-no-access",
+      "os": ["windows", "macos"],
+      "title": "VPN connected but work sites or drives don't open",
+      "symptoms": ["vpn connected but can't access", "vpn no internal sites", "intranet not loading vpn", "shared drive not working on vpn"],
+      "why": "Names of work servers aren't resolved through the VPN, or your account lacks access to that resource.",
+      "steps": [
+        { "text": "Disconnect and reconnect the VPN." },
+        { "text": "Clear the address cache.", "os": ["windows"], "fix": "flush-dns" },
+        { "text": "Try the server's full name (server.company.local) or ask IT for its address." },
+        { "text": "Turn off other VPNs or privacy tools; two VPNs fight." }
+      ],
+      "escalate": "Tell IT which site or drive, and whether coworkers on VPN can reach it.",
+      "related": ["network-drive-missing"]
+    },
+    {
+      "id": "remote-desktop-wont-connect",
+      "os": ["windows", "macos"],
+      "title": "Remote Desktop won't connect to my work computer",
+      "symptoms": ["remote desktop not connecting", "rdp", "can't connect to remote computer", "remote desktop error", "mstsc", "windows app remote"],
+      "why": "The VPN isn't connected, the remote computer is asleep or off, or the name/address is wrong.",
+      "steps": [
+        { "text": "Connect the VPN first if your work requires it." },
+        { "text": "Make sure the office computer is on and not asleep (ask someone on site, or use your company's wake tool)." },
+        { "text": "Use the full computer name IT gave you." },
+        { "text": "Use the Windows App (formerly Microsoft Remote Desktop) on the Mac.", "os": ["macos"] }
+      ],
+      "escalate": "IT can check whether remote access is allowed for your account and computer.",
+      "related": ["vpn-wont-connect"]
+    },
+    {
+      "id": "remote-support-session",
+      "os": ["windows", "macos"],
+      "title": "IT asked me to start a remote support session",
+      "symptoms": ["remote support", "quick assist", "share my screen with it", "let it connect", "remote help"],
+      "why": "Built-in tools let someone you trust see your screen and help.",
+      "steps": [
+        { "text": "Only accept sessions you asked for, from people you know at your IT team." },
+        { "text": "Windows: open Quick Assist (Start › Quick Assist) and enter the code IT gives you.", "os": ["windows"] },
+        { "text": "Mac: use the tool IT names; it needs Screen Recording and Accessibility permission.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture" },
+        { "text": "End the session yourself when done." }
+      ],
+      "related": ["scam-pop-up"]
+    }
+  ]
+}

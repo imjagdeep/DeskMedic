@@ -625,6 +625,20 @@ pub async fn resize(
 
 // ---------- remedies ----------
 
+/// The remedies library for this computer's system.
+#[tauri::command]
+pub fn remedy_library() -> CmdResult<dm_core::library::Library> {
+    dm_core::library::library(dm_core::library::Os::current())
+}
+
+/// Open what a remedy step points at (a Settings page or a fixed tool).
+/// By remedy id + step number only: the page never names the target.
+#[tauri::command]
+pub fn remedy_open(id: String, step: usize) -> CmdResult<()> {
+    use dm_core::library::{open, open_target, Os};
+    open(&open_target(&id, step, Os::current())?)
+}
+
 #[tauri::command]
 pub fn fix_list() -> Vec<dm_core::fixes::RecipeInfo> {
     dm_core::fixes::list()

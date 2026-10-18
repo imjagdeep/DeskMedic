@@ -1,0 +1,122 @@
+{
+  "id": "desktop",
+  "title": "Desktop, taskbar & Finder",
+  "icon": "window",
+  "blurb": "Icons, taskbar, Dock, notifications, screenshots, windows.",
+  "remedies": [
+    {
+      "id": "icons-wrong",
+      "os": ["windows", "macos"],
+      "title": "Icons are blank, wrong or thumbnails don't show",
+      "symptoms": ["icons blank", "wrong icons", "thumbnails not showing", "white icons", "icon cache", "generic icons"],
+      "why": "The icon and thumbnail cache is out of date or damaged.",
+      "steps": [
+        { "text": "Rebuild the icon and thumbnail cache (Explorer restarts).", "os": ["windows"], "fix": "rebuild-icon-cache" },
+        { "text": "Turn thumbnails back on: Folder options › View › untick \"Always show icons, never thumbnails\".", "os": ["windows"], "open": "run:file-explorer-options" },
+        { "text": "Restart the Mac; for one app's wrong icon, reinstall the app.", "os": ["macos"] }
+      ],
+      "related": ["windows-shell-hung"]
+    },
+    {
+      "id": "taskbar-missing",
+      "os": ["windows"],
+      "title": "Taskbar disappeared or moved",
+      "symptoms": ["taskbar missing", "taskbar hidden", "taskbar moved", "taskbar auto hide", "start button gone"],
+      "why": "Auto-hide is on, the taskbar is on another monitor, or Explorer needs a restart.",
+      "steps": [
+        { "text": "Turn off auto-hide: Settings › Personalization › Taskbar › Taskbar behaviours.", "open": "ms-settings:taskbar" },
+        { "text": "Check your other monitor; the taskbar may show there.", "open": "ms-settings:display" },
+        { "text": "Restart Explorer.", "fix": "restart-explorer" }
+      ],
+      "related": ["windows-shell-hung"]
+    },
+    {
+      "id": "dock-missing-mac",
+      "os": ["macos"],
+      "title": "Dock disappeared, moved, or icons are missing",
+      "symptoms": ["dock missing", "dock hidden", "dock on other screen", "dock icons gone", "dock auto hide"],
+      "why": "The Dock hides automatically, moved to another screen, or needs a restart.",
+      "steps": [
+        { "text": "Move the pointer to the bottom (or side) of the screen; turn off \"Automatically hide and show the Dock\".", "open": "x-apple.systempreferences:com.apple.Desktop-Settings.extension" },
+        { "text": "With two screens, move the pointer to the bottom of the other screen and keep it there to bring the Dock over." },
+        { "text": "Drag apps from Applications back into the Dock to pin them." }
+      ]
+    },
+    {
+      "id": "notifications-missing",
+      "os": ["windows", "macos"],
+      "title": "Not getting notifications",
+      "symptoms": ["no notifications", "notifications not showing", "do not disturb", "focus assist", "missed alerts", "banners not showing"],
+      "why": "Do not disturb / Focus is on, the app's notifications are off, or it only shows in the notification centre.",
+      "steps": [
+        { "text": "Turn off Do not disturb, check the app is on and its banners are allowed.", "os": ["windows"], "open": "ms-settings:notifications" },
+        { "text": "Turn off Focus, and check the app's style is Banners or Alerts.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Notifications-Settings.extension" },
+        { "text": "Check the app's own notification settings too." }
+      ],
+      "related": ["teams-notifications-missing"]
+    },
+    {
+      "id": "take-screenshot",
+      "os": ["windows", "macos"],
+      "title": "Take a screenshot",
+      "symptoms": ["screenshot", "print screen", "snipping tool", "capture screen", "screen capture"],
+      "why": "Both systems have built-in screenshot shortcuts.",
+      "steps": [
+        { "text": "Windows+Shift+S picks an area (copied, and saved by the Snipping Tool). Print Screen does the same on Windows 11.", "os": ["windows"], "open": "run:snipping-tool" },
+        { "text": "⌘+Shift+4 picks an area, ⌘+Shift+3 the whole screen, ⌘+Shift+5 shows all options and recording.", "os": ["macos"], "open": "app:Screenshot" },
+        { "text": "DeskShot (a sister DeskLab app) adds markup, blur and pinning." }
+      ]
+    },
+    {
+      "id": "windows-snap",
+      "os": ["windows", "macos"],
+      "title": "Put two windows side by side",
+      "symptoms": ["split screen", "side by side windows", "snap windows", "tile windows", "two windows"],
+      "why": "Both systems can tile windows to halves or quarters of the screen.",
+      "steps": [
+        { "text": "Windows+Left/Right arrow, or hover the Maximise button for Snap layouts.", "os": ["windows"], "open": "ms-settings:multitasking" },
+        { "text": "Hover the green button › Move & Resize › Left or Right; or Window › Move & Resize. Fn+Ctrl+arrows tile on recent macOS.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "clipboard-not-working",
+      "os": ["windows", "macos"],
+      "title": "Copy and paste stopped working",
+      "symptoms": ["copy paste not working", "clipboard not working", "ctrl c not working", "cmd v not working", "paste doesn't work"],
+      "why": "The clipboard service got stuck, often because of a remote-desktop app or a clipboard tool.",
+      "steps": [
+        { "text": "Try another app to see if it's one app only." },
+        { "text": "Close remote-desktop windows and clipboard managers." },
+        { "text": "Restart Explorer.", "os": ["windows"], "fix": "restart-explorer" },
+        { "text": "Clipboard history (Windows+V) can be turned off and on in Settings › System › Clipboard.", "os": ["windows"], "open": "ms-settings:clipboard" },
+        { "text": "In Activity Monitor, quit the process \"pboard\" (it restarts by itself).", "os": ["macos"], "open": "app:Activity Monitor" }
+      ]
+    },
+    {
+      "id": "desktop-files-missing",
+      "os": ["windows", "macos"],
+      "title": "Files disappeared from my desktop",
+      "symptoms": ["desktop files missing", "desktop empty", "icons gone from desktop", "desktop icons disappeared", "files moved to onedrive"],
+      "why": "Desktop icons are hidden, files moved into OneDrive/iCloud (Desktop backup), or you're signed in with a temporary profile.",
+      "steps": [
+        { "text": "Right-click the desktop › View › Show desktop icons.", "os": ["windows"] },
+        { "text": "Look in OneDrive › Desktop: OneDrive backup moves the Desktop folder into OneDrive.", "os": ["windows"] },
+        { "text": "\"You've been signed in with a temporary profile\": restart; if it stays, tell IT (your files are still there).", "os": ["windows"] },
+        { "text": "Desktop & Documents in iCloud Drive keeps them under iCloud Drive › Desktop; also check Stage Manager or \"Show items\" settings.", "os": ["macos"] }
+      ],
+      "related": ["file-deleted-by-mistake"]
+    },
+    {
+      "id": "start-menu-search-web",
+      "os": ["windows"],
+      "title": "Start menu shows web results, ads or news",
+      "symptoms": ["start menu ads", "web results in search", "widgets news", "turn off widgets", "recommended in start"],
+      "why": "Windows mixes Bing results, widgets and recommendations into Start and the taskbar.",
+      "steps": [
+        { "text": "Turn off Widgets and Task view in Taskbar settings.", "open": "ms-settings:taskbar" },
+        { "text": "Turn off recommendations and tips in Start settings.", "open": "ms-settings:personalization-start" },
+        { "text": "Turn off \"Show search highlights\" in Privacy & security › Search permissions.", "open": "ms-settings:search-permissions" }
+      ]
+    }
+  ]
+}

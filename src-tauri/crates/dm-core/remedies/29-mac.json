@@ -1,0 +1,131 @@
+{
+  "id": "mac",
+  "title": "Mac basics",
+  "icon": "apps",
+  "blurb": "Finder, iCloud, Launchpad, macOS settings and Mac-only tools.",
+  "remedies": [
+    {
+      "id": "mac-new-from-windows",
+      "os": ["macos"],
+      "title": "New to Mac (coming from Windows)",
+      "symptoms": ["switching from windows to mac", "mac for windows users", "where is control panel mac", "how to use mac", "right click mac"],
+      "why": "A few differences cover most of the confusion.",
+      "steps": [
+        { "text": "⌘ (Command) does what Ctrl does on Windows: ⌘C, ⌘V, ⌘Z." },
+        { "text": "Right-click = two-finger click on the trackpad, or Control+click." },
+        { "text": "Settings live in System Settings; Finder = File Explorer; the Dock = taskbar; ⌘Space opens Spotlight search." },
+        { "text": "Closing a window doesn't quit the app; ⌘Q quits it." }
+      ],
+      "related": ["keyboard-shortcuts-basics"]
+    },
+    {
+      "id": "mac-delete-key",
+      "os": ["macos"],
+      "title": "Delete files or text forward on a Mac",
+      "symptoms": ["delete key mac", "forward delete mac", "how to delete file mac", "move to trash shortcut"],
+      "why": "The Mac's delete key deletes backwards; Fn+Delete deletes forwards.",
+      "steps": [
+        { "text": "Fn+Delete deletes the character to the right." },
+        { "text": "⌘+Delete moves a selected file to the Bin; ⌘+Option+Delete deletes immediately." }
+      ]
+    },
+    {
+      "id": "mac-icloud-storage-full",
+      "os": ["macos"],
+      "title": "iCloud storage is full",
+      "symptoms": ["icloud storage full", "icloud full", "not enough icloud storage", "icloud backup failed storage"],
+      "why": "Photos, iPhone backups and iCloud Drive share the same storage.",
+      "steps": [
+        { "text": "System Settings › your name › iCloud › Manage shows what uses it." },
+        { "text": "Delete old iPhone/iPad backups and large files from iCloud Drive." },
+        { "text": "Upgrade storage, or move old photos to an external drive." }
+      ],
+      "related": ["icloud-drive-not-syncing"]
+    },
+    {
+      "id": "mac-app-wont-quit",
+      "os": ["macos"],
+      "title": "Close apps properly or see what's still running",
+      "symptoms": ["app still running mac", "quit app mac", "dot under dock icon", "force quit"],
+      "why": "Mac apps keep running after you close their window.",
+      "steps": [
+        { "text": "Press ⌘Q to quit the active app; a dot under its Dock icon means it's still running." },
+        { "text": "⌘+Option+Esc to force quit a stuck app." }
+      ],
+      "related": ["app-not-responding"]
+    },
+    {
+      "id": "mac-disk-permissions-first-aid",
+      "os": ["macos"],
+      "title": "Run Disk Utility First Aid",
+      "symptoms": ["first aid mac", "disk utility repair", "verify disk mac", "repair disk permissions"],
+      "why": "First Aid checks and repairs the disk's file system.",
+      "steps": [
+        { "text": "Open Disk Utility, select the Macintosh HD volume, click First Aid › Run.", "open": "app:Disk Utility" },
+        { "text": "For the startup disk, Recovery mode can repair more." }
+      ],
+      "related": ["disk-errors", "mac-wont-start"]
+    },
+    {
+      "id": "mac-reset-nvram-smc",
+      "os": ["macos"],
+      "title": "Reset NVRAM / SMC (and what to do on Apple silicon)",
+      "symptoms": ["reset smc", "reset nvram", "pram reset", "mac fan always on", "mac power issues"],
+      "why": "Intel Macs had resets for power and startup settings; Apple silicon Macs do it on a full shutdown.",
+      "steps": [
+        { "text": "Apple silicon: shut down, wait 30 seconds, start again. That's the equivalent." },
+        { "text": "Intel NVRAM: start while holding Option+⌘+P+R for ~20 seconds." },
+        { "text": "Intel SMC: follow Apple's steps for your model (they differ with the T2 chip)." }
+      ]
+    },
+    {
+      "id": "mac-launchpad-missing-app",
+      "os": ["macos"],
+      "title": "An app is missing from Launchpad or the Dock",
+      "symptoms": ["app missing launchpad", "can't find app mac", "app not in applications", "launchpad missing"],
+      "why": "The app may be running from Downloads or a disk image, not installed in Applications.",
+      "steps": [
+        { "text": "Search for it with ⌘Space." },
+        { "text": "Apps opened from a .dmg must be dragged into Applications, then the .dmg ejected." },
+        { "text": "Open Finder › Applications and drag it into the Dock." }
+      ]
+    },
+    {
+      "id": "mac-login-loop",
+      "os": ["macos"],
+      "title": "Mac keeps returning to the login screen",
+      "symptoms": ["mac login loop", "returns to login screen", "can't log in mac", "mac login stuck"],
+      "why": "A login item or damaged preference crashes the session.",
+      "steps": [
+        { "text": "Start in Safe Mode and log in; if it works, remove recent login items.", "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Check free disk space; a full disk causes login loops." },
+        { "text": "From Recovery, run Disk Utility First Aid." }
+      ],
+      "related": ["safe-mode", "low-disk-space"]
+    },
+    {
+      "id": "mac-default-folders-icloud",
+      "os": ["macos"],
+      "title": "Desktop and Documents moved into iCloud Drive",
+      "symptoms": ["desktop in icloud", "documents in icloud", "files moved to icloud", "turn off desktop and documents"],
+      "why": "\"Desktop & Documents Folders\" in iCloud stores them online and can download them on demand.",
+      "steps": [
+        { "text": "System Settings › your name › iCloud › iCloud Drive › Desktop & Documents Folders." },
+        { "text": "Turning it off leaves the files in iCloud Drive; copy them back to your Mac folders first." }
+      ],
+      "related": ["icloud-drive-not-syncing", "desktop-files-missing"]
+    },
+    {
+      "id": "mac-terminal-sudo",
+      "os": ["macos"],
+      "title": "A guide says to run a command in Terminal",
+      "symptoms": ["terminal command mac", "sudo password", "run command mac", "paste into terminal"],
+      "why": "Terminal commands can change anything on the Mac; sudo runs them as administrator.",
+      "steps": [
+        { "text": "Only run commands from sources you trust and understand." },
+        { "text": "sudo asks for your password; nothing appears while you type it, that's normal." }
+      ],
+      "escalate": "On work Macs, ask IT before running admin commands."
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "id": "storage",
+  "title": "Storage & disks",
+  "icon": "disk",
+  "blurb": "Disk full, external drives, USB sticks, disk errors.",
+  "remedies": [
+    {
+      "id": "low-disk-space",
+      "os": ["windows", "macos"],
+      "title": "Disk is full or almost full",
+      "symptoms": ["disk full", "low disk space", "not enough space", "storage full", "c drive full", "your startup disk is almost full", "out of space"],
+      "why": "Downloads, temporary files, old updates, photos and videos, and cloud files kept on the computer fill the disk. Under ~10% free slows everything.",
+      "steps": [
+        { "text": "See what takes the space: the Disk map shows the biggest folders and files.", "page": "diskmap" },
+        { "text": "Clean temporary files, caches and old update leftovers.", "page": "cleanup" },
+        { "text": "Empty the Recycle Bin / Bin and clear old Downloads." },
+        { "text": "Turn on Storage Sense to clean up automatically.", "os": ["windows"], "open": "ms-settings:storagesense" },
+        { "text": "System Settings › General › Storage shows recommendations (Optimise Storage, Empty Bin automatically).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.Storage" },
+        { "text": "Set OneDrive / iCloud Drive to keep files online only (Files On-Demand / Optimise Mac Storage)." },
+        { "text": "Move large videos and old projects to an external drive." }
+      ],
+      "related": ["onedrive-files-on-demand", "computer-slow"]
+    },
+    {
+      "id": "external-drive-not-showing",
+      "os": ["windows", "macos"],
+      "title": "External drive or USB stick doesn't show up",
+      "symptoms": ["external drive not showing", "usb stick not detected", "hard drive not appearing", "drive not in file explorer", "external disk not mounting"],
+      "why": "No drive letter, a format the system can't read, not enough power, or a failing drive.",
+      "steps": [
+        { "text": "Plug straight into the computer, try another port and cable; big drives may need their own power." },
+        { "text": "Open Disk Management: if the drive is there without a letter, right-click › Change Drive Letter and Paths › Add.", "os": ["windows"], "open": "run:disk-management" },
+        { "text": "Open Disk Utility: if the drive is listed but greyed, select it › Mount.", "os": ["macos"], "open": "app:Disk Utility" },
+        { "text": "A drive formatted for a Mac (APFS) isn't readable on Windows without extra software, and Windows NTFS drives are read-only on a Mac. exFAT works on both." },
+        { "text": "Don't format a drive that has your files on it because the system asks; back it up first." },
+        { "text": "Check the drive's health.", "os": ["windows"], "page": "disks" }
+      ],
+      "escalate": "Clicking or grinding noises: stop using the drive; a recovery service has the best chance.",
+      "related": ["usb-not-recognized", "disk-errors"]
+    },
+    {
+      "id": "disk-errors",
+      "os": ["windows", "macos"],
+      "title": "Disk errors, \"scan and fix\" or a drive that's failing",
+      "symptoms": ["disk errors", "scan and fix drive", "smart failure", "drive failing", "chkdsk", "first aid", "bad sectors", "disk is not healthy"],
+      "why": "The file system has errors (often after power loss) or the drive itself is wearing out.",
+      "steps": [
+        { "text": "Back up important files now, before trying repairs." },
+        { "text": "Check the drive's health and errors in DeskMedic's Disks page.", "os": ["windows"], "page": "disks" },
+        { "text": "Scan the drive: File Explorer › right-click the drive › Properties › Tools › Check.", "os": ["windows"] },
+        { "text": "Disk Utility › select the drive › First Aid.", "os": ["macos"], "open": "app:Disk Utility" },
+        { "text": "A drive reporting health warnings should be replaced even if it still works." }
+      ],
+      "escalate": "Tell IT straight away if the main drive reports a health warning.",
+      "related": ["external-drive-not-showing", "backup-setup"]
+    },
+    {
+      "id": "format-drive",
+      "os": ["windows", "macos"],
+      "title": "Format a USB stick or drive to work on Windows and Mac",
+      "symptoms": ["format usb", "exfat", "format drive", "use drive on mac and pc", "file too large for destination"],
+      "why": "FAT32 can't hold files over 4 GB; NTFS is read-only on Mac; APFS doesn't work on Windows. exFAT works on both.",
+      "steps": [
+        { "text": "Copy anything you need off the drive first: formatting erases everything on it." },
+        { "text": "File Explorer › right-click the drive › Format › File system: exFAT › Start.", "os": ["windows"] },
+        { "text": "Disk Utility › select the drive › Erase › Format: ExFAT › Scheme: GUID Partition Map.", "os": ["macos"], "open": "app:Disk Utility" }
+      ],
+      "related": ["external-drive-not-showing"]
+    },
+    {
+      "id": "eject-drive-in-use",
+      "os": ["windows", "macos"],
+      "title": "Can't eject a drive: \"in use\"",
+      "symptoms": ["can't eject usb", "device is currently in use", "disk not ejected properly", "eject failed"],
+      "why": "An app or the system still has a file open on the drive (often Explorer/Finder previews, antivirus or Spotlight).",
+      "steps": [
+        { "text": "Close files and windows from the drive, then try again." },
+        { "text": "Wait a minute; indexing or antivirus may be reading it." },
+        { "text": "Sign out or restart; then remove it." },
+        { "text": "Removing a drive while it's writing can damage files; wait for activity lights to stop." }
+      ]
+    },
+    {
+      "id": "find-large-files",
+      "os": ["windows", "macos"],
+      "title": "Find what's using my space",
+      "symptoms": ["what is taking space", "largest files", "big folders", "storage breakdown", "disk usage", "find large files"],
+      "why": "A few big files and folders usually take most of the disk.",
+      "steps": [
+        { "text": "Open the Disk map: a picture of your disk, biggest folders first, with the largest files listed.", "page": "diskmap" },
+        { "text": "Settings › System › Storage › Show more categories.", "os": ["windows"], "open": "ms-settings:storagesense" },
+        { "text": "System Settings › General › Storage › the ⓘ next to each category.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.Storage" }
+      ],
+      "related": ["low-disk-space"]
+    }
+  ]
+}

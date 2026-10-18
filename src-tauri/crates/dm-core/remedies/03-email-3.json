@@ -1,0 +1,107 @@
+{
+  "id": "email",
+  "title": "Email & calendar",
+  "icon": "mail",
+  "blurb": "Outlook, Apple Mail and webmail: not sending, not syncing, password prompts, calendar trouble.",
+  "remedies": [
+    {
+      "id": "outlook-attachments-wont-open",
+      "os": ["windows", "macos"],
+      "title": "Attachments won't open from Outlook",
+      "symptoms": ["attachment won't open", "outlook attachment blocked", "can't open attachment", "preview not available", "winmail.dat"],
+      "why": "The file type is blocked for safety, no app opens it, or the sender's mail turned it into winmail.dat.",
+      "steps": [
+        { "text": "Save the attachment to a folder first, then open it from there." },
+        { "text": "Blocked types (.exe, .js) are blocked on purpose; ask the sender to share via a link." },
+        { "text": "winmail.dat: ask the sender to send in HTML or plain text, not Rich Text." }
+      ],
+      "related": ["file-wont-open", "office-protected-view"]
+    },
+    {
+      "id": "outlook-folders-missing",
+      "os": ["windows", "macos"],
+      "title": "Outlook folders or messages disappeared",
+      "symptoms": ["outlook folder missing", "emails disappeared", "inbox empty", "messages gone outlook", "folder moved by accident"],
+      "why": "A folder got dragged into another, a view filter hides mail, or a rule moved it.",
+      "steps": [
+        { "text": "Search all mailboxes for a known message and check which folder it's in." },
+        { "text": "View › Reset View (classic) removes filters hiding mail." },
+        { "text": "Check Deleted Items › Recover items deleted from this folder." },
+        { "text": "Look for a misplaced folder inside other folders." }
+      ],
+      "related": ["email-rules-not-working"]
+    },
+    {
+      "id": "focused-inbox",
+      "os": ["windows", "macos"],
+      "title": "Some emails go to \"Other\" instead of my Inbox",
+      "symptoms": ["focused inbox", "other tab outlook", "emails in other", "turn off focused inbox"],
+      "why": "Focused Inbox sorts mail it thinks is less important into Other.",
+      "steps": [
+        { "text": "View › Show Focused Inbox to turn it off, or move a message to Focused › Always move to Focused." }
+      ]
+    },
+    {
+      "id": "calendar-double-booking",
+      "os": ["windows", "macos"],
+      "title": "Meetings show twice or keep reappearing after deleting",
+      "symptoms": ["duplicate meetings", "calendar duplicates", "deleted meeting comes back", "meeting appears twice"],
+      "why": "The calendar is synced twice (two accounts or apps), or a delegate keeps the old copy.",
+      "steps": [
+        { "text": "Check whether the same calendar is added twice (e.g. via iCloud and Exchange)." },
+        { "text": "Delete or decline from Outlook on the web, then let devices sync." },
+        { "text": "Remove calendar sync from apps you no longer use on the phone." }
+      ],
+      "related": ["calendar-not-syncing"]
+    },
+    {
+      "id": "unsubscribe-spam",
+      "os": ["windows", "macos"],
+      "title": "Too much spam or newsletters",
+      "symptoms": ["too much spam", "unsubscribe", "block sender", "junk mail", "newsletter spam"],
+      "why": "Genuine newsletters unsubscribe cleanly; real spam should be blocked, not answered.",
+      "steps": [
+        { "text": "For newsletters you signed up for, use Unsubscribe at the top of the message." },
+        { "text": "For spam, use Report/Block sender; don't click unsubscribe links in obvious spam." },
+        { "text": "Report phishing with the Report button." }
+      ],
+      "related": ["suspicious-email", "email-in-junk"]
+    },
+    {
+      "id": "email-encrypt",
+      "os": ["windows", "macos"],
+      "title": "Send an email securely (encrypted)",
+      "symptoms": ["encrypt email", "secure email", "send confidential email", "do not forward"],
+      "why": "Microsoft 365 can encrypt mail so only the recipients can read it.",
+      "steps": [
+        { "text": "Outlook: Options › Encrypt (or Encrypt-Only / Do Not Forward) before sending." },
+        { "text": "For files, a password-protected PDF or a share link limited to named people is often simpler." }
+      ],
+      "escalate": "Your organisation may have rules for sensitive data; ask IT which option to use."
+    },
+    {
+      "id": "delegate-access",
+      "os": ["windows", "macos"],
+      "title": "Let someone manage my email or calendar (delegate)",
+      "symptoms": ["delegate access", "assistant manage calendar", "send on behalf", "give access to mailbox"],
+      "why": "Delegates can read, send on behalf of, or manage your calendar.",
+      "steps": [
+        { "text": "Outlook: File › Account Settings › Delegate Access (classic), or share the calendar with \"Can edit\" / \"Delegate\"." },
+        { "text": "Send-on-behalf for the whole mailbox is set by IT." }
+      ],
+      "related": ["calendar-share"]
+    },
+    {
+      "id": "mail-app-windows",
+      "os": ["windows"],
+      "title": "The old Windows Mail app changed to Outlook",
+      "symptoms": ["windows mail app gone", "mail and calendar app", "outlook replaced mail app", "new outlook replaced mail"],
+      "why": "Microsoft replaced Mail and Calendar with the new Outlook for Windows.",
+      "steps": [
+        { "text": "Open Outlook (new) from Start; it imports your accounts when you sign in." },
+        { "text": "Or use webmail, or another mail app." }
+      ],
+      "related": ["new-outlook-toggle"]
+    }
+  ]
+}

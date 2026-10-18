@@ -1,0 +1,104 @@
+{
+  "id": "desktop",
+  "title": "Desktop, taskbar & Finder",
+  "icon": "window",
+  "blurb": "Icons, taskbar, Dock, notifications, screenshots, windows.",
+  "remedies": [
+    {
+      "id": "virtual-desktops",
+      "os": ["windows", "macos"],
+      "title": "Use several desktops (or my windows vanished to another desktop)",
+      "symptoms": ["virtual desktops", "spaces mac", "windows disappeared another desktop", "task view", "mission control"],
+      "why": "Extra desktops keep windows apart; a window can end up on another one.",
+      "steps": [
+        { "text": "Windows+Tab shows all desktops; Ctrl+Windows+Left/Right switches.", "os": ["windows"] },
+        { "text": "Mission Control (F3 or three-finger swipe up) shows Spaces; Control+Left/Right switches.", "os": ["macos"] }
+      ],
+      "related": ["windows-off-screen"]
+    },
+    {
+      "id": "pin-apps",
+      "os": ["windows", "macos"],
+      "title": "Pin apps to the taskbar, Start or Dock",
+      "symptoms": ["pin to taskbar", "add to dock", "pin app", "keep in dock", "shortcut on desktop"],
+      "why": "Pinned apps are one click away.",
+      "steps": [
+        { "text": "Right-click an app in Start (or a running app in the taskbar) › Pin to taskbar / Pin to Start.", "os": ["windows"] },
+        { "text": "Right-click a running app in the Dock › Options › Keep in Dock, or drag it from Applications.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "wallpaper-change",
+      "os": ["windows", "macos"],
+      "title": "Change the wallpaper, theme or dark mode",
+      "symptoms": ["change wallpaper", "dark mode", "light mode", "desktop background", "theme colour"],
+      "why": "Personalisation settings control the look.",
+      "steps": [
+        { "text": "Settings › Personalization › Background and Colors (Choose your mode: Dark/Light).", "os": ["windows"], "open": "ms-settings:personalization" },
+        { "text": "System Settings › Wallpaper; Appearance for Dark/Light.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Appearance-Settings.extension" }
+      ],
+      "escalate": "Work devices may lock the wallpaper."
+    },
+    {
+      "id": "finder-sidebar",
+      "os": ["macos"],
+      "title": "Finder is missing items in the sidebar (Desktop, Documents, iCloud)",
+      "symptoms": ["finder sidebar missing", "desktop missing finder", "icloud drive not in finder", "finder favorites"],
+      "why": "Sidebar items can be hidden in Finder's settings.",
+      "steps": [
+        { "text": "Finder › Settings › Sidebar: tick what you want to see." },
+        { "text": "Drag any folder into the sidebar to add it." }
+      ]
+    },
+    {
+      "id": "file-explorer-slow",
+      "os": ["windows"],
+      "title": "File Explorer is slow or keeps \"Working on it…\"",
+      "symptoms": ["file explorer slow", "working on it", "explorer not responding", "folder takes long to open", "quick access slow"],
+      "why": "Thumbnails for big folders, a disconnected network drive, or Quick Access history.",
+      "steps": [
+        { "text": "Restart Explorer.", "fix": "restart-explorer" },
+        { "text": "Disconnect network drives you don't reach any more." },
+        { "text": "Folder options › General › Clear File Explorer history.", "open": "run:file-explorer-options" },
+        { "text": "For a slow folder: right-click it › Properties › Customize › Optimize for: General items." }
+      ],
+      "related": ["network-drive-missing"]
+    },
+    {
+      "id": "context-menu-windows11",
+      "os": ["windows"],
+      "title": "Where did the full right-click menu go?",
+      "symptoms": ["right click menu windows 11", "show more options", "old context menu", "missing right click options"],
+      "why": "Windows 11 shows a short menu first; the full one is one step away.",
+      "steps": [
+        { "text": "Click \"Show more options\" or press Shift+F10 (or Shift+right-click) for the full menu." }
+      ]
+    },
+    {
+      "id": "focus-dnd",
+      "os": ["windows", "macos"],
+      "title": "Turn on Do Not Disturb or Focus while working",
+      "symptoms": ["do not disturb", "focus mode", "focus session", "silence notifications", "quiet hours"],
+      "why": "Focus modes hold notifications while you concentrate or present.",
+      "steps": [
+        { "text": "Notifications › Do not disturb; Clock app › Focus sessions for timed focus.", "os": ["windows"], "open": "ms-settings:notifications" },
+        { "text": "Control Center › Focus, or System Settings › Focus for schedules.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Focus-Settings.extension" },
+        { "text": "Both turn on automatically when you share your screen (if enabled)." }
+      ],
+      "related": ["notifications-missing"]
+    },
+    {
+      "id": "screen-recording",
+      "os": ["windows", "macos"],
+      "title": "Record my screen",
+      "symptoms": ["record screen", "screen recording", "capture video of screen", "record tutorial"],
+      "why": "Both systems have built-in screen recorders.",
+      "steps": [
+        { "text": "Snipping Tool › Record (Windows+Shift+R on recent Windows 11), or Xbox Game Bar (Windows+Alt+R) for one app.", "os": ["windows"], "open": "run:snipping-tool" },
+        { "text": "⌘+Shift+5 › Record Entire Screen or Selected Portion.", "os": ["macos"], "open": "app:Screenshot" },
+        { "text": "Teams and Zoom can also record meetings." }
+      ],
+      "related": ["take-screenshot"]
+    }
+  ]
+}

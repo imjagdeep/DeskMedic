@@ -1,0 +1,170 @@
+{
+  "id": "files",
+  "title": "Files, folders & cloud sync",
+  "icon": "folder",
+  "blurb": "OneDrive, iCloud, Dropbox, lost or deleted files, search, file types.",
+  "remedies": [
+    {
+      "id": "file-deleted-by-mistake",
+      "os": ["windows", "macos"],
+      "title": "I deleted a file by mistake",
+      "symptoms": ["deleted file by mistake", "recover deleted file", "restore deleted folder", "file gone", "accidentally deleted", "undo delete"],
+      "why": "Deleted files usually go to the Recycle Bin / Bin first, and cloud services keep deleted files for weeks.",
+      "steps": [
+        { "text": "Press Ctrl+Z (⌘Z) straight away in the same folder to undo the delete." },
+        { "text": "Open the Recycle Bin (Bin on Mac), right-click the file › Restore (Put Back)." },
+        { "text": "OneDrive / SharePoint: onedrive.com › Recycle bin (kept 30–93 days). iCloud: iCloud.com › Drive › Recently Deleted. Google Drive and Dropbox have their own Trash." },
+        { "text": "File History or a previous version: right-click the folder › Restore previous versions.", "os": ["windows"] },
+        { "text": "Time Machine: open the folder in Finder, then Time Machine in the menu bar › Browse Time Machine Backups.", "os": ["macos"] }
+      ],
+      "escalate": "For files on a work shared drive, IT can usually restore from the server's backup; tell them the path and when it was last there.",
+      "related": ["recover-unsaved-document", "backup-setup"]
+    },
+    {
+      "id": "onedrive-not-syncing",
+      "os": ["windows", "macos"],
+      "title": "OneDrive isn't syncing",
+      "symptoms": ["onedrive not syncing", "onedrive stuck", "sync pending", "onedrive red x", "processing changes", "onedrive paused", "onedrive sync error"],
+      "why": "Sync is paused, you're signed out, a file name or size isn't allowed, the disk or OneDrive storage is full, or OneDrive's own data got stuck.",
+      "steps": [
+        { "text": "Click the OneDrive cloud icon: resume if paused, and read any error it shows." },
+        { "text": "Check you're signed in and have storage left (OneDrive › Settings › Account)." },
+        { "text": "Rename files with characters OneDrive doesn't accept (\" * : < > ? / \\ |) or very long paths." },
+        { "text": "Quit OneDrive and start it again." },
+        { "text": "Reset OneDrive (re-syncs everything; your files stay).", "os": ["windows"], "fix": "reset-onedrive" },
+        { "text": "Reset OneDrive: quit it, then run the ResetOneDriveApp command inside the app (OneDrive.app › Show Package Contents › Contents › Resources).", "os": ["macos"] }
+      ],
+      "escalate": "Give IT the error text from the OneDrive icon.",
+      "related": ["onedrive-files-on-demand", "file-sync-conflict"]
+    },
+    {
+      "id": "onedrive-files-on-demand",
+      "os": ["windows", "macos"],
+      "title": "OneDrive files show a cloud icon or take space I don't have",
+      "symptoms": ["files on demand", "free up space onedrive", "cloud icon on files", "always keep on this device", "online only files"],
+      "why": "Files On-Demand keeps files online until you open them (cloud icon) or keeps them on the computer (green tick).",
+      "steps": [
+        { "text": "Right-click a folder › Free up space to keep it online only; Always keep on this device to keep it offline." },
+        { "text": "Turn on Storage Sense to free space on files you haven't opened in a while.", "os": ["windows"], "open": "ms-settings:storagesense" },
+        { "text": "Online-only files need internet to open; mark folders you use offline (travel) as Always keep." }
+      ],
+      "related": ["low-disk-space", "onedrive-not-syncing"]
+    },
+    {
+      "id": "file-sync-conflict",
+      "os": ["windows", "macos"],
+      "title": "Duplicate files with my computer's name in them",
+      "symptoms": ["conflicted copy", "duplicate files onedrive", "file name with computer name", "sync conflict", "-desktop copy"],
+      "why": "The same file changed in two places before syncing, so the sync service kept both.",
+      "steps": [
+        { "text": "Open both copies, keep the right one, delete the other." },
+        { "text": "Close files on other devices before editing; work in Office's co-authoring for shared files." },
+        { "text": "Avoid editing the same file offline on two computers." }
+      ],
+      "related": ["onedrive-not-syncing"]
+    },
+    {
+      "id": "icloud-drive-not-syncing",
+      "os": ["macos", "windows"],
+      "title": "iCloud Drive isn't syncing",
+      "symptoms": ["icloud drive not syncing", "icloud upload stuck", "icloud waiting to upload", "icloud for windows not syncing", "desktop and documents icloud"],
+      "why": "iCloud storage is full, you're signed out, low power mode pauses it, or a big upload is still going.",
+      "steps": [
+        { "text": "Check iCloud storage isn't full (System Settings › your name › iCloud)." },
+        { "text": "Turn off Low Power Mode; it pauses iCloud uploads.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "In Finder's sidebar, the progress circle next to iCloud Drive shows what's uploading; give big uploads time.", "os": ["macos"] },
+        { "text": "Open iCloud for Windows and check iCloud Drive is ticked and you're signed in; restart the computer.", "os": ["windows"] },
+        { "text": "Sign out of iCloud and back in as a last resort (keep a copy of files first)." }
+      ]
+    },
+    {
+      "id": "file-wont-open",
+      "os": ["windows", "macos"],
+      "title": "Can't open a file: \"How do you want to open this file?\"",
+      "symptoms": ["can't open file", "no app to open file", "file type", "how do you want to open this", "unknown file extension", "open with"],
+      "why": "No app on this computer opens that file type, or the wrong one is set as default.",
+      "steps": [
+        { "text": "Show file extensions to see the real type: File Explorer › View › Show › File name extensions.", "os": ["windows"] },
+        { "text": "Choose an app: right-click › Open with › choose another app, and tick Always.", "os": ["windows"] },
+        { "text": "Set the default per type: Settings › Apps › Default apps › search the extension.", "os": ["windows"], "open": "ms-settings:defaultapps" },
+        { "text": "Right-click › Get Info › Open with › choose the app › Change All.", "os": ["macos"] },
+        { "text": "Look up the extension (e.g. .heic, .pages, .msg) to find the right app; many open in a browser or online viewer." }
+      ],
+      "related": ["heic-photos"]
+    },
+    {
+      "id": "heic-photos",
+      "os": ["windows", "macos"],
+      "title": "iPhone photos (.HEIC) won't open",
+      "symptoms": ["heic", "can't open iphone photos", "heic to jpg", "heif", "photos from iphone won't open on pc"],
+      "why": "iPhones save photos as HEIC, which Windows needs an extension to open and many websites don't accept.",
+      "steps": [
+        { "text": "Install \"HEIF Image Extensions\" from the Microsoft Store (free).", "os": ["windows"] },
+        { "text": "On the iPhone: Settings › Camera › Formats › Most Compatible saves JPEG instead; Photos › Transfer to Mac or PC › Automatic converts when copying." },
+        { "text": "On a Mac, open the photo in Preview › File › Export › JPEG.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "zip-files",
+      "os": ["windows", "macos"],
+      "title": "Open or make a ZIP file",
+      "symptoms": ["zip file", "extract zip", "compress folder", "unzip", "rar file", "7z", "compressed folder"],
+      "why": "ZIP files bundle many files into one; both systems handle ZIP themselves.",
+      "steps": [
+        { "text": "Open: right-click › Extract All. Make: select files › right-click › Compress to ZIP file. Windows 11 also opens .rar and .7z.", "os": ["windows"] },
+        { "text": "Open: double-click the ZIP. Make: select files › right-click › Compress.", "os": ["macos"] },
+        { "text": "Extract files before working on them; editing inside a ZIP doesn't save back." }
+      ]
+    },
+    {
+      "id": "windows-search-broken",
+      "os": ["windows"],
+      "title": "Windows search finds nothing or is slow",
+      "symptoms": ["windows search not working", "start menu search not working", "search no results", "file explorer search slow", "search index"],
+      "why": "The search index is incomplete or damaged, or the folder isn't indexed.",
+      "steps": [
+        { "text": "Rebuild the search index (takes a while to fill in again).", "fix": "rebuild-search" },
+        { "text": "Choose Enhanced (whole PC) or add folders: Settings › Privacy & security › Searching Windows.", "open": "ms-settings:cortana-windowssearch" },
+        { "text": "If the Start menu search box itself doesn't respond, restart Explorer.", "fix": "restart-explorer" }
+      ],
+      "related": ["outlook-search-broken"]
+    },
+    {
+      "id": "spotlight-broken",
+      "os": ["macos"],
+      "title": "Spotlight search finds nothing",
+      "symptoms": ["spotlight not working", "spotlight no results", "spotlight indexing", "can't find files mac search"],
+      "why": "Spotlight's index is incomplete or the folder is excluded.",
+      "steps": [
+        { "text": "Check the categories you want are on, and the folder isn't in Spotlight Privacy.", "open": "x-apple.systempreferences:com.apple.Spotlight-Settings.extension" },
+        { "text": "Rebuild the index: add the disk to Spotlight Privacy, wait a moment, then remove it; Spotlight re-indexes (can take hours)." }
+      ],
+      "related": ["outlook-search-broken"]
+    },
+    {
+      "id": "access-denied-folder",
+      "os": ["windows", "macos"],
+      "title": "\"Access denied\" or \"You don't have permission\" on a file or folder",
+      "symptoms": ["access denied", "you don't have permission", "permission denied", "need administrator permission folder", "read only folder"],
+      "why": "The file belongs to another user, it's on a protected system folder, or a shared folder's permissions don't include you.",
+      "steps": [
+        { "text": "Save your own files in Documents, Desktop or OneDrive, not in system folders." },
+        { "text": "For a file from an old computer or another user, copy it into your Documents folder." },
+        { "text": "A Mac app may need \"Files and Folders\" or \"Full Disk Access\" permission.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" },
+        { "text": "Controlled folder access in Windows Security can block apps from Documents; allow the app there.", "os": ["windows"], "open": "run:windows-security" }
+      ],
+      "escalate": "For shared work folders, IT has to give you access; tell them the folder path."
+    },
+    {
+      "id": "file-name-too-long",
+      "os": ["windows"],
+      "title": "\"File name too long\" or path too long when copying",
+      "symptoms": ["file name too long", "path too long", "destination path too long", "cannot copy long path", "260 characters"],
+      "why": "Many Windows apps still have a 260-character limit on the full path of a file.",
+      "steps": [
+        { "text": "Shorten folder names along the path, or move the folder closer to the drive's top (e.g. C:\\Work)." },
+        { "text": "Zip the folder before copying it, then extract it somewhere with a shorter path." }
+      ]
+    }
+  ]
+}

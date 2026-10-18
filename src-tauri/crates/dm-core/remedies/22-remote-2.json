@@ -1,0 +1,64 @@
+{
+  "id": "remote",
+  "title": "VPN & remote access",
+  "icon": "remote",
+  "blurb": "VPN won't connect, remote desktop, working from home.",
+  "remedies": [
+    {
+      "id": "vpn-slow",
+      "os": ["windows", "macos"],
+      "title": "Everything is slow while the VPN is on",
+      "symptoms": ["vpn slow", "slow internet on vpn", "vpn lag", "teams slow on vpn"],
+      "why": "All traffic may go through the office first; distance and busy VPN servers slow it.",
+      "steps": [
+        { "text": "Connect to the nearest VPN location if the app lets you choose." },
+        { "text": "Disconnect the VPN when you don't need work-only resources (if policy allows)." },
+        { "text": "Use a cable or better Wi-Fi; VPN adds to any Wi-Fi weakness." }
+      ],
+      "escalate": "IT can check whether Teams and Microsoft 365 bypass the VPN (split tunnel).",
+      "related": ["wifi-slow"]
+    },
+    {
+      "id": "vpn-drops",
+      "os": ["windows", "macos"],
+      "title": "VPN keeps disconnecting",
+      "symptoms": ["vpn disconnects", "vpn drops", "vpn session timeout", "vpn reconnecting"],
+      "why": "Unstable Wi-Fi, sleep, or a session time limit.",
+      "steps": [
+        { "text": "Fix the Wi-Fi first; VPNs drop with every Wi-Fi hiccup." },
+        { "text": "Stop the computer sleeping during long transfers.", "os": ["windows"], "open": "ms-settings:powersleep" },
+        { "text": "Stop the computer sleeping during long transfers.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Update the VPN app." }
+      ],
+      "escalate": "Tell IT the times it dropped; sessions may have a time limit.",
+      "related": ["wifi-drops", "vpn-wont-connect"]
+    },
+    {
+      "id": "working-from-home-setup",
+      "os": ["windows", "macos"],
+      "title": "Getting set up to work from home",
+      "symptoms": ["work from home setup", "home office", "remote work checklist", "wfh"],
+      "why": "A few checks avoid most work-from-home problems.",
+      "steps": [
+        { "text": "Test the VPN and sign-in before your first day at home." },
+        { "text": "Use a cable or sit near the router for calls." },
+        { "text": "A headset with a microphone beats laptop speakers." },
+        { "text": "Lock the computer when away and keep work files in work storage." }
+      ],
+      "related": ["vpn-wont-connect", "meeting-poor-quality"]
+    },
+    {
+      "id": "rdp-black-screen",
+      "os": ["windows", "macos"],
+      "title": "Remote Desktop shows a black screen or is very slow",
+      "symptoms": ["remote desktop black screen", "rdp slow", "remote desktop lag", "rdp blank"],
+      "why": "Display settings, a slow connection or graphics features in the session.",
+      "steps": [
+        { "text": "Lower the remote session's display quality (Experience tab: choose a slower connection)." },
+        { "text": "Use one monitor in the session instead of all." },
+        { "text": "Press Ctrl+Alt+End then cancel to refresh a black session (Windows client).", "os": ["windows"] }
+      ],
+      "related": ["remote-desktop-wont-connect"]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "security",
+  "title": "Security & viruses",
+  "icon": "shield",
+  "blurb": "Viruses, scam pop-ups, firewall, encryption, safe browsing.",
+  "remedies": [
+    {
+      "id": "two-step-setup",
+      "os": ["windows", "macos"],
+      "title": "Turn on two-step sign-in (MFA) for my accounts",
+      "symptoms": ["turn on 2fa", "enable mfa", "two factor authentication", "authenticator app setup", "secure my account"],
+      "why": "Two-step sign-in stops most account takeovers, even if a password leaks.",
+      "steps": [
+        { "text": "Microsoft: account.microsoft.com/security › Advanced security options. Google: myaccount.google.com/security › 2-Step Verification. Apple: on by default." },
+        { "text": "Prefer an authenticator app or passkey over text messages." },
+        { "text": "Save the backup codes somewhere safe (not on the same computer only)." }
+      ],
+      "related": ["mfa-not-working", "passkeys"]
+    },
+    {
+      "id": "mfa-fatigue",
+      "os": ["windows", "macos"],
+      "title": "I keep getting sign-in approval requests I didn't start",
+      "symptoms": ["mfa prompts i didn't request", "random authenticator notifications", "approve sign in request unknown", "mfa spam"],
+      "why": "Someone has your password and is hoping you'll approve by mistake.",
+      "steps": [
+        { "text": "Deny every request you didn't start; never approve to make them stop." },
+        { "text": "Change your password now from a trusted device." },
+        { "text": "Report it as suspicious in the authenticator if offered." }
+      ],
+      "escalate": "Tell IT immediately for a work account.",
+      "related": ["account-hacked"]
+    },
+    {
+      "id": "check-app-safe",
+      "os": ["windows", "macos"],
+      "title": "Is this program or file safe to open?",
+      "symptoms": ["is this file safe", "scan file for virus", "virustotal", "check download safe", "suspicious attachment"],
+      "why": "You can scan a single file before opening it.",
+      "steps": [
+        { "text": "Right-click the file › Scan with Microsoft Defender.", "os": ["windows"] },
+        { "text": "Unexpected attachments (even from people you know) can be malicious; check with the sender another way." },
+        { "text": "Never enable macros or \"content\" in a document you didn't expect." }
+      ],
+      "escalate": "Send suspicious work files to IT rather than opening them.",
+      "related": ["suspicious-email", "office-macros-blocked"]
+    },
+    {
+      "id": "ransomware-signs",
+      "os": ["windows", "macos"],
+      "title": "My files have strange names or a ransom note appeared",
+      "symptoms": ["ransomware", "files encrypted", "ransom note", "files renamed strange extension", "pay bitcoin"],
+      "why": "Ransomware encrypts files and demands payment.",
+      "steps": [
+        { "text": "Disconnect from the network now (unplug the cable, turn off Wi-Fi). Don't turn the computer off." },
+        { "text": "Don't pay and don't contact the attackers." },
+        { "text": "Unplug backup drives so they aren't encrypted too." }
+      ],
+      "escalate": "Call IT immediately; on a work network this affects everyone."
+    },
+    {
+      "id": "sharing-screen-safety",
+      "os": ["windows", "macos"],
+      "title": "Avoid showing private things when sharing my screen",
+      "symptoms": ["share screen privately", "notifications during screen share", "hide desktop when presenting"],
+      "why": "Sharing the whole screen shows pop-ups, emails and other windows.",
+      "steps": [
+        { "text": "Share one window instead of the whole screen." },
+        { "text": "Turn on Do not disturb / Focus while presenting.", "os": ["windows"], "open": "ms-settings:notifications" },
+        { "text": "Turn on Focus while presenting.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Focus-Settings.extension" },
+        { "text": "Close private tabs and documents first." }
+      ],
+      "related": ["focus-dnd"]
+    },
+    {
+      "id": "core-isolation",
+      "os": ["windows"],
+      "title": "\"Memory integrity is off\" or a driver is incompatible",
+      "symptoms": ["memory integrity off", "core isolation", "incompatible driver memory integrity", "vulnerable driver blocklist"],
+      "why": "Memory integrity blocks old drivers; one incompatible driver keeps it off.",
+      "steps": [
+        { "text": "Windows Security › Device security › Core isolation details: see which driver is incompatible.", "open": "run:windows-security" },
+        { "text": "Update or uninstall the app that brought that driver, then turn memory integrity on and restart." }
+      ],
+      "escalate": "On work PCs, IT manages this setting."
+    }
+  ]
+}

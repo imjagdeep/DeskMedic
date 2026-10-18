@@ -1,0 +1,110 @@
+{
+  "id": "meetings",
+  "title": "Teams, Zoom & meetings",
+  "icon": "video",
+  "blurb": "Can't hear or be heard, camera off, screen share, Teams won't start.",
+  "remedies": [
+    {
+      "id": "teams-status-stuck",
+      "os": ["windows", "macos"],
+      "title": "Teams status is stuck (Away, Offline or In a meeting)",
+      "symptoms": ["teams status stuck", "teams shows away", "teams presence wrong", "teams offline status", "status not updating"],
+      "why": "Presence follows activity, calendar and other devices; a stuck sign-in or a set status overrides it.",
+      "steps": [
+        { "text": "Click your picture › Reset status (or set it explicitly), and clear any status duration." },
+        { "text": "Sign out of Teams on other devices you don't use, then quit and reopen Teams." },
+        { "text": "Clear Teams' cache.", "os": ["windows"], "fix": "reset-teams" }
+      ],
+      "related": ["teams-wont-start"]
+    },
+    {
+      "id": "teams-chat-missing",
+      "os": ["windows", "macos"],
+      "title": "Teams messages or chats are missing or late",
+      "symptoms": ["teams messages missing", "teams chat not loading", "teams message delayed", "can't see chat history"],
+      "why": "Teams didn't sync, you're in another account/tenant, or the chat is hidden.",
+      "steps": [
+        { "text": "Check you're in the right organisation (your picture at the top right)." },
+        { "text": "Look under Chat filters for hidden chats." },
+        { "text": "Clear Teams' cache.", "os": ["windows"], "fix": "reset-teams" },
+        { "text": "Check in Teams on the web; if it's there, it's this computer's Teams." }
+      ]
+    },
+    {
+      "id": "zoom-cant-join",
+      "os": ["windows", "macos"],
+      "title": "Can't join a Zoom meeting",
+      "symptoms": ["can't join zoom", "zoom error code", "zoom waiting for host", "zoom meeting id invalid", "zoom link not opening"],
+      "why": "Wrong ID or passcode, an old Zoom app, the host hasn't started, or the network blocks Zoom.",
+      "steps": [
+        { "text": "Open the link from the invite rather than typing the ID; check the passcode." },
+        { "text": "\"Waiting for host\" means it hasn't started yet." },
+        { "text": "Update Zoom (your picture › Check for Updates)." },
+        { "text": "Try joining from the browser, or on another network." }
+      ],
+      "related": ["zoom-update"]
+    },
+    {
+      "id": "background-blur",
+      "os": ["windows", "macos"],
+      "title": "Background blur or virtual backgrounds don't show",
+      "symptoms": ["background blur not available", "virtual background missing", "teams background effects", "zoom background not working"],
+      "why": "Effects need a recent app and enough computer power; some organisations turn them off.",
+      "steps": [
+        { "text": "Update the meeting app." },
+        { "text": "Teams: in the meeting › More › Video effects. Zoom: Settings › Backgrounds & effects." },
+        { "text": "On a Mac, Control Center › Video Effects adds blur for any app.", "os": ["macos"] },
+        { "text": "On Windows 11 with Studio Effects, Settings › Bluetooth & devices › Cameras offers blur.", "os": ["windows"] }
+      ]
+    },
+    {
+      "id": "meeting-recording-where",
+      "os": ["windows", "macos"],
+      "title": "Where did my meeting recording go?",
+      "symptoms": ["teams recording location", "zoom recording location", "find recording", "meeting recording missing"],
+      "why": "Teams saves to OneDrive/SharePoint; Zoom saves locally or to the cloud.",
+      "steps": [
+        { "text": "Teams: open the meeting chat; the recording link appears there after processing (it's in the organiser's OneDrive › Recordings, or the channel's SharePoint)." },
+        { "text": "Zoom: local recordings in Documents › Zoom; cloud ones at zoom.us › Recordings." },
+        { "text": "Long meetings can take a while to appear." }
+      ]
+    },
+    {
+      "id": "headset-buttons",
+      "os": ["windows", "macos"],
+      "title": "Headset mute or answer button doesn't work in calls",
+      "symptoms": ["headset mute button not working", "answer button headset", "headset controls teams", "jabra button", "poly button"],
+      "why": "Call buttons need the app to support the headset and may need the maker's software.",
+      "steps": [
+        { "text": "Pick the headset as speaker and microphone in the meeting app (not just the system)." },
+        { "text": "Install the headset maker's app (Jabra Direct, Poly Lens, Logi Tune)." },
+        { "text": "Use the dongle (USB receiver) rather than plain Bluetooth for full call controls." }
+      ],
+      "related": ["bluetooth-headset-bad-sound"]
+    },
+    {
+      "id": "teams-guest-access",
+      "os": ["windows", "macos"],
+      "title": "Can't join another organisation's Teams meeting or team",
+      "symptoms": ["teams guest", "join external teams meeting", "teams other organization", "switch tenant teams", "anonymous join"],
+      "why": "External meetings may need a guest account or allow anonymous join only from the browser.",
+      "steps": [
+        { "text": "Open the meeting link and choose \"Continue on this browser\" to join as a guest." },
+        { "text": "If you were added as a guest to their team, switch organisations from your picture." },
+        { "text": "Accept the guest invitation email first." }
+      ]
+    },
+    {
+      "id": "meeting-captions",
+      "os": ["windows", "macos"],
+      "title": "Turn on live captions or a transcript in meetings",
+      "symptoms": ["live captions", "subtitles meeting", "transcript teams", "captions zoom"],
+      "why": "Meeting apps can show live captions, and the system can caption any audio.",
+      "steps": [
+        { "text": "Teams: More › Language and speech › Turn on live captions. Zoom: Captions button." },
+        { "text": "Windows Live captions for any audio: Windows+Ctrl+L.", "os": ["windows"] },
+        { "text": "Mac Live Captions: Accessibility › Live Captions.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    }
+  ]
+}

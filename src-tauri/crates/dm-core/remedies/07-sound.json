@@ -1,0 +1,125 @@
+{
+  "id": "sound",
+  "title": "Sound & microphone",
+  "icon": "sound",
+  "blurb": "No sound, wrong speaker, crackling, microphone not picking up.",
+  "remedies": [
+    {
+      "id": "no-sound",
+      "os": ["windows", "macos"],
+      "title": "No sound from the computer",
+      "symptoms": ["no sound", "no audio", "speakers not working", "sound stopped working", "volume not working", "red x speaker"],
+      "why": "Sound goes to another device (a monitor, headset or TV), is muted, or the audio service stopped.",
+      "steps": [
+        { "text": "Check the volume and mute, including the keys on the keyboard and any speaker knobs." },
+        { "text": "Pick the right output: click the speaker in the taskbar › the arrow next to the volume › choose the speaker or headset.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Pick the right output in Sound › Output (monitors and TVs often grab the sound).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Restart the Windows audio service.", "os": ["windows"], "fix": "restart-audio" },
+        { "text": "Check the app's own volume in the mixer.", "os": ["windows"], "open": "ms-settings:apps-volume" },
+        { "text": "Unplug headphones and Bluetooth devices, then try the built-in speakers." },
+        { "text": "Restart the Mac if sound stays missing; that restarts the sound system.", "os": ["macos"] }
+      ],
+      "related": ["sound-wrong-device", "sound-crackling", "bluetooth-headset-bad-sound"]
+    },
+    {
+      "id": "sound-wrong-device",
+      "os": ["windows", "macos"],
+      "title": "Sound plays through the wrong speaker or headset",
+      "symptoms": ["sound wrong output", "audio goes to monitor", "headphones not working", "sound through tv", "default playback device"],
+      "why": "The system switched to a newly connected device (a monitor, dock or Bluetooth headset).",
+      "steps": [
+        { "text": "Choose the output in Settings › System › Sound › Output, and set it as default in More sound settings.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Choose the output in Sound › Output; hold Option and click the menu-bar speaker to switch quickly.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "In meeting apps set the speaker in the app too; they don't always follow the system." },
+        { "text": "Disable devices you never use (like a monitor's speakers) so they stop taking over: Sound control panel › right-click › Disable.", "os": ["windows"], "open": "run:sound-control-panel" }
+      ],
+      "related": ["no-sound"]
+    },
+    {
+      "id": "sound-crackling",
+      "os": ["windows", "macos"],
+      "title": "Sound crackles, pops or stutters",
+      "symptoms": ["crackling audio", "audio popping", "sound stutters", "distorted sound", "audio glitch"],
+      "why": "The computer is overloaded, audio enhancements misbehave, a USB/Bluetooth link is weak, or the sound driver is old.",
+      "steps": [
+        { "text": "Close heavy apps and see if it stops." },
+        { "text": "Turn off audio enhancements: Settings › Sound › your speaker › Audio enhancements: Off.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Set a lower format (24-bit 48000 Hz) under the speaker's Properties › Advanced.", "os": ["windows"], "open": "run:sound-control-panel" },
+        { "text": "In Audio MIDI Setup set the output to 48,000 Hz.", "os": ["macos"], "open": "app:Audio MIDI Setup" },
+        { "text": "For USB headsets, plug straight into the computer instead of a hub or dock." },
+        { "text": "Update the sound driver (Windows Update › Optional updates, or the PC maker's site).", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" }
+      ],
+      "related": ["no-sound", "computer-slow"]
+    },
+    {
+      "id": "mic-not-working",
+      "os": ["windows", "macos"],
+      "title": "Microphone doesn't pick anything up",
+      "symptoms": ["microphone not working", "mic not detected", "mic too quiet", "no input device", "mic level not moving"],
+      "why": "Privacy settings block apps, the wrong microphone is selected, or the input level is very low or muted.",
+      "steps": [
+        { "text": "Allow microphone access for apps and desktop apps.", "os": ["windows"], "open": "ms-settings:privacy-microphone" },
+        { "text": "Allow each app in Privacy & Security › Microphone.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone" },
+        { "text": "Choose the microphone in Sound › Input and raise its volume; speak and watch the level move.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Choose the microphone in Sound › Input and raise the input volume.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Check for a mute switch on the headset or its cable." },
+        { "text": "Restart the Windows audio service.", "os": ["windows"], "fix": "restart-audio" }
+      ],
+      "related": ["meeting-others-cant-hear-me", "mic-too-quiet"]
+    },
+    {
+      "id": "mic-too-quiet",
+      "os": ["windows", "macos"],
+      "title": "My microphone is too quiet or too loud",
+      "symptoms": ["mic too quiet", "mic volume low", "people say i'm quiet", "mic too loud", "boost microphone"],
+      "why": "The input level is set low, or the app adjusts it automatically.",
+      "steps": [
+        { "text": "Raise the input volume (Windows also has Microphone Boost under Sound control panel › Recording › Properties › Levels).", "os": ["windows"], "open": "run:sound-control-panel" },
+        { "text": "Raise the input volume in Sound › Input.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "In Teams/Zoom turn off automatic microphone adjustment if it keeps changing." },
+        { "text": "Move the microphone closer (2–3 finger widths from your mouth for a headset)." }
+      ]
+    },
+    {
+      "id": "headphone-jack",
+      "os": ["windows", "macos"],
+      "title": "Plugged-in headphones don't work",
+      "symptoms": ["headphone jack not working", "3.5mm", "headphones not detected", "audio jack", "headset plug not working"],
+      "why": "The plug isn't fully in, the computer doesn't detect it, or a headset with one plug is in a headphone-only port.",
+      "steps": [
+        { "text": "Push the plug in firmly; cases on phones and some laptops stop it seating." },
+        { "text": "Pick the headphones as the output in Sound settings.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Pick the headphones as the output in Sound settings.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Try another pair; if it works, the first pair is faulty." },
+        { "text": "Look for dust in the jack and blow it out gently." }
+      ],
+      "related": ["sound-wrong-device"]
+    },
+    {
+      "id": "volume-keys-not-working",
+      "os": ["windows", "macos"],
+      "title": "Volume keys or mute key don't work",
+      "symptoms": ["volume buttons not working", "mute key not working", "fn keys volume", "media keys not working"],
+      "why": "The function keys are set to F1–F12 mode, or the keyboard's helper software isn't running.",
+      "steps": [
+        { "text": "Hold Fn while pressing the key, or press Fn+Esc (many laptops) to switch the function-key mode." },
+        { "text": "Change \"Use F1, F2, etc. keys as standard function keys\" in Keyboard settings › Keyboard Shortcuts › Function Keys.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" },
+        { "text": "Reinstall the laptop maker's hotkey app (often in its support tools)." , "os": ["windows"] }
+      ]
+    },
+    {
+      "id": "sound-hdmi-tv",
+      "os": ["windows", "macos"],
+      "title": "No sound from the TV or monitor over HDMI",
+      "symptoms": ["hdmi no sound", "tv no sound from laptop", "displayport audio", "monitor speakers not working"],
+      "why": "Sound still goes to the laptop's speakers, or the TV/monitor's own volume is muted.",
+      "steps": [
+        { "text": "Choose the TV or monitor as the output.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "Choose the TV or monitor as the output.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "Turn up the TV or monitor's own volume, and check its audio input setting." },
+        { "text": "Some adapters (especially cheap USB-C to HDMI) don't carry sound; try another." }
+      ],
+      "related": ["sound-wrong-device", "external-monitor-not-detected"]
+    }
+  ]
+}

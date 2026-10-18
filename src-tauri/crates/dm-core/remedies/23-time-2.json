@@ -1,0 +1,44 @@
+{
+  "id": "time",
+  "title": "Date, time & language",
+  "icon": "clock",
+  "blurb": "Wrong clock, time zone, date format, language.",
+  "remedies": [
+    {
+      "id": "clock-24-hour",
+      "os": ["windows", "macos"],
+      "title": "Switch between 12-hour and 24-hour clock",
+      "symptoms": ["24 hour clock", "12 hour clock", "am pm", "military time"],
+      "why": "Clock format follows the region settings.",
+      "steps": [
+        { "text": "Settings › Time & language › Language & region › Regional format › Change formats › Short time.", "os": ["windows"], "open": "ms-settings:regionformatting" },
+        { "text": "System Settings › General › Date & Time › 24-hour time.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" }
+      ],
+      "related": ["date-format"]
+    },
+    {
+      "id": "second-clock",
+      "os": ["windows", "macos"],
+      "title": "Show a second time zone clock",
+      "symptoms": ["second clock", "world clock", "two time zones taskbar", "additional clock"],
+      "why": "Handy when working with people in other time zones.",
+      "steps": [
+        { "text": "Control Panel › Date and Time › Additional Clocks; Outlook can also show two time zones in the calendar.", "os": ["windows"], "open": "run:date-and-time" },
+        { "text": "Add a World Clock widget, or show two time zones in Calendar › Settings › Advanced.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "keyboard-language-switch-accident",
+      "os": ["windows", "macos"],
+      "title": "Language keeps switching while I type",
+      "symptoms": ["language switches by itself", "keyboard layout changes randomly", "alt shift changes language", "input language changes"],
+      "why": "A shortcut (Alt+Shift, Ctrl+Shift, Windows+Space or Control+Space) switches layouts when pressed by accident.",
+      "steps": [
+        { "text": "Turn off or change the switching shortcut: Settings › Time & language › Typing › Advanced keyboard settings › Input language hot keys.", "os": ["windows"], "open": "ms-settings:typing" },
+        { "text": "Change the shortcut in Keyboard › Keyboard Shortcuts › Input Sources.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" },
+        { "text": "Remove layouts you don't use." }
+      ],
+      "related": ["keyboard-wrong-characters"]
+    }
+  ]
+}
