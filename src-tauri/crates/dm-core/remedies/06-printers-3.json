@@ -1,0 +1,58 @@
+{
+  "id": "printers",
+  "title": "Printers & scanners",
+  "icon": "printer",
+  "blurb": "Offline, stuck jobs, wrong printer, scanning.",
+  "remedies": [
+    {
+      "id": "print-envelopes-labels",
+      "os": ["windows", "macos"],
+      "title": "Print envelopes or labels",
+      "symptoms": ["print envelope", "print labels", "avery labels", "mail merge labels", "address labels"],
+      "why": "Word has tools for envelopes and labels; the printer tray settings must match.",
+      "steps": [
+        { "text": "Word › Mailings › Envelopes or Labels (pick the label maker and product number)." },
+        { "text": "Feed envelopes as the printer's tray icon shows; set the paper type to Envelope." },
+        { "text": "Print a test on plain paper and hold it against the label sheet first." }
+      ]
+    },
+    {
+      "id": "print-photos-quality",
+      "os": ["windows", "macos"],
+      "title": "Photos print with the wrong colours or low quality",
+      "symptoms": ["photo print quality", "colors wrong printing", "print photos", "glossy paper settings"],
+      "why": "The paper type and quality settings must match the paper loaded.",
+      "steps": [
+        { "text": "Choose the exact paper type (e.g. Glossy Photo) and Best quality." },
+        { "text": "Use the maker's photo paper and genuine ink for accurate colours." },
+        { "text": "Run the printer's head alignment." }
+      ],
+      "related": ["printer-prints-blank"]
+    },
+    {
+      "id": "printer-shared-home",
+      "os": ["windows", "macos"],
+      "title": "Share a USB printer with other computers",
+      "symptoms": ["share printer", "usb printer network", "printer sharing", "share printer windows mac"],
+      "why": "A computer can share its USB printer, but it must stay on.",
+      "steps": [
+        { "text": "Printer › Printer properties › Sharing › Share this printer.", "os": ["windows"], "open": "run:devices-and-printers" },
+        { "text": "System Settings › General › Sharing › Printer Sharing.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sharing-Settings.extension" },
+        { "text": "Better long-term: connect the printer to Wi-Fi or by network cable." }
+      ],
+      "related": ["printer-wifi-setup"]
+    },
+    {
+      "id": "secure-print-badge",
+      "os": ["windows", "macos"],
+      "title": "Office print jobs wait for my badge or PIN",
+      "symptoms": ["follow me printing", "secure print", "release print job", "badge printing", "papercut"],
+      "why": "Secure printing holds jobs until you're at the printer.",
+      "steps": [
+        { "text": "Walk to any compatible printer and tap your badge or enter your PIN to release the job." },
+        { "text": "Jobs are usually deleted if not released within a few hours." }
+      ],
+      "escalate": "Badge or quota problems go to IT."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "backup",
+  "title": "Backup & restore",
+  "icon": "backup",
+  "blurb": "Back up files, restore from backup, move to a new computer, start fresh.",
+  "remedies": [
+    {
+      "id": "time-machine-failed",
+      "os": ["macos"],
+      "title": "Time Machine backup failed or hasn't run",
+      "symptoms": ["time machine failed", "time machine not backing up", "backup disk not available", "time machine stuck preparing"],
+      "why": "The backup drive is disconnected, full, or needs repair.",
+      "steps": [
+        { "text": "Connect the backup drive and choose Back Up Now from the menu bar." },
+        { "text": "Check the drive in Disk Utility › First Aid.", "open": "app:Disk Utility" },
+        { "text": "If full, Time Machine deletes the oldest backups; a bigger drive helps." },
+        { "text": "Check Time Machine settings for the right disk.", "open": "x-apple.systempreferences:com.apple.Time-Machine-Settings.extension" }
+      ],
+      "related": ["backup-setup"]
+    },
+    {
+      "id": "file-history-setup",
+      "os": ["windows"],
+      "title": "Set up File History (versions of every file on an external drive)",
+      "symptoms": ["file history", "windows backup external drive", "backup to usb drive windows"],
+      "why": "File History keeps copies of your files every hour on an external drive.",
+      "steps": [
+        { "text": "Plug in an external drive, open Control Panel › File History › Turn on." },
+        { "text": "Check Advanced settings for how often and how long to keep versions." },
+        { "text": "Restore with right-click › Restore previous versions." }
+      ],
+      "related": ["backup-setup"]
+    },
+    {
+      "id": "recovery-drive",
+      "os": ["windows", "macos"],
+      "title": "Make a recovery USB drive",
+      "symptoms": ["recovery drive", "bootable usb", "windows installation media", "macos installer usb"],
+      "why": "A recovery drive starts the computer when it won't boot.",
+      "steps": [
+        { "text": "Search Start for \"Create a recovery drive\", or make install media with Microsoft's Media Creation Tool (16 GB USB).", "os": ["windows"] },
+        { "text": "Macs boot into Recovery without a USB; Apple's createinstallmedia makes a USB installer if needed.", "os": ["macos"] }
+      ],
+      "related": ["boot-repair"]
+    },
+    {
+      "id": "backup-photos",
+      "os": ["windows", "macos"],
+      "title": "Back up my photos safely",
+      "symptoms": ["backup photos", "save family photos", "photos only on laptop", "photo backup"],
+      "why": "Photos are irreplaceable; keep at least two copies in different places.",
+      "steps": [
+        { "text": "Turn on a cloud photo service (iCloud Photos, Google Photos, OneDrive camera upload)." },
+        { "text": "Also copy them to an external drive once in a while." },
+        { "text": "Check the cloud copy opens before deleting anything from the phone." }
+      ],
+      "related": ["backup-setup", "photos-phone-to-computer"]
+    }
+  ]
+}

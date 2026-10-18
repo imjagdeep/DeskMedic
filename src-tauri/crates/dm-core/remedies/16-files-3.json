@@ -1,0 +1,94 @@
+{
+  "id": "files",
+  "title": "Files, folders & cloud sync",
+  "icon": "folder",
+  "blurb": "OneDrive, iCloud, Dropbox, lost or deleted files, search, file types.",
+  "remedies": [
+    {
+      "id": "onedrive-backup-folders",
+      "os": ["windows", "macos"],
+      "title": "Turn OneDrive folder backup on or off (Desktop, Documents, Pictures)",
+      "symptoms": ["onedrive backup desktop", "stop onedrive backup", "known folder move", "documents in onedrive", "manage backup onedrive"],
+      "why": "OneDrive can keep your Desktop, Documents and Pictures in the cloud automatically.",
+      "steps": [
+        { "text": "OneDrive icon › Settings › Sync and back up › Manage back up." },
+        { "text": "Turning it off leaves a copy online; files on this PC start empty unless you copy them back." }
+      ],
+      "escalate": "Work PCs often require backup to stay on.",
+      "related": ["desktop-files-missing", "onedrive-not-syncing"]
+    },
+    {
+      "id": "onedrive-sign-in-wrong-account",
+      "os": ["windows", "macos"],
+      "title": "OneDrive is signed in with the wrong account",
+      "symptoms": ["onedrive wrong account", "personal onedrive vs work", "unlink onedrive", "change onedrive account"],
+      "why": "OneDrive can hold one personal and several work accounts; files go to whichever folder you use.",
+      "steps": [
+        { "text": "OneDrive icon › Settings › Account › Unlink this PC, then sign in with the right account." },
+        { "text": "Work files belong in \"OneDrive - <Company>\", personal in \"OneDrive - Personal\"." }
+      ]
+    },
+    {
+      "id": "large-file-send",
+      "os": ["windows", "macos"],
+      "title": "Send a really large file (several GB)",
+      "symptoms": ["send large file", "share big file", "transfer gb file", "wetransfer", "file too big to send"],
+      "why": "Email can't carry big files; cloud links can.",
+      "steps": [
+        { "text": "Upload to OneDrive/Google Drive/iCloud/Dropbox and share a link." },
+        { "text": "Use a USB drive for very large or private transfers in person." },
+        { "text": "At work, use the approved sharing tool rather than public transfer sites." }
+      ],
+      "related": ["attachment-too-big"]
+    },
+    {
+      "id": "file-corrupt",
+      "os": ["windows", "macos"],
+      "title": "A file is damaged or won't open after copying",
+      "symptoms": ["file corrupt", "file damaged", "can't open copied file", "zip corrupt", "file is broken"],
+      "why": "The copy didn't finish, the drive was pulled out, or the download was interrupted.",
+      "steps": [
+        { "text": "Copy or download it again from the original." },
+        { "text": "Get an older version from OneDrive/iCloud version history or a backup." },
+        { "text": "Check the drive it came from for errors." }
+      ],
+      "related": ["file-history-versions", "disk-errors"]
+    },
+    {
+      "id": "folder-permissions-shared",
+      "os": ["windows", "macos"],
+      "title": "Share a folder with another person on this computer",
+      "symptoms": ["share folder between users", "public folder", "shared folder same computer", "family files shared"],
+      "why": "Each user's files are private; a shared folder lets everyone reach them.",
+      "steps": [
+        { "text": "Use C:\\Users\\Public, or right-click a folder › Properties › Security to add users.", "os": ["windows"] },
+        { "text": "Use /Users/Shared, or Get Info › Sharing & Permissions.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "find-duplicates",
+      "os": ["windows", "macos"],
+      "title": "Find and remove duplicate files",
+      "symptoms": ["duplicate files", "find duplicates", "remove duplicate photos", "same file twice"],
+      "why": "Copies from phones, downloads and backups waste space.",
+      "steps": [
+        { "text": "DeskZero (a sister DeskLab app) finds exact duplicates and moves them aside safely." },
+        { "text": "Photos apps can merge duplicate photos (Mac Photos › Duplicates)." },
+        { "text": "Check the Disk map for big repeated folders.", "page": "diskmap" }
+      ],
+      "related": ["low-disk-space"]
+    },
+    {
+      "id": "downloads-messy",
+      "os": ["windows", "macos"],
+      "title": "My Downloads folder is a mess",
+      "symptoms": ["organize downloads", "clean downloads folder", "too many files downloads", "sort files automatically"],
+      "why": "Everything you download lands in one folder.",
+      "steps": [
+        { "text": "Sort by Date and delete installers and old files you no longer need." },
+        { "text": "DeskZero can sort Downloads into folders by type or rules automatically." },
+        { "text": "Storage Sense can clear Downloads files older than N days.", "os": ["windows"], "open": "ms-settings:storagesense" }
+      ]
+    }
+  ]
+}
