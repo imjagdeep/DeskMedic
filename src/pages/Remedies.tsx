@@ -121,7 +121,7 @@ export function Remedies({
         </section>
       ) : category && cat ? (
         <section>
-          <button className="link-button" onClick={() => setCategory(null)}>‹ All categories</button>
+          <button className="link" onClick={() => setCategory(null)}>‹ All categories</button>
           <h2 className="remedy-cat-title">
             <CategoryIcon name={cat.icon} size={20} /> {cat.title}
           </h2>
@@ -306,7 +306,7 @@ function RemedyView({
   };
   return (
     <article className="remedy-view">
-      <button className="link-button" onClick={onBack}>‹ Back</button>
+      <button className="link" onClick={onBack}>‹ Back</button>
       <h2>{r.title}</h2>
       <p className="remedy-why">{r.why}</p>
       <h3 className="fix-group-title">Try these, in order</h3>
