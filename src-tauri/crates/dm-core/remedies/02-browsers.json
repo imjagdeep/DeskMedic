@@ -1,0 +1,181 @@
+{
+  "id": "browsers",
+  "title": "Web browsers",
+  "icon": "globe",
+  "blurb": "Chrome, Edge, Safari and Firefox: slow, crashing, pop-ups, certificate warnings.",
+  "remedies": [
+    {
+      "id": "browser-slow",
+      "os": ["windows", "macos"],
+      "title": "Browser is slow or uses lots of memory",
+      "symptoms": ["chrome slow", "edge slow", "safari slow", "browser lagging", "too many tabs", "browser high memory", "browser high cpu"],
+      "why": "Dozens of open tabs, heavy extensions, or a single misbehaving page can slow the browser and the whole computer.",
+      "steps": [
+        { "text": "Close tabs you don't need. Chrome and Edge show what each tab uses in their own Task Manager (Shift+Esc)." },
+        { "text": "Turn off extensions you don't use: Chrome › ⋮ › Extensions, Edge › … › Extensions, Safari › Settings › Extensions, Firefox › ☰ › Add-ons." },
+        { "text": "Turn on memory saving: Chrome › Settings › Performance › Memory Saver; Edge › Settings › System and performance › Efficiency mode." },
+        { "text": "Update the browser: Chrome/Edge › Help › About; Safari updates with macOS; Firefox › Help › About Firefox." },
+        { "text": "Restart the browser; it reopens your tabs on most settings." }
+      ],
+      "related": ["browser-crashing", "computer-slow"]
+    },
+    {
+      "id": "browser-crashing",
+      "os": ["windows", "macos"],
+      "title": "Browser crashes, freezes or shows \"Aw, Snap!\"",
+      "symptoms": ["aw snap", "chrome crashes", "edge keeps closing", "browser not responding", "page crashed", "status_access_violation", "safari quit unexpectedly"],
+      "why": "A broken extension, a damaged profile, hardware acceleration with an old graphics driver, or security software injecting into the browser.",
+      "steps": [
+        { "text": "Reload the page. If only one site crashes, try it in a private window." },
+        { "text": "Turn off all extensions, then turn them back on one at a time to find the culprit." },
+        { "text": "Turn off hardware acceleration: Chrome/Edge › Settings › System › \"Use graphics acceleration when available\", then restart the browser." },
+        { "text": "Update the graphics driver through Windows Update › Advanced options › Optional updates, or the maker's site.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" },
+        { "text": "Make a new browser profile and see if the crashes stop; if they do, the old profile is damaged." },
+        { "text": "Check the computer's memory if many programs crash, not just the browser.", "os": ["windows"], "open": "run:memory-diagnostic" }
+      ],
+      "escalate": "Note the error name (for example STATUS_ACCESS_VIOLATION) and whether other browsers crash too.",
+      "related": ["browser-slow", "apps-crash-everything"]
+    },
+    {
+      "id": "browser-certificate-error",
+      "os": ["windows", "macos"],
+      "title": "\"Your connection is not private\" or certificate warning",
+      "symptoms": ["your connection is not private", "net::err_cert", "certificate error", "not secure", "err_cert_date_invalid", "this connection is not private", "ssl error"],
+      "why": "Usually the computer's clock is wrong, the network (hotel, airport) wants you to sign in first, or the site's certificate really is broken. Sometimes it's an attack.",
+      "steps": [
+        { "text": "Check the date and time; fix them if they're off.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Check the date and time are set automatically.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" },
+        { "text": "On public Wi-Fi, open any plain site (like neverssl.com) to bring up the sign-in page, then try again." },
+        { "text": "Try the site from your phone on mobile data. If it warns there too, the site's certificate is broken: don't type passwords or card details." },
+        { "text": "Never click through a warning on your bank, email or work sites." }
+      ],
+      "escalate": "If it happens on many sites on your work network, tell IT at once (it can mean traffic is being intercepted).",
+      "related": ["clock-wrong", "dns-site-wont-load"]
+    },
+    {
+      "id": "browser-hijacked",
+      "os": ["windows", "macos"],
+      "title": "Browser has a strange homepage, search engine or pop-ups",
+      "symptoms": ["browser hijacked", "search engine changed", "homepage changed", "pop up ads", "notifications spam", "redirects", "yahoo search keeps coming back"],
+      "why": "An unwanted extension or program changed the settings, or a site was allowed to send notifications.",
+      "steps": [
+        { "text": "Remove extensions you didn't install or don't recognise." },
+        { "text": "Block site notifications: Chrome/Edge › Settings › Privacy › Site settings › Notifications, remove sites you don't know. Safari › Settings › Websites › Notifications." },
+        { "text": "Reset the browser: Chrome › Settings › Reset settings; Edge › Settings › Reset settings; Firefox › Help › More troubleshooting information › Refresh Firefox." },
+        { "text": "Uninstall programs you don't recognise that appeared recently (sort by install date).", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Look in Applications for apps you don't recognise and move them to the Bin; check Login Items too.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Run a full virus scan.", "os": ["windows"], "open": "run:windows-security" }
+      ],
+      "escalate": "On a work computer, report it to IT before entering any passwords.",
+      "related": ["virus-suspected", "proxy-unexpected"]
+    },
+    {
+      "id": "browser-clear-cache",
+      "os": ["windows", "macos"],
+      "title": "A site looks broken or shows old content",
+      "symptoms": ["clear cache", "site looks broken", "page not updating", "old version of site", "clear cookies", "website layout broken"],
+      "why": "The browser keeps copies of pages and cookies; a stale copy can break a site after it changes.",
+      "steps": [
+        { "text": "Hard-reload the page: Ctrl+Shift+R on Windows, ⌘+Shift+R on Mac." },
+        { "text": "Clear that one site's data: click the icon left of the address › Cookies and site data (Chrome/Edge) or Safari › Settings › Privacy › Manage Website Data." },
+        { "text": "Clear everything cached: Ctrl+Shift+Delete (Chrome, Edge, Firefox) › Cached images and files. You'll stay signed in if you leave cookies unticked." }
+      ],
+      "related": ["browser-sign-in-loop"]
+    },
+    {
+      "id": "browser-sign-in-loop",
+      "os": ["windows", "macos"],
+      "title": "Website keeps asking me to sign in, or sign-in loops",
+      "symptoms": ["sign in loop", "keeps logging me out", "login page loops", "too many redirects", "err_too_many_redirects", "cookies blocked"],
+      "why": "The site's sign-in cookies are blocked or damaged, or a privacy extension removes them.",
+      "steps": [
+        { "text": "Clear cookies for that site only and sign in again." },
+        { "text": "Allow cookies for the site (Chrome/Edge › Settings › Privacy › Third-party cookies › Sites allowed). Work sign-ins (Microsoft, Google) need them." },
+        { "text": "Try a private window, or turn off privacy and ad-block extensions for the site." },
+        { "text": "Check the computer's date and time.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Check the computer's date and time.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" }
+      ],
+      "related": ["browser-clear-cache", "m365-sign-in-loop"]
+    },
+    {
+      "id": "browser-downloads-blocked",
+      "os": ["windows", "macos"],
+      "title": "Download blocked or \"file may be dangerous\"",
+      "symptoms": ["download blocked", "virus scan failed", "file might be dangerous", "couldn't download", "smartscreen blocked", "insecure download blocked"],
+      "why": "The browser or Windows SmartScreen thinks the file is risky, it comes over an insecure connection, or security software stopped it.",
+      "steps": [
+        { "text": "Only keep a file you expected from a site you trust. If unsure, delete it." },
+        { "text": "In Chrome/Edge open Downloads (Ctrl+J) and choose Keep only if you trust it." },
+        { "text": "If Windows Security quarantined it and you're sure it's safe, check Protection history.", "os": ["windows"], "open": "run:windows-security" },
+        { "text": "Get the file from the maker's own website instead of a download site." }
+      ],
+      "escalate": "Work computers often block downloads on purpose; ask IT for the program instead.",
+      "related": ["app-cant-be-opened-mac", "smartscreen-blocked"]
+    },
+    {
+      "id": "browser-default",
+      "os": ["windows", "macos"],
+      "title": "Links open in the wrong browser",
+      "symptoms": ["default browser", "links open in edge", "change default browser", "links open in safari"],
+      "why": "Another browser is set as the default.",
+      "steps": [
+        { "text": "Settings › Apps › Default apps › pick your browser › Set default.", "os": ["windows"], "open": "ms-settings:defaultapps" },
+        { "text": "System Settings › Desktop & Dock › Default web browser.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Desktop-Settings.extension" },
+        { "text": "Outlook and Teams may open links in Edge on purpose; change that in Outlook › Settings › General › Files and browser links." }
+      ]
+    },
+    {
+      "id": "browser-passwords",
+      "os": ["windows", "macos"],
+      "title": "Browser stopped saving or filling passwords",
+      "symptoms": ["saved passwords missing", "password not autofilling", "offer to save passwords", "lost passwords chrome", "passwords not syncing"],
+      "why": "Password saving was turned off, you're in a different browser profile, or sync is off.",
+      "steps": [
+        { "text": "Check you're in the right profile (the picture at the top right)." },
+        { "text": "Turn on saving: Chrome › Settings › Autofill › Google Password Manager › Settings; Edge › Settings › Profiles › Passwords; Safari › Settings › AutoFill." },
+        { "text": "Turn sync on so passwords come back on other devices." },
+        { "text": "On a Mac, passwords saved in Safari live in the Passwords app.", "os": ["macos"] }
+      ],
+      "related": ["forgot-password"]
+    },
+    {
+      "id": "browser-camera-mic",
+      "os": ["windows", "macos"],
+      "title": "Website can't use my camera or microphone",
+      "symptoms": ["site can't access camera", "browser microphone blocked", "camera blocked in chrome", "google meet camera not working", "allow camera"],
+      "why": "The site was blocked, the browser itself isn't allowed by the system, or another app holds the camera.",
+      "steps": [
+        { "text": "Click the icon left of the address bar › allow Camera and Microphone, then reload." },
+        { "text": "Allow the browser: Settings › Privacy & security › Camera (and Microphone) › let desktop apps access.", "os": ["windows"], "open": "ms-settings:privacy-webcam" },
+        { "text": "Allow the browser: Privacy & Security › Camera and Microphone › turn on your browser, then quit and reopen it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera" },
+        { "text": "Close Teams, Zoom and other apps that might be using the camera." }
+      ],
+      "related": ["camera-not-working", "mic-not-working"]
+    },
+    {
+      "id": "browser-printing",
+      "os": ["windows", "macos"],
+      "title": "Web page prints blank, cut off or tiny",
+      "symptoms": ["print web page", "printing website blank", "page cut off when printing", "print preview blank"],
+      "why": "Pages built for screens don't always print well; scale, margins and background graphics settings matter.",
+      "steps": [
+        { "text": "In the print dialog (Ctrl+P / ⌘P) open More settings: set Scale to Fit, margins Default, and tick Background graphics if parts are missing." },
+        { "text": "Choose Save as PDF first, check it looks right, then print the PDF." },
+        { "text": "Try printing from another browser." }
+      ],
+      "related": ["printer-offline"]
+    },
+    {
+      "id": "browser-pdf-opens",
+      "os": ["windows", "macos"],
+      "title": "PDFs open in the browser instead of my PDF app",
+      "symptoms": ["pdf opens in edge", "pdf opens in chrome", "download pdf instead of open", "default pdf viewer"],
+      "why": "The browser is set to show PDFs itself, or the browser is the default app for PDF files.",
+      "steps": [
+        { "text": "Chrome › Settings › Privacy › Site settings › PDF documents › Download PDFs. Edge › Settings › Cookies and site permissions › PDF documents › Always download." },
+        { "text": "Set your PDF app as the default for .pdf: Settings › Apps › Default apps › search \".pdf\".", "os": ["windows"], "open": "ms-settings:defaultapps" },
+        { "text": "Right-click a PDF › Get Info › Open with › choose the app › Change All.", "os": ["macos"] }
+      ]
+    }
+  ]
+}

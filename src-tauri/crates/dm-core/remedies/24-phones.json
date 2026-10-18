@@ -1,0 +1,74 @@
+{
+  "id": "phones",
+  "title": "Phones & syncing",
+  "icon": "phone",
+  "blurb": "Work email on a phone, photos to the computer, Phone Link, iPhone and Android.",
+  "remedies": [
+    {
+      "id": "phone-email-setup",
+      "os": ["windows", "macos"],
+      "title": "Set up work email on my phone",
+      "symptoms": ["email on phone", "outlook on iphone", "add work email to phone", "mail on android", "company email on phone"],
+      "why": "Most workplaces want the Outlook app (and sometimes the Company Portal or Authenticator) on phones.",
+      "steps": [
+        { "text": "Install Microsoft Outlook from the App Store / Google Play and add your work address." },
+        { "text": "Approve the sign-in in Microsoft Authenticator if asked." },
+        { "text": "If it asks to install Company Portal or to protect work data, follow it; your workplace requires it." }
+      ],
+      "escalate": "If it says your device isn't allowed, IT has to approve it.",
+      "related": ["mfa-not-working", "calendar-not-syncing"]
+    },
+    {
+      "id": "photos-phone-to-computer",
+      "os": ["windows", "macos"],
+      "title": "Copy photos from my phone to the computer",
+      "symptoms": ["transfer photos", "import photos from iphone", "phone photos to pc", "android photos to mac", "copy pictures from phone"],
+      "why": "A cable import is fastest; cloud photo services do it automatically.",
+      "steps": [
+        { "text": "iPhone: plug in, unlock the phone and tap Trust, then open the Photos app on the PC › Import.", "os": ["windows"] },
+        { "text": "Android: plug in, choose File transfer on the phone's USB notification, then open the phone in File Explorer › DCIM.", "os": ["windows"] },
+        { "text": "iPhone: plug in, Trust, then Photos or Image Capture › Import. Or AirDrop them.", "os": ["macos"] },
+        { "text": "Android: use Google Photos, or a USB cable with an Android file transfer app.", "os": ["macos"] },
+        { "text": "Automatic: iCloud Photos, Google Photos or OneDrive camera upload." }
+      ],
+      "related": ["heic-photos", "phone-not-recognised"]
+    },
+    {
+      "id": "phone-not-recognised",
+      "os": ["windows", "macos"],
+      "title": "Computer doesn't see my phone over USB",
+      "symptoms": ["phone not recognized", "iphone not showing", "android not detected pc", "trust this computer", "phone only charging"],
+      "why": "The cable only charges, the phone is locked, or the phone hasn't trusted the computer.",
+      "steps": [
+        { "text": "Unlock the phone; tap Trust (iPhone) or choose File transfer (Android) when asked." },
+        { "text": "Use the cable that came with the phone; many cheap cables only charge." },
+        { "text": "Try another USB port directly on the computer." },
+        { "text": "iPhone on Windows: install Apple Devices from the Microsoft Store.", "os": ["windows"] }
+      ],
+      "related": ["usb-not-recognized"]
+    },
+    {
+      "id": "phone-link",
+      "os": ["windows"],
+      "title": "Use my phone's texts and calls on the PC (Phone Link)",
+      "symptoms": ["phone link", "texts on pc", "calls on computer", "your phone app", "link to windows"],
+      "why": "Phone Link connects an Android or iPhone to Windows for messages, calls and notifications.",
+      "steps": [
+        { "text": "Open Phone Link from Start and follow the QR code to pair.", "open": "ms-settings:mobile-devices" },
+        { "text": "Keep Bluetooth on both devices; iPhone features are more limited." }
+      ]
+    },
+    {
+      "id": "continuity-handoff",
+      "os": ["macos"],
+      "title": "AirDrop, Handoff or iPhone calls on the Mac don't work",
+      "symptoms": ["airdrop not working", "handoff not working", "continuity", "universal clipboard", "iphone calls on mac"],
+      "why": "Both devices need the same Apple Account, Wi-Fi and Bluetooth on, and Handoff allowed.",
+      "steps": [
+        { "text": "Sign in with the same Apple Account on both; turn on Wi-Fi and Bluetooth." },
+        { "text": "Turn on \"Allow Handoff between this Mac and your iCloud devices\" in General › AirDrop & Handoff.", "open": "x-apple.systempreferences:com.apple.AirDrop-Handoff-Settings.extension" },
+        { "text": "AirDrop: set \"Allow me to be discovered by\" to Everyone for 10 Minutes on the receiving device." }
+      ]
+    }
+  ]
+}

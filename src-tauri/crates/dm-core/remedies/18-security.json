@@ -1,0 +1,131 @@
+{
+  "id": "security",
+  "title": "Security & viruses",
+  "icon": "shield",
+  "blurb": "Viruses, scam pop-ups, firewall, encryption, safe browsing.",
+  "remedies": [
+    {
+      "id": "virus-suspected",
+      "os": ["windows", "macos"],
+      "title": "I think my computer has a virus",
+      "symptoms": ["virus", "malware", "computer infected", "ransomware", "strange behaviour", "programs i didn't install", "files renamed encrypted"],
+      "why": "Unwanted software can arrive from downloads, email attachments and fake updates.",
+      "steps": [
+        { "text": "If files suddenly have strange extensions or a ransom note appears, unplug the network cable / turn off Wi-Fi and tell IT now." },
+        { "text": "Run a full scan: Windows Security › Virus & threat protection › Scan options › Full scan (and Microsoft Defender Offline scan for stubborn ones).", "os": ["windows"], "open": "run:windows-security" },
+        { "text": "Remove programs you don't recognise, sorted by install date.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Remove apps you don't recognise from Applications and Login Items, and check Profiles in Privacy & Security › Profiles (if present).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Change important passwords from a different, clean device." },
+        { "text": "Keep the system updated; most malware uses old holes." }
+      ],
+      "escalate": "Work computer: stop and tell IT before doing anything else; they may need to look at it as it is.",
+      "related": ["scam-pop-up", "account-hacked", "browser-hijacked"]
+    },
+    {
+      "id": "scam-pop-up",
+      "os": ["windows", "macos"],
+      "title": "Pop-up says my computer is infected and to call a number",
+      "symptoms": ["tech support scam", "call microsoft", "your computer is locked", "virus warning pop up", "apple security alert call", "loud alarm website", "browser locked"],
+      "why": "A website is pretending to be Microsoft or Apple. Real warnings never ask you to call a number.",
+      "steps": [
+        { "text": "Don't call the number or let anyone connect to your computer." },
+        { "text": "Close the browser: Ctrl+Shift+Esc › select the browser › End task.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Force Quit the browser: ⌘+Option+Esc.", "os": ["macos"] },
+        { "text": "When you reopen the browser, don't restore the tabs." },
+        { "text": "If you already called and gave access or paid: disconnect from the internet, tell IT or your bank, and change passwords from another device." }
+      ],
+      "escalate": "If someone remote-connected to the computer, IT must check it before you use it for work or banking.",
+      "related": ["virus-suspected", "browser-hijacked"]
+    },
+    {
+      "id": "defender-off",
+      "os": ["windows"],
+      "title": "Windows Security says protection is off",
+      "symptoms": ["virus protection off", "defender turned off", "real time protection off", "windows security warning", "your device may be vulnerable"],
+      "why": "Another antivirus took over, a setting was changed, or (worse) malware switched it off.",
+      "steps": [
+        { "text": "Open Windows Security and press Turn on for anything red.", "open": "run:windows-security" },
+        { "text": "If another antivirus is installed, it's the one protecting you; Defender switches off on purpose." },
+        { "text": "If it won't stay on and you have no other antivirus, run a Defender Offline scan and tell IT." }
+      ],
+      "related": ["virus-suspected"]
+    },
+    {
+      "id": "smartscreen-blocked",
+      "os": ["windows"],
+      "title": "\"Windows protected your PC\" stops an app",
+      "symptoms": ["windows protected your pc", "smartscreen", "unrecognized app", "microsoft defender smartscreen prevented", "smart app control blocked"],
+      "why": "SmartScreen and Smart App Control block apps Windows hasn't seen much yet; that includes unknown malware and small, honest apps.",
+      "steps": [
+        { "text": "Only run it if you got it from the maker's own site and expected it." },
+        { "text": "If you trust it: More info › Run anyway." },
+        { "text": "Smart App Control can't be bypassed for a single app; look for a signed version or ask the maker." }
+      ],
+      "escalate": "On work PCs, ask IT instead of running blocked apps.",
+      "related": ["browser-downloads-blocked", "app-wont-install"]
+    },
+    {
+      "id": "app-cant-be-opened-mac",
+      "os": ["macos"],
+      "title": "\"App can't be opened\" or \"Apple could not verify\"",
+      "symptoms": ["app can't be opened", "unidentified developer", "apple could not verify", "app is damaged and can't be opened", "gatekeeper", "move to bin"],
+      "why": "Gatekeeper blocks apps that aren't from the App Store or a verified developer, or that look modified.",
+      "steps": [
+        { "text": "Only continue for an app from a maker you trust." },
+        { "text": "Try opening it, then go to Privacy & Security and press Open Anyway near the bottom.", "open": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" },
+        { "text": "\"Damaged\": download the app again from the maker's site; don't run copies from unknown sources." }
+      ],
+      "related": ["browser-downloads-blocked"]
+    },
+    {
+      "id": "firewall-blocking",
+      "os": ["windows", "macos"],
+      "title": "Firewall blocks an app (or asks to allow it)",
+      "symptoms": ["firewall blocked", "allow app through firewall", "windows defender firewall has blocked some features", "incoming connections", "firewall prompt"],
+      "why": "The firewall asks before letting an app accept connections from the network.",
+      "steps": [
+        { "text": "Allow it only for apps you know need it (games, file sharing, remote tools), and only on Private networks." },
+        { "text": "Change it later: Windows Security › Firewall & network protection › Allow an app through firewall.", "os": ["windows"], "open": "run:firewall-control-panel" },
+        { "text": "System Settings › Network › Firewall › Options lists allowed apps.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Network-Settings.extension" }
+      ]
+    },
+    {
+      "id": "encryption-check",
+      "os": ["windows", "macos"],
+      "title": "Is my disk encrypted? (BitLocker, FileVault)",
+      "symptoms": ["bitlocker", "filevault", "device encryption", "encrypt laptop", "is my drive encrypted"],
+      "why": "Encryption keeps your files safe if the laptop is lost or stolen.",
+      "steps": [
+        { "text": "Settings › Privacy & security › Device encryption (or BitLocker in Control Panel on Pro).", "os": ["windows"], "open": "ms-settings:deviceencryption" },
+        { "text": "System Settings › Privacy & Security › FileVault.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" },
+        { "text": "Before turning it on, save the recovery key somewhere safe outside the computer (your Microsoft/Apple account, or IT)." }
+      ],
+      "related": ["bitlocker-recovery-key"]
+    },
+    {
+      "id": "lost-stolen-laptop",
+      "os": ["windows", "macos"],
+      "title": "My laptop was lost or stolen",
+      "symptoms": ["laptop stolen", "lost laptop", "find my device", "find my mac", "locate laptop"],
+      "why": "Act fast: lock or erase it remotely and protect your accounts.",
+      "steps": [
+        { "text": "Locate or lock it: account.microsoft.com/devices › Find my device (if it was turned on).", "os": ["windows"] },
+        { "text": "Locate, lock or erase it: icloud.com/find or the Find My app on another Apple device.", "os": ["macos"] },
+        { "text": "Change passwords for email and banking, and sign the device out of your accounts." },
+        { "text": "Report it to the police, and to IT for a work device." }
+      ],
+      "escalate": "Tell IT at once for a work device: they can wipe it and revoke its access."
+    },
+    {
+      "id": "permissions-privacy",
+      "os": ["windows", "macos"],
+      "title": "Review which apps can use my camera, microphone, location and files",
+      "symptoms": ["app permissions", "privacy settings", "location access", "which apps can see", "screen recording permission"],
+      "why": "Apps ask once and keep access; it's worth checking now and then.",
+      "steps": [
+        { "text": "Settings › Privacy & security › App permissions (Location, Camera, Microphone…).", "os": ["windows"], "open": "ms-settings:privacy" },
+        { "text": "System Settings › Privacy & Security, each category lists allowed apps.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension" }
+      ]
+    }
+  ]
+}

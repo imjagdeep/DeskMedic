@@ -1,0 +1,208 @@
+{
+  "id": "email",
+  "title": "Email & calendar",
+  "icon": "mail",
+  "blurb": "Outlook, Apple Mail and webmail: not sending, not syncing, password prompts, calendar trouble.",
+  "remedies": [
+    {
+      "id": "outlook-not-receiving",
+      "os": ["windows", "macos"],
+      "title": "Outlook isn't getting new email",
+      "symptoms": ["outlook not receiving email", "no new emails", "outlook not updating", "inbox not syncing", "working offline", "disconnected outlook"],
+      "why": "Outlook is set to Work Offline, lost its connection, its sign-in expired, or the mailbox is full.",
+      "steps": [
+        { "text": "Check the bottom of the Outlook window: if it says Working Offline or Disconnected, click Send/Receive › Work Offline to turn it off." },
+        { "text": "Sign in to Outlook on the web (outlook.office.com or your provider's webmail). If mail arrives there, the problem is Outlook on this computer." },
+        { "text": "Quit Outlook completely and reopen it; enter your password if asked." },
+        { "text": "Check the mailbox isn't full: File › Info › Mailbox settings shows the space used.", "os": ["windows"] },
+        { "text": "Check rules aren't moving mail away: File › Manage Rules & Alerts (or Outlook › Settings › Rules on Mac)." },
+        { "text": "If none of that helps, make a new mail profile: Control Panel › Mail › Show Profiles › Add.", "os": ["windows"], "open": "run:mail-profiles" }
+      ],
+      "escalate": "Tell IT whether Outlook on the web gets the mail; that tells them if it's the mailbox or this computer.",
+      "related": ["outlook-password-prompt", "mailbox-full", "outlook-slow"]
+    },
+    {
+      "id": "outlook-password-prompt",
+      "os": ["windows", "macos"],
+      "title": "Outlook keeps asking for my password",
+      "symptoms": ["outlook keeps asking for password", "outlook password prompt", "need password outlook", "credentials prompt", "enter password repeatedly"],
+      "why": "A saved password is out of date after a change, or the modern sign-in token got damaged.",
+      "steps": [
+        { "text": "If you changed your password recently, sign in with the new one everywhere, including your phone." },
+        { "text": "Remove old saved passwords: Credential Manager › Windows Credentials › delete entries starting with MicrosoftOffice or Outlook, then restart Outlook.", "os": ["windows"], "open": "run:credential-manager" },
+        { "text": "Delete old Outlook or Exchange entries in Keychain Access, then restart Outlook.", "os": ["macos"], "open": "app:Keychain Access" },
+        { "text": "Sign out of Office and back in: File › Office Account › Sign out, close all Office apps, open Outlook and sign in." , "os": ["windows"] },
+        { "text": "For work accounts check \"Access work or school\" lists your account and isn't showing an error.", "os": ["windows"], "open": "ms-settings:workplace" }
+      ],
+      "escalate": "If it keeps asking after this, IT should check your account (it may be locked or need a new device registration).",
+      "related": ["password-changed-prompts", "m365-sign-in-loop", "account-locked-out"]
+    },
+    {
+      "id": "email-stuck-outbox",
+      "os": ["windows", "macos"],
+      "title": "Email stuck in the Outbox",
+      "symptoms": ["stuck in outbox", "email not sending", "outbox", "message won't send", "outlook won't send"],
+      "why": "The attachment is too big, Outlook is offline, or the message is open or damaged.",
+      "steps": [
+        { "text": "Check you're online and Outlook isn't set to Work Offline." },
+        { "text": "Attachments over ~20–25 MB are refused by most mail servers: delete the message, and send a share link (OneDrive, iCloud, Dropbox) instead." },
+        { "text": "Open the Outbox, drag the stuck message to Drafts, open it and press Send again." },
+        { "text": "If it won't move, turn on Work Offline, then delete or move it, then go back online." }
+      ],
+      "related": ["outlook-not-receiving", "attachment-too-big"]
+    },
+    {
+      "id": "attachment-too-big",
+      "os": ["windows", "macos"],
+      "title": "Attachment is too large to send",
+      "symptoms": ["attachment too large", "file too big to email", "exceeds the maximum size", "552 message size", "can't attach file"],
+      "why": "Mail servers limit message size, usually 20–35 MB total, and attachments grow by about a third when sent.",
+      "steps": [
+        { "text": "Share a link instead: upload to OneDrive, Google Drive, iCloud or Dropbox and insert the link." },
+        { "text": "In Outlook, attach as a cloud link: Attach file › choose the OneDrive copy › Share link." },
+        { "text": "On a Mac, Mail Drop sends large files through iCloud automatically when asked.", "os": ["macos"] },
+        { "text": "Zip several files into one, or shrink photos and PDFs before attaching." }
+      ]
+    },
+    {
+      "id": "mailbox-full",
+      "os": ["windows", "macos"],
+      "title": "\"Mailbox is full\" or almost full",
+      "symptoms": ["mailbox full", "mailbox almost full", "quota exceeded", "can't send mailbox size", "storage full outlook", "out of mail storage"],
+      "why": "The mailbox has reached its size limit; sent items, deleted items and large attachments are usually the cause.",
+      "steps": [
+        { "text": "Empty Deleted Items and Junk." },
+        { "text": "Search for big messages: in Outlook search type size:huge or size:enormous (Windows), sort by size, delete or save the attachments elsewhere." },
+        { "text": "Clean Sent Items: old messages with attachments take the most space." },
+        { "text": "Ask IT about an archive mailbox if you need to keep everything." }
+      ],
+      "escalate": "IT can raise the limit or turn on online archiving.",
+      "related": ["outlook-slow"]
+    },
+    {
+      "id": "outlook-slow",
+      "os": ["windows", "macos"],
+      "title": "Outlook is slow or freezes",
+      "symptoms": ["outlook slow", "outlook not responding", "outlook freezes", "outlook hangs", "outlook takes forever to open"],
+      "why": "A very large mailbox or data file, an add-in, or Outlook still downloading a lot of mail.",
+      "steps": [
+        { "text": "Give it a few minutes after opening; it may be syncing (look at the bottom bar)." },
+        { "text": "Start Outlook without add-ins: hold Ctrl while opening it and say Yes to safe mode. If it's fast, turn add-ins off one by one in File › Options › Add-ins.", "os": ["windows"] },
+        { "text": "Cut the mailbox size (see \"Mailbox is full\")." },
+        { "text": "Repair Office: Settings › Apps › Microsoft 365 › Modify › Quick Repair.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Try the new Outlook (toggle at the top right) or Outlook on the web to see if it's this install." }
+      ],
+      "related": ["mailbox-full", "office-repair"]
+    },
+    {
+      "id": "outlook-search-broken",
+      "os": ["windows", "macos"],
+      "title": "Outlook search finds nothing or misses messages",
+      "symptoms": ["outlook search not working", "search results incomplete", "outlook search no results", "can't find email search"],
+      "why": "Outlook search relies on the system's search index, which can be incomplete or damaged.",
+      "steps": [
+        { "text": "Wait if Outlook was just set up; indexing can take hours. Outlook shows progress under Search › Search Tools › Indexing Status.", "os": ["windows"] },
+        { "text": "Rebuild the Windows search index.", "os": ["windows"], "fix": "rebuild-search" },
+        { "text": "Make sure Outlook isn't excluded from Spotlight: System Settings › Spotlight (and Privacy list).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Spotlight-Settings.extension" },
+        { "text": "Search Outlook on the web; it searches the server directly." }
+      ],
+      "related": ["windows-search-broken", "spotlight-broken"]
+    },
+    {
+      "id": "email-in-junk",
+      "os": ["windows", "macos"],
+      "title": "Emails go to Junk or my emails land in other people's spam",
+      "symptoms": ["email in junk", "spam folder", "emails going to spam", "not junk", "my email goes to spam"],
+      "why": "Filters guess wrong, or your messages look like spam (many links, attachments, or a domain set up without email checks).",
+      "steps": [
+        { "text": "Mark wanted messages as Not Junk and add the sender to Safe Senders." },
+        { "text": "Ask people to check their spam and mark your mail as not spam." },
+        { "text": "Avoid all-caps subjects, many links, and large attachments to new contacts." },
+        { "text": "For your own domain, ask whoever runs it to check SPF, DKIM and DMARC records." }
+      ],
+      "escalate": "If many recipients get your mail as spam, IT should check your domain's email records and whether it's on a blocklist."
+    },
+    {
+      "id": "suspicious-email",
+      "os": ["windows", "macos"],
+      "title": "I got a suspicious email (or clicked a link in one)",
+      "symptoms": ["phishing", "suspicious email", "clicked a bad link", "scam email", "fake invoice", "password expiry email", "gift card request"],
+      "why": "Phishing emails pretend to be a bank, a delivery, Microsoft or your boss to get passwords or money.",
+      "steps": [
+        { "text": "Don't reply, open attachments, or click links. Report it with the Report button in Outlook, or forward it to your IT team." },
+        { "text": "If you typed a password into the page, change that password now from a trusted device and turn on two-step sign-in." },
+        { "text": "If you opened an attachment, disconnect from the network and tell IT right away." },
+        { "text": "Requests for gift cards, bank changes or urgent payments: check by phone with the person, using a number you already have." }
+      ],
+      "escalate": "Tell IT immediately if you clicked, typed a password or opened an attachment; the faster, the less damage.",
+      "related": ["account-hacked", "virus-suspected"]
+    },
+    {
+      "id": "calendar-not-syncing",
+      "os": ["windows", "macos"],
+      "title": "Calendar not syncing between computer and phone",
+      "symptoms": ["calendar not syncing", "meetings missing", "calendar not updating", "events not showing on phone", "shared calendar not updating"],
+      "why": "The phone or computer uses a different account, sync is off, or a shared calendar isn't refreshing.",
+      "steps": [
+        { "text": "Check the event on Outlook on the web (or iCloud.com / Google Calendar). Whichever device disagrees with the web is the one to fix." },
+        { "text": "On the phone, check the account's Calendars switch is on (iPhone: Settings › Calendar › Accounts)." },
+        { "text": "Remove and re-add a shared calendar that's stuck." },
+        { "text": "In Outlook on Windows turn on \"Turn on shared calendar improvements\" in File › Account Settings › your account › Change › More Settings › Advanced.", "os": ["windows"] }
+      ],
+      "related": ["outlook-not-receiving", "phone-email-setup"]
+    },
+    {
+      "id": "meeting-wrong-time",
+      "os": ["windows", "macos"],
+      "title": "Meetings show at the wrong time",
+      "symptoms": ["meeting wrong time", "calendar time zone", "events an hour off", "invite wrong time"],
+      "why": "The computer, phone or calendar has a different time zone set, or daylight saving was entered by hand.",
+      "steps": [
+        { "text": "Set time and time zone automatically on this computer.", "os": ["windows"], "open": "ms-settings:dateandtime" },
+        { "text": "Set time and time zone automatically on this computer.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Date-Time-Settings.extension" },
+        { "text": "Check Outlook's own time zone: File › Options › Calendar › Time zones (Windows) or Outlook › Settings › Calendar (Mac)." },
+        { "text": "Ask the organiser which time zone they used when creating the meeting." }
+      ],
+      "related": ["clock-wrong"]
+    },
+    {
+      "id": "apple-mail-not-working",
+      "os": ["macos"],
+      "title": "Apple Mail won't send or receive",
+      "symptoms": ["apple mail not working", "mail app not sending", "mail offline", "mail account offline", "mail password prompt mac"],
+      "why": "The account's sign-in expired, the account is offline, or its settings changed at the provider.",
+      "steps": [
+        { "text": "In Mail choose Mailbox › Take All Accounts Online." },
+        { "text": "Window › Connection Doctor shows which account fails and why." },
+        { "text": "Re-enter the password in System Settings › Internet Accounts › the account.", "open": "x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension" },
+        { "text": "For Gmail and Outlook.com accounts, remove and add the account again to sign in the modern way." }
+      ],
+      "related": ["outlook-password-prompt"]
+    },
+    {
+      "id": "out-of-office",
+      "os": ["windows", "macos"],
+      "title": "How do I set an out-of-office reply?",
+      "symptoms": ["out of office", "automatic replies", "vacation reply", "away message"],
+      "why": "Automatic replies are set on the mail server, so they work even with the computer off.",
+      "steps": [
+        { "text": "Outlook: File › Automatic Replies (Windows) or Tools › Out of Office (Mac). New Outlook / web: Settings › Mail › Automatic replies." },
+        { "text": "Set an end date so it switches itself off, and write a separate reply for people outside your organisation." },
+        { "text": "Gmail: Settings › See all settings › Vacation responder." }
+      ]
+    },
+    {
+      "id": "shared-mailbox-missing",
+      "os": ["windows", "macos"],
+      "title": "Shared mailbox doesn't show in Outlook",
+      "symptoms": ["shared mailbox missing", "shared inbox not showing", "add shared mailbox", "delegate mailbox"],
+      "why": "New access can take up to an hour to appear, and the new Outlook needs shared mailboxes added by hand.",
+      "steps": [
+        { "text": "Restart Outlook; access given recently can take an hour to show." },
+        { "text": "Add it by hand: right-click your account › Add shared folder or mailbox, type its address." },
+        { "text": "Check it in Outlook on the web: your picture › Open another mailbox." }
+      ],
+      "escalate": "If it's not in Outlook on the web either, IT needs to give you access."
+    }
+  ]
+}

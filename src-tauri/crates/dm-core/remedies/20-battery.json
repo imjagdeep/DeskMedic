@@ -1,0 +1,93 @@
+{
+  "id": "battery",
+  "title": "Battery & power",
+  "icon": "battery",
+  "blurb": "Not charging, draining fast, sleep and wake problems.",
+  "remedies": [
+    {
+      "id": "battery-not-charging",
+      "os": ["windows", "macos"],
+      "title": "Laptop isn't charging",
+      "symptoms": ["not charging", "plugged in not charging", "battery not charging", "charger not working", "charging paused", "usb-c charging"],
+      "why": "A faulty charger, cable or socket, a weak USB-C charger, or a battery-care setting that stops at 80%.",
+      "steps": [
+        { "text": "Try another wall socket, and check the charger's light; try another cable/charger of the right wattage." },
+        { "text": "Charge from the laptop's own charger, not a dock or a phone charger; USB-C chargers under ~45 W may only slow the drain." },
+        { "text": "\"Plugged in, not charging\" at 80% is often battery care on purpose (maker's app, or Optimised Battery Charging on Mac)." },
+        { "text": "Check Battery settings and the battery health.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Check the battery's state in Power & battery settings.", "os": ["windows"], "open": "ms-settings:batterysaver" },
+        { "text": "Shut down, unplug, hold power 15 seconds, then plug in and charge while off." }
+      ],
+      "escalate": "If the battery swells (case bulges, trackpad lifts), stop using it and tell IT.",
+      "related": ["battery-drains-fast", "wont-turn-on"]
+    },
+    {
+      "id": "battery-drains-fast",
+      "os": ["windows", "macos"],
+      "title": "Battery runs out too quickly",
+      "symptoms": ["battery drains fast", "short battery life", "battery dies quickly", "battery draining", "battery percentage drops"],
+      "why": "Bright screen, heavy apps and browser tabs, background sync, or a worn battery.",
+      "steps": [
+        { "text": "See which apps use the most battery: Settings › System › Power & battery › Battery usage.", "os": ["windows"], "open": "ms-settings:batterysaver" },
+        { "text": "See battery usage and turn on Low Power Mode on battery.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Lower screen brightness and close apps you aren't using." },
+        { "text": "Check the battery's health; batteries wear out after a few hundred cycles.", "os": ["macos"], "open": "app:System Information" },
+        { "text": "Check what's busy in the background.", "os": ["windows"], "open": "run:task-manager" }
+      ],
+      "related": ["battery-not-charging", "high-cpu"]
+    },
+    {
+      "id": "battery-drains-asleep",
+      "os": ["windows", "macos"],
+      "title": "Battery empty after the laptop was closed overnight",
+      "symptoms": ["battery drains while sleeping", "laptop hot in bag", "wakes up in bag", "sleep battery drain", "modern standby"],
+      "why": "The laptop wakes for updates and notifications in sleep, or something keeps it from sleeping.",
+      "steps": [
+        { "text": "Shut down (or use Hibernate) for longer breaks or before putting it in a bag." },
+        { "text": "Power options › Choose what closing the lid does › Hibernate on battery.", "os": ["windows"], "open": "run:power-options" },
+        { "text": "Battery › Options: turn off \"Wake for network access\" and Power Nap on battery.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" },
+        { "text": "Unplug USB devices before closing the lid." }
+      ],
+      "related": ["sleep-problems"]
+    },
+    {
+      "id": "sleep-problems",
+      "os": ["windows", "macos"],
+      "title": "Computer won't sleep, or wakes up by itself",
+      "symptoms": ["won't go to sleep", "wakes up randomly", "computer wakes by itself", "sleep not working", "screen won't turn off"],
+      "why": "A device (mouse, network card) or app (video playing, a download) keeps it awake or wakes it.",
+      "steps": [
+        { "text": "Set the sleep times: Settings › System › Power & battery › Screen, sleep & hibernate.", "os": ["windows"], "open": "ms-settings:powersleep" },
+        { "text": "Stop the mouse waking it: Device Manager › Mice › Properties › Power Management › untick \"Allow this device to wake the computer\".", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Set display sleep in Lock Screen settings, and \"Prevent automatic sleeping\" in Battery › Options.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension" },
+        { "text": "Close video, music and big downloads; they keep the computer awake." }
+      ],
+      "related": ["wont-wake-up"]
+    },
+    {
+      "id": "wont-wake-up",
+      "os": ["windows", "macos"],
+      "title": "Computer won't wake from sleep (black screen)",
+      "symptoms": ["won't wake up", "black screen after sleep", "stuck in sleep", "won't resume", "screen stays black after opening lid"],
+      "why": "A driver didn't resume properly, or the screen is asleep while the computer is awake.",
+      "steps": [
+        { "text": "Press a key, move the mouse, then press the power button briefly once." },
+        { "text": "Press Windows+Ctrl+Shift+B to wake the graphics driver.", "os": ["windows"] },
+        { "text": "If nothing works, hold the power button 10 seconds; unsaved work is lost." },
+        { "text": "Update graphics and chipset drivers if it keeps happening.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" }
+      ],
+      "related": ["sleep-problems"]
+    },
+    {
+      "id": "power-plan",
+      "os": ["windows", "macos"],
+      "title": "Make the laptop faster on battery (or last longer)",
+      "symptoms": ["power mode", "best performance", "power plan", "battery saver", "low power mode", "performance on battery"],
+      "why": "Power mode trades speed for battery life.",
+      "steps": [
+        { "text": "Settings › System › Power & battery › Power mode: Best performance when plugged in, Balanced or Best power efficiency on battery.", "os": ["windows"], "open": "ms-settings:powersleep" },
+        { "text": "Battery › Low Power Mode: Only on Battery (or Never for full speed).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Battery-Settings.extension" }
+      ]
+    }
+  ]
+}

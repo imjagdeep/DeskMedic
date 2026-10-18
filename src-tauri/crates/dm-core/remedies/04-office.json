@@ -1,0 +1,174 @@
+{
+  "id": "office",
+  "title": "Microsoft 365 & Office",
+  "icon": "apps",
+  "blurb": "Word, Excel, PowerPoint: activation, sign-in, crashes, files that won't open.",
+  "remedies": [
+    {
+      "id": "office-unlicensed",
+      "os": ["windows", "macos"],
+      "title": "Office says \"Unlicensed product\" or \"Product deactivated\"",
+      "symptoms": ["unlicensed product", "product deactivated", "office activation", "activate office", "subscription expired", "reduced functionality mode", "office read only"],
+      "why": "Office can't confirm your licence: you're signed in with a different account, the subscription lapsed, or the licence check is stale.",
+      "steps": [
+        { "text": "In Word, open File › Account (Mac: Word › Sign In) and check the account shown is the one with the subscription." },
+        { "text": "Sign out, close every Office app, open Word and sign in again with the licensed account." },
+        { "text": "Check the subscription at account.microsoft.com/services (home) or ask IT (work)." },
+        { "text": "Check the date and time are correct; activation fails with a wrong clock.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Repair Office: Settings › Apps › Microsoft 365 › Modify › Online Repair.", "os": ["windows"], "open": "ms-settings:appsfeatures" }
+      ],
+      "escalate": "At work, IT has to assign you a licence; tell them the account shown in File › Account.",
+      "related": ["m365-sign-in-loop", "office-repair"]
+    },
+    {
+      "id": "m365-sign-in-loop",
+      "os": ["windows", "macos"],
+      "title": "Microsoft 365 sign-in loops or shows an error code",
+      "symptoms": ["sign in loop office", "aadsts", "something went wrong 1001", "can't sign in to office", "teams sign in error", "caa2000b", "0x80180018"],
+      "why": "The work account's device registration or saved sign-in is damaged, or your organisation's rules (like MFA or a compliant device) aren't met.",
+      "steps": [
+        { "text": "Note the error code; it tells IT exactly what failed." },
+        { "text": "Check \"Access work or school\" shows your account; if it shows an error, choose Disconnect only if IT agrees, then reconnect.", "os": ["windows"], "open": "ms-settings:workplace" },
+        { "text": "Remove saved Office sign-ins: Credential Manager › Windows Credentials › entries starting with MicrosoftOffice16 or ADAL.", "os": ["windows"], "open": "run:credential-manager" },
+        { "text": "Delete Microsoft Office identity entries in Keychain Access (search \"Microsoft Office Identities\"), then reopen Office.", "os": ["macos"], "open": "app:Keychain Access" },
+        { "text": "Check the clock is correct.", "os": ["windows"], "fix": "time-sync" },
+        { "text": "Try signing in at office.com in a private browser window; if that fails too, the account itself needs IT." }
+      ],
+      "escalate": "Give IT the error code, time, and whether office.com works.",
+      "related": ["outlook-password-prompt", "mfa-not-working"]
+    },
+    {
+      "id": "office-repair",
+      "os": ["windows"],
+      "title": "Office apps crash or behave strangely (repair Office)",
+      "symptoms": ["repair office", "word crashing", "excel crashing", "office keeps crashing", "office won't open", "office error"],
+      "why": "Damaged program files or a broken update. Repair puts Office back without touching your documents.",
+      "steps": [
+        { "text": "Close all Office apps." },
+        { "text": "Settings › Apps › Installed apps › Microsoft 365 (or Office) › ⋯ › Modify › Quick Repair. If that doesn't help, run Online Repair (downloads Office again, ~30 minutes).", "open": "ms-settings:appsfeatures" },
+        { "text": "Start the app in safe mode (hold Ctrl while opening it); if it works there, turn off add-ins in File › Options › Add-ins." },
+        { "text": "Install Office updates: open Word › File › Account › Update Options › Update Now." }
+      ],
+      "related": ["word-crashes", "office-unlicensed"]
+    },
+    {
+      "id": "word-crashes",
+      "os": ["windows", "macos"],
+      "title": "Word or Excel crashes when opening one file",
+      "symptoms": ["word crashes opening file", "excel file crashes", "document won't open", "file is corrupt", "word found unreadable content"],
+      "why": "That file is damaged or contains something (a macro, a link, an image) the app chokes on.",
+      "steps": [
+        { "text": "Open it with File › Open › select the file › the arrow next to Open › Open and Repair (Windows Office)." },
+        { "text": "Open it in Word/Excel on the web (upload to OneDrive) and save a fresh copy from there." },
+        { "text": "Look for an older copy: OneDrive/SharePoint › Version history, or File Explorer › right-click › Restore previous versions.", "os": ["windows"] },
+        { "text": "Look for an older copy: OneDrive/SharePoint › Version history, or Time Machine.", "os": ["macos"] }
+      ],
+      "related": ["file-locked-by-another-user", "recover-unsaved-document"]
+    },
+    {
+      "id": "recover-unsaved-document",
+      "os": ["windows", "macos"],
+      "title": "I lost a document I didn't save",
+      "symptoms": ["recover unsaved word document", "didn't save", "lost my work", "autosave", "autorecover", "word closed without saving"],
+      "why": "Office keeps AutoRecover copies every few minutes, and AutoSave keeps files in OneDrive saved as you type.",
+      "steps": [
+        { "text": "Open the app again: a Document Recovery panel often appears on the left." },
+        { "text": "Word › File › Info › Manage Document › Recover Unsaved Documents (Excel: Recover Unsaved Workbooks).", "os": ["windows"] },
+        { "text": "Look in ~/Library/Containers/com.microsoft.Word/Data/Library/Preferences/AutoRecovery (Finder › Go › Go to Folder).", "os": ["macos"] },
+        { "text": "If the file was ever saved to OneDrive or SharePoint, open Version history there." },
+        { "text": "From now on keep files in OneDrive with AutoSave on (switch at the top left)." }
+      ],
+      "related": ["word-crashes", "file-deleted-by-mistake"]
+    },
+    {
+      "id": "file-locked-by-another-user",
+      "os": ["windows", "macos"],
+      "title": "\"File is locked for editing by another user\"",
+      "symptoms": ["file locked for editing", "locked by another user", "read only file", "file in use", "excel locked by me"],
+      "why": "Someone (sometimes you, on another computer) has it open, or Office left a lock behind after a crash.",
+      "steps": [
+        { "text": "Ask the named person to close it. If it names you, close it on your other devices." },
+        { "text": "Save files on OneDrive/SharePoint and use co-authoring so several people can edit at once." },
+        { "text": "If it's left over from a crash, restart the computer; for a network folder, a hidden file starting with ~$ next to it can be deleted once nobody has it open." }
+      ],
+      "related": ["word-crashes"]
+    },
+    {
+      "id": "excel-slow",
+      "os": ["windows", "macos"],
+      "title": "Excel is slow, \"Calculating\" or \"Not responding\"",
+      "symptoms": ["excel slow", "excel calculating", "excel not responding", "excel freezes", "large spreadsheet slow"],
+      "why": "Large sheets with many formulas, whole-column references, volatile functions (like NOW, INDIRECT, OFFSET) or lots of formatting.",
+      "steps": [
+        { "text": "Set Formulas › Calculation Options › Manual while editing, then press F9 to recalculate." },
+        { "text": "Replace references to whole columns (A:A) with real ranges, and remove unused rows/columns of formatting." },
+        { "text": "Save as .xlsb (binary workbook) for very large files; it opens faster." },
+        { "text": "Close other workbooks and turn off add-ins you don't need." }
+      ],
+      "related": ["office-repair"]
+    },
+    {
+      "id": "office-macros-blocked",
+      "os": ["windows", "macos"],
+      "title": "\"Microsoft has blocked macros\" in a file",
+      "symptoms": ["macros blocked", "security risk macros", "enable content", "vba disabled", "mark of the web"],
+      "why": "Office blocks macros in files from the internet or email, because they're a common way to spread malware.",
+      "steps": [
+        { "text": "Only use macros in files you expected from someone you trust." },
+        { "text": "If you trust it, save the file, right-click it › Properties › tick Unblock › OK, then open it again.", "os": ["windows"] },
+        { "text": "Better: keep trusted macro files in a Trusted Location your IT sets up." }
+      ],
+      "escalate": "At work, IT controls macro settings; ask them rather than changing security options."
+    },
+    {
+      "id": "office-update",
+      "os": ["windows", "macos"],
+      "title": "Update Office",
+      "symptoms": ["update office", "office updates", "check for office updates", "office version old"],
+      "why": "Office updates fix bugs and security holes; many problems go away after updating.",
+      "steps": [
+        { "text": "Open Word › File › Account › Update Options › Update Now.", "os": ["windows"] },
+        { "text": "Open Word › Help › Check for Updates (Microsoft AutoUpdate), or update through the App Store if installed from there.", "os": ["macos"] }
+      ]
+    },
+    {
+      "id": "onenote-not-syncing",
+      "os": ["windows", "macos"],
+      "title": "OneNote won't sync",
+      "symptoms": ["onenote not syncing", "onenote sync error", "notebook not syncing", "onenote red x"],
+      "why": "The notebook lost its connection or sign-in, or one section has a conflict.",
+      "steps": [
+        { "text": "File › Info › View Sync Status › Sync All (Windows), or Notebooks › right-click › Sync This Notebook (Mac)." },
+        { "text": "Open the notebook on OneNote for the web; if changes are there, the problem is this app." },
+        { "text": "Sign out of OneNote and back in." },
+        { "text": "Copy pages out of a section that won't sync into a new section." }
+      ]
+    },
+    {
+      "id": "office-fonts-missing",
+      "os": ["windows", "macos"],
+      "title": "Document looks different or fonts are missing",
+      "symptoms": ["fonts missing", "font substituted", "document looks different", "layout changed other computer", "missing font"],
+      "why": "The document uses a font this computer doesn't have, so another one stands in and changes the layout.",
+      "steps": [
+        { "text": "Ask the sender which font they used, or for a PDF copy if you only need to read or print it." },
+        { "text": "Install the font (double-click the font file › Install)." },
+        { "text": "In Word, File › Options › Save › Embed fonts in the file, before sending documents with unusual fonts.", "os": ["windows"] },
+        { "text": "Check Font Book for disabled or duplicate fonts.", "os": ["macos"], "open": "app:Font Book" }
+      ]
+    },
+    {
+      "id": "office-add-in-missing",
+      "os": ["windows", "macos"],
+      "title": "An Office add-in or tab disappeared",
+      "symptoms": ["add-in missing", "tab disappeared excel", "add-in disabled", "outlook add-in gone", "teams meeting button missing"],
+      "why": "Office turns off add-ins that crash or slow it down, and they can be removed by updates.",
+      "steps": [
+        { "text": "File › Options › Add-ins › Manage: Disabled Items › Go, re-enable it, restart the app.", "os": ["windows"] },
+        { "text": "File › Options › Add-ins › Manage: COM Add-ins › Go, tick it.", "os": ["windows"] },
+        { "text": "In Outlook, the Teams Meeting button returns after signing in to Teams and restarting Outlook." }
+      ],
+      "related": ["teams-meeting-button-missing"]
+    }
+  ]
+}

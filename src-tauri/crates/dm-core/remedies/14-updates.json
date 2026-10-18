@@ -1,0 +1,79 @@
+{
+  "id": "updates",
+  "title": "Updates",
+  "icon": "update",
+  "blurb": "Updates failing, stuck, or asking to restart.",
+  "remedies": [
+    {
+      "id": "updates-failing",
+      "os": ["windows"],
+      "title": "Windows Update fails or shows an error",
+      "symptoms": ["windows update failed", "update error", "0x80070002", "0x800f0922", "0x80073712", "update keeps failing", "install error"],
+      "why": "Damaged update files, too little disk space, or system files that need repair.",
+      "steps": [
+        { "text": "Free up disk space (updates need 10–20 GB).", "page": "cleanup" },
+        { "text": "Restart, then try Windows Update again.", "open": "ms-settings:windowsupdate" },
+        { "text": "Reset Windows Update's components and downloads.", "fix": "repair-windows-update" },
+        { "text": "Repair system files.", "fix": "sfc" },
+        { "text": "Repair the Windows image.", "fix": "dism-restore" },
+        { "text": "Run Settings › System › Troubleshoot › Other troubleshooters › Windows Update.", "open": "ms-settings:troubleshoot" }
+      ],
+      "escalate": "Give IT the error code from Update history.",
+      "related": ["updates-stuck", "low-disk-space"]
+    },
+    {
+      "id": "updates-stuck",
+      "os": ["windows", "macos"],
+      "title": "Update stuck at a percentage",
+      "symptoms": ["update stuck", "stuck at 0%", "stuck downloading", "working on updates stuck", "update progress not moving", "macos update stuck"],
+      "why": "Large updates can sit at one number for a long time; a slow connection or a damaged download can also stall it.",
+      "steps": [
+        { "text": "Give it at least an hour on the charger, especially at \"Working on updates\" screens; don't turn it off then." },
+        { "text": "If it's stuck at Downloading for hours, restart and try again." , "os": ["windows"] },
+        { "text": "Reset Windows Update's downloads.", "os": ["windows"], "fix": "repair-windows-update" },
+        { "text": "Check free space: macOS updates need 20 GB+.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.settings.Storage" },
+        { "text": "Restart the Mac and run Software Update again; for repeated failures, update from macOS Recovery.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" }
+      ],
+      "related": ["updates-failing", "wont-shut-down"]
+    },
+    {
+      "id": "updates-check",
+      "os": ["windows", "macos"],
+      "title": "Check for updates",
+      "symptoms": ["check for updates", "install updates", "is my computer up to date", "software update", "security update"],
+      "why": "Updates fix security holes and bugs; many problems disappear after updating.",
+      "steps": [
+        { "text": "Settings › Windows Update › Check for updates. Also look at Advanced options › Optional updates for drivers.", "os": ["windows"], "open": "ms-settings:windowsupdate" },
+        { "text": "System Settings › General › Software Update.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" },
+        { "text": "Update apps too: Microsoft Store › Library › Get updates, or App Store › Updates." }
+      ]
+    },
+    {
+      "id": "update-broke-something",
+      "os": ["windows"],
+      "title": "Something broke after an update",
+      "symptoms": ["after update not working", "update broke", "uninstall update", "roll back update", "problem since update"],
+      "why": "Occasionally an update clashes with a driver or app.",
+      "steps": [
+        { "text": "Check Update history for what installed and when.", "open": "ms-settings:windowsupdate-history" },
+        { "text": "Uninstall the most recent update from Update history › Uninstall updates (security updates come back later, once fixed)." },
+        { "text": "For a driver update, Device Manager › the device › Properties › Driver › Roll Back Driver.", "open": "run:device-manager" },
+        { "text": "System Restore to a point before the update (your files stay).", "open": "run:system-restore" },
+        { "text": "Pause updates for a week while it's sorted.", "open": "ms-settings:windowsupdate" }
+      ],
+      "related": ["updates-failing"]
+    },
+    {
+      "id": "update-restart-nag",
+      "os": ["windows", "macos"],
+      "title": "Updates keep asking me to restart",
+      "symptoms": ["restart required", "restart to update", "update restart reminder", "restart now prompt"],
+      "why": "Installed updates only finish on a restart; the reminders continue until then.",
+      "steps": [
+        { "text": "Restart at the end of the day; it takes a few minutes." },
+        { "text": "Set active hours so Windows never restarts while you work.", "os": ["windows"], "open": "ms-settings:windowsupdate-options" },
+        { "text": "Choose \"Try Tonight\" in the macOS update reminder.", "os": ["macos"] }
+      ]
+    }
+  ]
+}

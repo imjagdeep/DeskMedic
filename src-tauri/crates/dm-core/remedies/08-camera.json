@@ -1,0 +1,66 @@
+{
+  "id": "camera",
+  "title": "Camera",
+  "icon": "camera",
+  "blurb": "Camera not found, black picture, blocked by privacy settings.",
+  "remedies": [
+    {
+      "id": "camera-not-working",
+      "os": ["windows", "macos"],
+      "title": "Camera doesn't work or shows black",
+      "symptoms": ["camera not working", "webcam not detected", "camera black", "no camera found", "we can't find your camera", "0xa00f4244"],
+      "why": "The privacy shutter or camera key is off, privacy settings block apps, another app holds the camera, or the driver failed.",
+      "steps": [
+        { "text": "Look for a sliding cover over the camera, or a camera key (often F8/F10) on the keyboard." },
+        { "text": "Allow camera access, and for desktop apps too.", "os": ["windows"], "open": "ms-settings:privacy-webcam" },
+        { "text": "Allow the app in Privacy & Security › Camera, then quit and reopen it.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera" },
+        { "text": "Close every app that might use the camera (Teams, Zoom, browsers), then open the Camera app to test.", "os": ["windows"] },
+        { "text": "Close every app that might use the camera, then test in Photo Booth or FaceTime.", "os": ["macos"] },
+        { "text": "Check Device Manager › Cameras: if it shows a warning, right-click › Uninstall device, then restart.", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "For an external webcam, try another USB port without a hub." }
+      ],
+      "escalate": "Tell IT if the camera is missing from Device Manager or System Information (hardware fault or blocked by policy).",
+      "related": ["meeting-camera-off", "browser-camera-mic"]
+    },
+    {
+      "id": "camera-wrong-one",
+      "os": ["windows", "macos"],
+      "title": "App uses the wrong camera",
+      "symptoms": ["wrong camera", "choose webcam", "external webcam not used", "iphone continuity camera used", "virtual camera"],
+      "why": "Apps pick the first camera they find: a laptop's built-in one, a virtual camera, or an iPhone (Continuity Camera).",
+      "steps": [
+        { "text": "Choose the camera in the app's own settings (Teams: Device settings; Zoom: Video)." },
+        { "text": "Turn off Continuity Camera on the iPhone (Settings › General › AirPlay & Continuity) if it keeps taking over.", "os": ["macos"] },
+        { "text": "Disable a camera you never use in Device Manager › Cameras.", "os": ["windows"], "open": "run:device-manager" }
+      ]
+    },
+    {
+      "id": "camera-blurry-dark",
+      "os": ["windows", "macos"],
+      "title": "Camera picture is blurry, dark or grainy",
+      "symptoms": ["webcam blurry", "camera dark", "grainy video", "camera low quality", "webcam out of focus"],
+      "why": "A smudged lens, light behind you, or low internet bandwidth (the app lowers quality).",
+      "steps": [
+        { "text": "Wipe the lens with a soft cloth." },
+        { "text": "Face a window or lamp; avoid bright light behind you." },
+        { "text": "Turn on background blur sparingly; it can lower quality on slower computers." },
+        { "text": "Check the quality in the Camera app: if it's good there, the meeting app is lowering it for the connection.", "os": ["windows"] }
+      ],
+      "related": ["meeting-poor-quality"]
+    },
+    {
+      "id": "camera-light-on",
+      "os": ["windows", "macos"],
+      "title": "Camera light turns on by itself",
+      "symptoms": ["camera light on", "webcam light", "camera turning on", "someone watching camera", "green light camera"],
+      "why": "An app (often a meeting app or browser tab in the background) is using the camera. Rarely, unwanted software.",
+      "steps": [
+        { "text": "See which app uses it: Settings › Privacy & security › Camera shows apps that used the camera recently.", "os": ["windows"], "open": "ms-settings:privacy-webcam" },
+        { "text": "The green dot in the menu bar (and Control Center) names the app using the camera.", "os": ["macos"] },
+        { "text": "Turn off camera access for apps that don't need it." },
+        { "text": "If an app you don't know is using it, run a full virus scan and tell IT.", "os": ["windows"], "open": "run:windows-security" }
+      ],
+      "related": ["virus-suspected"]
+    }
+  ]
+}

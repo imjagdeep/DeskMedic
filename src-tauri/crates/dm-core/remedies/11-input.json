@@ -1,0 +1,119 @@
+{
+  "id": "input",
+  "title": "Keyboard, mouse & trackpad",
+  "icon": "keyboard",
+  "blurb": "Keys typing wrong, mouse frozen, trackpad not clicking, touch screen.",
+  "remedies": [
+    {
+      "id": "keyboard-wrong-characters",
+      "os": ["windows", "macos"],
+      "title": "Keyboard types the wrong characters",
+      "symptoms": ["keyboard typing wrong letters", "@ and \" swapped", "keyboard layout changed", "z and y swapped", "wrong symbols", "keyboard language"],
+      "why": "A different keyboard layout is active; a shortcut (Alt+Shift or Windows+Space on Windows, Control+Space on Mac) switches it.",
+      "steps": [
+        { "text": "Press Windows+Space to cycle layouts, and check the language shown next to the clock.", "os": ["windows"] },
+        { "text": "Remove layouts you don't use: Settings › Time & language › Language & region › your language › Options › Keyboards.", "os": ["windows"], "open": "ms-settings:regionlanguage" },
+        { "text": "Click the input menu (flag/letters) in the menu bar and pick the right layout.", "os": ["macos"] },
+        { "text": "Remove layouts you don't use: Keyboard › Text Input › Edit.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Keyboard-Settings.extension" },
+        { "text": "If numbers come out instead of letters on a small laptop, Num Lock is on: press Fn+Num Lk." }
+      ],
+      "related": ["keys-not-working"]
+    },
+    {
+      "id": "keys-not-working",
+      "os": ["windows", "macos"],
+      "title": "Some keys don't work, or the keyboard stopped",
+      "symptoms": ["keyboard not working", "keys not working", "keyboard stopped", "laptop keyboard dead", "some keys don't respond"],
+      "why": "Filter Keys or Sticky Keys is on, a key is physically stuck, a wireless keyboard's battery is flat, or the driver failed.",
+      "steps": [
+        { "text": "Try the On-Screen Keyboard to keep working meanwhile.", "os": ["windows"], "open": "run:on-screen-keyboard" },
+        { "text": "Turn off Filter Keys and Sticky Keys: Settings › Accessibility › Keyboard.", "os": ["windows"], "open": "ms-settings:easeofaccess-keyboard" },
+        { "text": "Turn off Slow Keys and Sticky Keys: Accessibility › Keyboard.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" },
+        { "text": "Wireless: replace batteries or charge, then re-pair or replug the USB receiver." },
+        { "text": "Blow out crumbs at an angle with compressed air." },
+        { "text": "Device Manager › Keyboards › uninstall the keyboard › restart.", "os": ["windows"], "open": "run:device-manager" }
+      ],
+      "related": ["keyboard-wrong-characters", "bluetooth-keeps-disconnecting"]
+    },
+    {
+      "id": "mouse-not-working",
+      "os": ["windows", "macos"],
+      "title": "Mouse pointer frozen, jumpy or not moving",
+      "symptoms": ["mouse not working", "cursor frozen", "mouse jumpy", "mouse lagging", "pointer not moving", "mouse skipping"],
+      "why": "A flat battery, a dirty or shiny surface, the USB receiver too far away, or the computer itself frozen.",
+      "steps": [
+        { "text": "If the keyboard still works (Caps Lock light changes), the computer is fine: focus on the mouse." },
+        { "text": "Replace batteries or charge; move the USB receiver to a port nearer the mouse (a front port or extension)." },
+        { "text": "Use a mouse mat; glass and glossy desks confuse the sensor." },
+        { "text": "Try another USB port, or another mouse to rule the computer out." },
+        { "text": "Check the pointer speed: Mouse settings.", "os": ["windows"], "open": "ms-settings:mousetouchpad" },
+        { "text": "Check tracking speed in Mouse settings.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Mouse-Settings.extension" }
+      ],
+      "related": ["bluetooth-keeps-disconnecting", "computer-frozen"]
+    },
+    {
+      "id": "touchpad-not-working",
+      "os": ["windows", "macos"],
+      "title": "Trackpad or touchpad not working",
+      "symptoms": ["touchpad not working", "trackpad not clicking", "touchpad disabled", "trackpad unresponsive", "two finger scroll not working"],
+      "why": "The touchpad was turned off (often with an Fn key), it turns off when a mouse is plugged in, or its gestures changed.",
+      "steps": [
+        { "text": "Press the touchpad key (Fn + a key with a touchpad icon)." , "os": ["windows"] },
+        { "text": "Turn the touchpad on, and check \"Leave touchpad on when a mouse is connected\".", "os": ["windows"], "open": "ms-settings:devices-touchpad" },
+        { "text": "Check Trackpad settings: Tap to click, scroll direction and gestures.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Trackpad-Settings.extension" },
+        { "text": "Accessibility › Pointer Control › turn off \"Ignore built-in trackpad when mouse or wireless trackpad is present\".", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" },
+        { "text": "A swollen battery can push the trackpad up so it won't click: if the case bulges, stop using it and get it checked." }
+      ],
+      "escalate": "If the case bulges or the trackpad lifts, stop using the laptop and tell IT (swollen battery)."
+    },
+    {
+      "id": "mouse-scroll-direction",
+      "os": ["windows", "macos"],
+      "title": "Scrolling goes the wrong way",
+      "symptoms": ["scroll direction", "reverse scroll", "natural scrolling", "scroll backwards"],
+      "why": "\"Natural\" scrolling moves the page with your fingers, like a phone; some prefer the opposite.",
+      "steps": [
+        { "text": "Touchpad: Scrolling direction. Mouse: the maker's software.", "os": ["windows"], "open": "ms-settings:devices-touchpad" },
+        { "text": "Trackpad › Scroll & Zoom › Natural scrolling (it also changes the mouse).", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Trackpad-Settings.extension" }
+      ]
+    },
+    {
+      "id": "double-click-problems",
+      "os": ["windows", "macos"],
+      "title": "Mouse double-clicks on one click (or single clicks open things)",
+      "symptoms": ["mouse double clicking", "single click opens", "click registers twice", "mouse button faulty"],
+      "why": "A worn mouse switch registers twice, or the system is set to open items on one click.",
+      "steps": [
+        { "text": "Try another mouse; if the problem goes, the first mouse's button is worn." },
+        { "text": "Folder options › General › choose \"Double-click to open an item\".", "os": ["windows"], "open": "run:file-explorer-options" },
+        { "text": "Set the double-click speed in Mouse properties.", "os": ["windows"], "open": "run:mouse-properties" },
+        { "text": "Set the double-click speed in Accessibility › Pointer Control.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" }
+      ]
+    },
+    {
+      "id": "touch-screen-not-working",
+      "os": ["windows"],
+      "title": "Touch screen doesn't respond or touches by itself",
+      "symptoms": ["touch screen not working", "ghost touches", "touchscreen disabled", "phantom touch"],
+      "why": "The touch driver is off or needs a reset; dirt or a charger can cause ghost touches.",
+      "steps": [
+        { "text": "Clean the screen; unplug the charger to see if ghost touches stop." },
+        { "text": "Device Manager › Human Interface Devices › HID-compliant touch screen: Enable, or Disable and Enable again.", "open": "run:device-manager" },
+        { "text": "Calibrate: Control Panel › Tablet PC Settings › Calibrate (if present)." }
+      ]
+    },
+    {
+      "id": "caps-lock-stuck",
+      "os": ["windows", "macos"],
+      "title": "Everything types in capitals, or a modifier key seems stuck",
+      "symptoms": ["caps lock stuck", "typing in capitals", "shift stuck", "ctrl stuck", "sticky keys"],
+      "why": "Caps Lock or Sticky Keys is on, or a remote session left a key pressed.",
+      "steps": [
+        { "text": "Tap Caps Lock, then press and release Shift, Ctrl, Alt (Option) and Windows (Command) once each." },
+        { "text": "Turn off Sticky Keys.", "os": ["windows"], "open": "ms-settings:easeofaccess-keyboard" },
+        { "text": "Turn off Sticky Keys in Accessibility › Keyboard.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" },
+        { "text": "If you just used Remote Desktop, close it; keys can stay \"pressed\" until you do." }
+      ]
+    }
+  ]
+}

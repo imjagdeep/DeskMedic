@@ -114,7 +114,7 @@ export default function App() {
           {page === "diskmap" && <DiskMap />}
           {page === "cleanup" && <Cleanup />}
           {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
-          {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} />}
+          {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} onNavigate={setPage} />}
           {page === "log" && <Log />}
           {page === "settings" && <SettingsPage />}
         </main>

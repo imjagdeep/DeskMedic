@@ -1,0 +1,134 @@
+{
+  "id": "performance",
+  "title": "Slow computer & freezes",
+  "icon": "pulse",
+  "blurb": "Slow, frozen, fan loud, high CPU or memory, apps not responding.",
+  "remedies": [
+    {
+      "id": "computer-slow",
+      "os": ["windows", "macos"],
+      "title": "Computer is slow",
+      "symptoms": ["computer slow", "laptop slow", "pc running slow", "mac slow", "everything takes forever", "sluggish", "slow performance"],
+      "why": "Usually too much running at once, a nearly full disk, startup apps, updates working in the background, or not having restarted for weeks.",
+      "steps": [
+        { "text": "Restart the computer (a real restart). Fast startup on Windows means Shut down isn't a fresh start." },
+        { "text": "Run the Health check: it flags low disk space, memory pressure and other common causes.", "page": "health" },
+        { "text": "See what's busy: Task Manager › Processes › sort by CPU, Memory and Disk.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "See what's busy: Activity Monitor › CPU and Memory (watch Memory Pressure).", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Free up disk space if under ~10% is left.", "page": "cleanup" },
+        { "text": "Turn off startup apps you don't need.", "os": ["windows"], "open": "ms-settings:startupapps" },
+        { "text": "Turn off login items you don't need.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Close browser tabs and quit apps you're not using." }
+      ],
+      "escalate": "If it's still slow with little running, tell IT the Health check result and how much memory the computer has.",
+      "related": ["high-cpu", "high-memory", "disk-100", "startup-slow"]
+    },
+    {
+      "id": "computer-frozen",
+      "os": ["windows", "macos"],
+      "title": "Computer froze completely",
+      "symptoms": ["computer frozen", "pc froze", "screen frozen", "not responding at all", "spinning wheel", "can't click anything", "hung"],
+      "why": "One app is blocking the screen, the desktop shell hung, or (rarely) the whole system stopped.",
+      "steps": [
+        { "text": "Wait a minute; heavy work can stall it briefly." },
+        { "text": "Press Ctrl+Alt+Delete › Task Manager, select the app that's Not responding › End task.", "os": ["windows"] },
+        { "text": "If the taskbar and Start menu froze, restart Explorer.", "os": ["windows"], "fix": "restart-explorer" },
+        { "text": "Press ⌘+Option+Esc, choose the app › Force Quit.", "os": ["macos"] },
+        { "text": "If nothing reacts, hold the power button ~10 seconds to turn it off, wait, turn it on. Unsaved work will be lost." },
+        { "text": "If it happens often, look at Reliability Monitor for the app or driver behind it.", "os": ["windows"], "open": "run:reliability-monitor" }
+      ],
+      "related": ["app-not-responding", "computer-slow"]
+    },
+    {
+      "id": "app-not-responding",
+      "os": ["windows", "macos"],
+      "title": "An app says \"Not responding\" or won't close",
+      "symptoms": ["not responding", "app frozen", "force quit", "end task", "program won't close", "application not responding"],
+      "why": "The app is stuck waiting (on the network, a file, or a dialog hidden behind another window) or crashed.",
+      "steps": [
+        { "text": "Look for a hidden dialog: Alt+Tab (⌘+Tab) through windows; one may be waiting for an answer." },
+        { "text": "End it in Task Manager (Ctrl+Shift+Esc) › select › End task.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Force Quit with ⌘+Option+Esc, or in Activity Monitor.", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Update the app; if it keeps freezing, reinstall it." }
+      ],
+      "related": ["computer-frozen"]
+    },
+    {
+      "id": "high-cpu",
+      "os": ["windows", "macos"],
+      "title": "CPU at 100%, fan loud, computer hot",
+      "symptoms": ["high cpu", "cpu 100", "fan loud", "laptop hot", "overheating", "fan always on", "fan noise"],
+      "why": "A process is working hard (updates, antivirus scan, indexing, a runaway browser tab), or dust blocks cooling.",
+      "steps": [
+        { "text": "Find the process: Task Manager › Processes › sort by CPU.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Find the process: Activity Monitor › CPU › sort by % CPU.", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Windows Update, antivirus scans and Search indexing calm down on their own after a while, especially right after starting." },
+        { "text": "Close the busy app or browser tab; if it's always the same app, update or reinstall it." },
+        { "text": "Use the laptop on a hard surface (not a bed or lap) so air can flow; vents can be cleaned with compressed air." }
+      ],
+      "escalate": "If an unknown process uses the CPU all the time, tell IT its name (it may be unwanted software).",
+      "related": ["computer-slow", "virus-suspected"]
+    },
+    {
+      "id": "high-memory",
+      "os": ["windows", "macos"],
+      "title": "Memory (RAM) is always full",
+      "symptoms": ["high memory usage", "ram full", "out of memory", "memory pressure", "your system has run out of application memory", "low memory warning"],
+      "why": "Many browser tabs and big apps fill memory; once it's full, the computer swaps to disk and slows down.",
+      "steps": [
+        { "text": "See what uses memory: Task Manager › sort by Memory.", "os": ["windows"], "open": "run:task-manager" },
+        { "text": "Check Memory Pressure in Activity Monitor › Memory (green is fine, red means too little memory).", "os": ["macos"], "open": "app:Activity Monitor" },
+        { "text": "Close unused tabs and apps; turn on the browser's memory saver." },
+        { "text": "Restart once in a while; it clears leaks." },
+        { "text": "Computers with 8 GB struggle with today's apps; 16 GB is comfortable." }
+      ],
+      "related": ["computer-slow", "browser-slow"]
+    },
+    {
+      "id": "disk-100",
+      "os": ["windows"],
+      "title": "Disk at 100% in Task Manager",
+      "symptoms": ["disk 100", "disk usage 100", "hard drive at 100", "disk always busy"],
+      "why": "Updates, Search indexing, antivirus, or a slow old hard drive (not SSD) that can't keep up.",
+      "steps": [
+        { "text": "Wait 15–20 minutes after starting; background tasks often finish." },
+        { "text": "See which process: Task Manager › sort by Disk, or Resource Monitor › Disk.", "open": "run:resource-monitor" },
+        { "text": "Check free space; a nearly full disk makes it worse.", "page": "cleanup" },
+        { "text": "Check the disk's health in DeskMedic's Disks page.", "page": "disks" },
+        { "text": "A computer with a spinning hard drive gets much faster with an SSD." }
+      ],
+      "related": ["computer-slow", "low-disk-space"]
+    },
+    {
+      "id": "apps-crash-everything",
+      "os": ["windows", "macos"],
+      "title": "Many different apps crash",
+      "symptoms": ["apps keep crashing", "programs crash randomly", "everything crashing", "random crashes", "quit unexpectedly"],
+      "why": "When many apps crash, the cause is shared: damaged system files, failing memory, a bad driver, or security software.",
+      "steps": [
+        { "text": "Install all updates.", "os": ["windows"], "open": "ms-settings:windowsupdate" },
+        { "text": "Install all updates.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" },
+        { "text": "Repair Windows system files.", "os": ["windows"], "fix": "sfc" },
+        { "text": "Repair the Windows image if the file check found problems it couldn't fix.", "os": ["windows"], "fix": "dism-restore" },
+        { "text": "Test the memory (restarts the PC).", "os": ["windows"], "open": "run:memory-diagnostic" },
+        { "text": "Look at crash history in Reliability Monitor.", "os": ["windows"], "open": "run:reliability-monitor" },
+        { "text": "Run Apple Diagnostics: shut down, then hold the power button (Apple silicon) and press ⌘D at the options screen.", "os": ["macos"] }
+      ],
+      "escalate": "Tell IT the names of the apps and the crash times; Reliability Monitor's details help.",
+      "related": ["blue-screen", "computer-frozen"]
+    },
+    {
+      "id": "windows-shell-hung",
+      "os": ["windows"],
+      "title": "Taskbar, Start menu or desktop frozen or blank",
+      "symptoms": ["taskbar frozen", "start menu not working", "desktop icons missing", "taskbar not responding", "explorer crashed", "black desktop"],
+      "why": "Explorer (which draws the taskbar, Start and desktop) hung or crashed.",
+      "steps": [
+        { "text": "Restart Explorer (open windows stay; the taskbar comes back).", "fix": "restart-explorer" },
+        { "text": "If icons show blank or wrong pictures, rebuild the icon cache.", "fix": "rebuild-icon-cache" },
+        { "text": "Repair system files if it keeps happening.", "fix": "sfc" }
+      ],
+      "related": ["computer-frozen", "icons-wrong"]
+    }
+  ]
+}

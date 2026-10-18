@@ -314,3 +314,37 @@ export interface AssistantStatus {
   last_warnings: number;
   last_temp_bytes: number | null;
 }
+
+/** One step of a guided remedy; at most one of fix / open / page. */
+export interface RemedyStep {
+  text: string;
+  os?: ("windows" | "macos")[];
+  fix?: string;
+  open?: string;
+  page?: string;
+}
+
+export interface Remedy {
+  id: string;
+  os: ("windows" | "macos")[];
+  title: string;
+  symptoms: string[];
+  why: string;
+  steps: RemedyStep[];
+  escalate?: string;
+  related: string[];
+  category: string;
+}
+
+export interface RemedyCategory {
+  id: string;
+  title: string;
+  icon: string;
+  blurb: string;
+  count: number;
+}
+
+export interface RemedyLibrary {
+  categories: RemedyCategory[];
+  remedies: Remedy[];
+}

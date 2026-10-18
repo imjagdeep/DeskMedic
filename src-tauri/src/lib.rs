@@ -149,6 +149,8 @@ pub fn run() {
             commands::resize_info,
             commands::resize,
             commands::fix_list,
+            commands::remedy_library,
+            commands::remedy_open,
             commands::fix_run,
             commands::health_run,
             commands::network_run,

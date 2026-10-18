@@ -1,0 +1,144 @@
+{
+  "id": "startup",
+  "title": "Startup, shutdown & crashes",
+  "icon": "power",
+  "blurb": "Won't turn on, slow to start, blue screens, restarts by itself, won't shut down.",
+  "remedies": [
+    {
+      "id": "wont-turn-on",
+      "os": ["windows", "macos"],
+      "title": "Computer won't turn on",
+      "symptoms": ["won't turn on", "dead laptop", "no power", "black screen nothing", "laptop not starting", "power button does nothing"],
+      "why": "A flat battery, a faulty charger or socket, or the computer is on but the screen is off.",
+      "steps": [
+        { "text": "Plug in the charger and leave it 15–30 minutes; look for a charging light. Try another socket." },
+        { "text": "Hold the power button 15–30 seconds, release, then press it normally." },
+        { "text": "Listen for fans and look for keyboard lights: if you see them, the computer is on and the screen is the problem (try an external monitor)." },
+        { "text": "Unplug everything (docks, USB drives) and try again." },
+        { "text": "For a Mac with Apple silicon, try another USB-C charger and cable if you have one.", "os": ["macos"] }
+      ],
+      "escalate": "Tell IT the model and what you see (lights, fan sounds, beeps).",
+      "related": ["black-screen-after-login", "battery-not-charging"]
+    },
+    {
+      "id": "startup-slow",
+      "os": ["windows", "macos"],
+      "title": "Computer takes ages to start up",
+      "symptoms": ["slow startup", "slow boot", "takes long to start", "slow to log in", "boot time"],
+      "why": "Many apps start with the computer, updates finish at startup, or the disk is slow or full.",
+      "steps": [
+        { "text": "Turn off startup apps you don't need (sort by Startup impact).", "os": ["windows"], "open": "ms-settings:startupapps" },
+        { "text": "Turn off login items you don't need.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Free up disk space.", "page": "cleanup" },
+        { "text": "Let pending updates finish, then restart once more." },
+        { "text": "Run the Health check.", "page": "health" }
+      ],
+      "related": ["computer-slow"]
+    },
+    {
+      "id": "blue-screen",
+      "os": ["windows"],
+      "title": "Blue screen (\"Your PC ran into a problem\")",
+      "symptoms": ["blue screen", "bsod", "your pc ran into a problem", "stop code", "critical process died", "irql_not_less_or_equal", "page fault in nonpaged area", "black screen of death"],
+      "why": "Windows stopped to protect itself, usually because of a driver, failing hardware (memory, disk) or damaged system files.",
+      "steps": [
+        { "text": "Note the stop code shown (e.g. CRITICAL_PROCESS_DIED); it points to the cause." },
+        { "text": "Undo what changed last: a new device, driver or update. Settings › Windows Update › Update history › Uninstall updates if it started after one.", "open": "ms-settings:windowsupdate-history" },
+        { "text": "Look at Reliability Monitor for the failing driver or app around the crash time.", "open": "run:reliability-monitor" },
+        { "text": "Repair system files.", "fix": "sfc" },
+        { "text": "Test the memory (restarts the PC).", "open": "run:memory-diagnostic" },
+        { "text": "Check the disk's health.", "page": "disks" },
+        { "text": "If Windows won't start, it opens Automatic Repair after two failed starts: choose Advanced options › Startup Repair or System Restore." }
+      ],
+      "escalate": "Give IT the stop code, how often it happens and what changed before it started.",
+      "related": ["apps-crash-everything", "restarts-by-itself"]
+    },
+    {
+      "id": "restarts-by-itself",
+      "os": ["windows", "macos"],
+      "title": "Computer restarts or shuts down by itself",
+      "symptoms": ["restarts randomly", "shuts down by itself", "turned off suddenly", "restarted overnight", "your computer restarted because of a problem"],
+      "why": "Scheduled updates, overheating, a power problem, or a crash that restarts automatically.",
+      "steps": [
+        { "text": "Overnight restarts are often updates: set active hours so Windows doesn't restart while you work.", "os": ["windows"], "open": "ms-settings:windowsupdate-options" },
+        { "text": "Look for crashes in Reliability Monitor (\"Windows was not properly shut down\").", "os": ["windows"], "open": "run:reliability-monitor" },
+        { "text": "\"Your computer restarted because of a problem\": after it starts, check for updates, remove recently added extensions or drivers, and unplug accessories.", "os": ["macos"] },
+        { "text": "Keep vents clear; a hot computer shuts down to protect itself." },
+        { "text": "Try another charger and wall socket." }
+      ],
+      "related": ["blue-screen", "high-cpu"]
+    },
+    {
+      "id": "wont-shut-down",
+      "os": ["windows", "macos"],
+      "title": "Computer won't shut down or takes forever",
+      "symptoms": ["won't shut down", "stuck shutting down", "shutdown takes long", "restarting forever", "stuck on restarting"],
+      "why": "An app won't close, updates are installing, or a device driver hangs.",
+      "steps": [
+        { "text": "If it says updates are installing, wait; turning it off can damage Windows.", "os": ["windows"] },
+        { "text": "Save and quit apps yourself before shutting down; look for apps asking to save." },
+        { "text": "If stuck for over 30 minutes with no disk light, hold the power button 10 seconds." },
+        { "text": "Unplug docks and USB devices and try again." },
+        { "text": "Look in Reliability Monitor for apps that hang at shutdown.", "os": ["windows"], "open": "run:reliability-monitor" }
+      ],
+      "related": ["updates-stuck"]
+    },
+    {
+      "id": "black-screen-after-login",
+      "os": ["windows", "macos"],
+      "title": "Black screen after signing in (maybe with a cursor)",
+      "symptoms": ["black screen after login", "black screen with cursor", "screen black after sign in", "desktop doesn't load"],
+      "why": "The desktop (Explorer) didn't start, the display is set to a screen that's not there, or a graphics driver failed.",
+      "steps": [
+        { "text": "Press Windows+Ctrl+Shift+B to restart the graphics driver.", "os": ["windows"] },
+        { "text": "Press Windows+P twice and Enter to cycle display modes, in case it's showing on a missing screen.", "os": ["windows"] },
+        { "text": "Press Ctrl+Alt+Delete › Task Manager › Run new task › explorer.exe.", "os": ["windows"] },
+        { "text": "Restart the desktop: Explorer.", "os": ["windows"], "fix": "restart-explorer" },
+        { "text": "Unplug external monitors and restart.", "os": ["macos"] }
+      ],
+      "related": ["windows-shell-hung", "external-monitor-not-detected"]
+    },
+    {
+      "id": "boot-repair",
+      "os": ["windows"],
+      "title": "Windows won't start (repair loop, \"Preparing Automatic Repair\")",
+      "symptoms": ["automatic repair loop", "preparing automatic repair", "windows won't boot", "inaccessible boot device", "boot loop", "no bootable device"],
+      "why": "Damaged startup files, a failed update, or a disk problem.",
+      "steps": [
+        { "text": "Unplug USB drives and docks; a USB drive can be tried as the startup disk by mistake." },
+        { "text": "In the blue Recovery screen choose Troubleshoot › Advanced options › Startup Repair." },
+        { "text": "Then try Advanced options › Uninstall Updates › latest quality update." },
+        { "text": "Or System Restore to a point before the problem (your files stay)." },
+        { "text": "If BitLocker asks for a recovery key, find it at aka.ms/myrecoverykey with your Microsoft or work account." }
+      ],
+      "escalate": "For \"no bootable device\" or disk errors, stop and tell IT: the disk may be failing.",
+      "related": ["bitlocker-recovery-key", "blue-screen"]
+    },
+    {
+      "id": "mac-wont-start",
+      "os": ["macos"],
+      "title": "Mac won't start (question mark, circle with a line, stuck on logo)",
+      "symptoms": ["mac won't boot", "folder with question mark", "prohibitory symbol", "stuck on apple logo", "progress bar stuck", "mac recovery"],
+      "why": "macOS can't find or load its startup disk, or an update didn't finish.",
+      "steps": [
+        { "text": "Unplug everything except the charger and restart." },
+        { "text": "Start in safe mode: Apple silicon › hold power until options appear › select the disk › hold Shift › Continue in Safe Mode." },
+        { "text": "Open macOS Recovery (hold the power button until Options) › Disk Utility › First Aid on the startup disk." },
+        { "text": "From Recovery, Reinstall macOS keeps your files and apps." }
+      ],
+      "escalate": "If Disk Utility reports errors it can't fix, back up what you can and tell IT.",
+      "related": ["disk-errors"]
+    },
+    {
+      "id": "fast-startup",
+      "os": ["windows"],
+      "title": "Problems that a shutdown doesn't fix (but a restart does)",
+      "symptoms": ["fast startup", "shutdown doesn't fix", "uptime days", "never really shuts down", "restart vs shutdown"],
+      "why": "With Fast startup on, Shut down saves part of Windows to disk, so problems survive it. Restart starts fresh.",
+      "steps": [
+        { "text": "Use Restart when fixing problems." },
+        { "text": "Turn off Fast startup if you prefer: Power options › Choose what the power buttons do › Change settings that are currently unavailable › untick \"Turn on fast startup\".", "open": "run:power-options" }
+      ]
+    }
+  ]
+}

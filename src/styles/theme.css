@@ -304,6 +304,7 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .preview-dst { color: var(--text-2); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .badge { display: inline-block; margin-left: 8px; font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); }
 .badge.warn { color: var(--orange); background: var(--orange-soft); }
+.badge.ok { color: var(--green); background: var(--green-soft); }
 @keyframes fade { from { opacity: 0; } }
 @keyframes sheet { from { opacity: 0; transform: translateY(-10px) scale(0.98); } }
 
@@ -606,3 +607,28 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 @keyframes banner-in { from { opacity: 0; transform: translate(-50%, 8px); } }
 .update-banner-actions { display: flex; gap: 8px; }
 .spinner.small { width: 16px; height: 16px; border-width: 2px; }
+
+/* Remedies library */
+.remedy-search { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 18px; }
+.remedy-search input { font-size: 15px; padding: 10px 14px; width: 100%; max-width: 720px; }
+.remedy-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.remedy-cat { margin: 0; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+.remedy-cat:hover { box-shadow: var(--shadow-lg); }
+.remedy-cat-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.remedy-cat-title { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; }
+.remedy-oneclick-title { margin-top: 8px; }
+.remedy-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 18px; }
+.remedy-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left; padding: 10px 14px; border-radius: var(--radius); background: var(--window); border: 1px solid var(--group-border); cursor: pointer; font: inherit; color: inherit; }
+.remedy-row:hover { border-color: var(--accent); }
+.remedy-row .muted { grid-column: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.remedy-row .badge { grid-column: 2; grid-row: 1; align-self: start; }
+.remedy-view { max-width: 820px; }
+.remedy-view h2 { margin: 8px 0 6px; }
+.remedy-why { font-size: 15px; line-height: 1.5; }
+.remedy-steps { padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+.remedy-steps li { line-height: 1.5; }
+.remedy-steps li > span { display: block; }
+.remedy-steps li > button { margin-top: 6px; }
+.remedy-escalate { margin: 18px 0; }
+.remedy-escalate p { margin: 4px 0 0; }
+.link-button { background: none; border: none; padding: 0; color: var(--accent-text, var(--accent)); cursor: pointer; font: inherit; }

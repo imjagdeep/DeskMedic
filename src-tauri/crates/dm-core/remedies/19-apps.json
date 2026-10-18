@@ -1,0 +1,115 @@
+{
+  "id": "apps",
+  "title": "Apps & installing",
+  "icon": "apps",
+  "blurb": "Installing and removing apps, Store problems, apps that won't start.",
+  "remedies": [
+    {
+      "id": "app-wont-install",
+      "os": ["windows", "macos"],
+      "title": "An app won't install",
+      "symptoms": ["can't install app", "installation failed", "installer error", "setup failed", "msi error", "install blocked"],
+      "why": "Not enough space, no admin rights, an older version in the way, or the installer is for another system (32/64-bit, Intel/Apple silicon).",
+      "steps": [
+        { "text": "Check free disk space.", "page": "cleanup" },
+        { "text": "Get the installer again from the maker's site, choosing the right version (Windows x64/ARM, Mac Apple silicon/Intel)." },
+        { "text": "Uninstall an older version first.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Restart, then run the installer again (a pending update can block installs)." },
+        { "text": "If it asks for an admin password you don't have, ask IT or the computer's owner." }
+      ],
+      "escalate": "Give IT the installer's name and the exact error.",
+      "related": ["admin-password-prompt", "smartscreen-blocked", "store-not-working"]
+    },
+    {
+      "id": "uninstall-app",
+      "os": ["windows", "macos"],
+      "title": "Uninstall an app",
+      "symptoms": ["uninstall app", "remove program", "delete app", "uninstall software", "how to remove app"],
+      "why": "Removing apps you don't use frees space and stops them running in the background.",
+      "steps": [
+        { "text": "Settings › Apps › Installed apps › ⋯ › Uninstall.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Drag the app from Applications to the Bin; for apps with their own uninstaller (in the app's folder), use that.", "os": ["macos"] },
+        { "text": "If an app won't uninstall, its maker often has a removal tool on their support site." }
+      ]
+    },
+    {
+      "id": "store-not-working",
+      "os": ["windows"],
+      "title": "Microsoft Store won't open, download or update",
+      "symptoms": ["microsoft store not working", "store won't download", "store app error", "0x80131500", "store stuck pending"],
+      "why": "The Store's cache is damaged, the clock is wrong, or Windows Update is stuck.",
+      "steps": [
+        { "text": "Reset the Store's cache.", "fix": "reset-store" },
+        { "text": "Correct the date and time.", "fix": "time-sync" },
+        { "text": "Sign out of the Store and back in (your picture at the top)." },
+        { "text": "Settings › Apps › Installed apps › Microsoft Store › Advanced options › Repair, then Reset.", "open": "ms-settings:appsfeatures" }
+      ],
+      "related": ["app-store-mac", "updates-failing"]
+    },
+    {
+      "id": "app-store-mac",
+      "os": ["macos"],
+      "title": "App Store won't download or update apps",
+      "symptoms": ["app store not downloading", "app store stuck", "can't update apps mac", "app store waiting"],
+      "why": "A stuck download, sign-in problem, or not enough space.",
+      "steps": [
+        { "text": "Check free space.", "open": "x-apple.systempreferences:com.apple.settings.Storage" },
+        { "text": "In the App Store, Store › Sign Out, then sign in again." },
+        { "text": "Pause and resume the download from Launchpad, or restart the Mac." }
+      ]
+    },
+    {
+      "id": "app-wont-open",
+      "os": ["windows", "macos"],
+      "title": "An app won't open or closes straight away",
+      "symptoms": ["app won't open", "program won't start", "app closes immediately", "app crashes on launch", "nothing happens when i open app"],
+      "why": "Damaged settings, a missing component, a pending update, or it's already running in the background.",
+      "steps": [
+        { "text": "Check it isn't already running (taskbar/menu bar icons) and close that copy." },
+        { "text": "Restart the computer." },
+        { "text": "Settings › Apps › the app › Advanced options › Repair, then Reset (Store apps); or Modify › Repair for desktop apps.", "os": ["windows"], "open": "ms-settings:appsfeatures" },
+        { "text": "Update or reinstall the app." },
+        { "text": "Check Reliability Monitor for the error.", "os": ["windows"], "open": "run:reliability-monitor" },
+        { "text": "Look in Console › Crash Reports for the app's report.", "os": ["macos"], "open": "app:Console" }
+      ],
+      "related": ["apps-crash-everything", "app-not-responding"]
+    },
+    {
+      "id": "app-missing-dll",
+      "os": ["windows"],
+      "title": "\"MSVCP140.dll / VCRUNTIME140.dll is missing\" or .NET errors",
+      "symptoms": ["dll missing", "msvcp140.dll", "vcruntime140.dll", "the code execution cannot proceed", ".net framework required", "missing runtime"],
+      "why": "The app needs a Microsoft runtime (Visual C++ Redistributable or .NET) that isn't installed or is damaged.",
+      "steps": [
+        { "text": "Install the latest Visual C++ Redistributable (x64 and x86) from Microsoft's site (search \"Visual C++ Redistributable latest\")." },
+        { "text": "For .NET messages, install the version named in the message from dotnet.microsoft.com, or turn on .NET Framework 3.5 in Windows features.", "open": "run:windows-features" },
+        { "text": "Never download single DLL files from \"DLL download\" sites." }
+      ]
+    },
+    {
+      "id": "default-apps",
+      "os": ["windows", "macos"],
+      "title": "Files open in the wrong app",
+      "symptoms": ["default app", "change default program", "open with", "wrong app opens", "default pdf", "default photos app"],
+      "why": "Each file type has a default app, which installs can change.",
+      "steps": [
+        { "text": "Settings › Apps › Default apps › search the file type (.pdf, .jpg) and pick the app.", "os": ["windows"], "open": "ms-settings:defaultapps" },
+        { "text": "Right-click a file › Get Info › Open with › choose › Change All.", "os": ["macos"] }
+      ],
+      "related": ["browser-default", "file-wont-open"]
+    },
+    {
+      "id": "startup-apps",
+      "os": ["windows", "macos"],
+      "title": "Stop apps starting with the computer",
+      "symptoms": ["startup apps", "programs start automatically", "login items", "disable startup programs", "apps open at login"],
+      "why": "Many apps add themselves to startup, slowing the start and using memory.",
+      "steps": [
+        { "text": "Settings › Apps › Startup: turn off what you don't need right away.", "os": ["windows"], "open": "ms-settings:startupapps" },
+        { "text": "System Settings › General › Login Items & Extensions: remove apps and turn off background items.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Keep security software, cloud sync and anything IT installed." }
+      ],
+      "related": ["startup-slow"]
+    }
+  ]
+}

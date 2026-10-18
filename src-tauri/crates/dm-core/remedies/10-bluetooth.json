@@ -1,0 +1,98 @@
+{
+  "id": "bluetooth",
+  "title": "Bluetooth & devices",
+  "icon": "bluetooth",
+  "blurb": "Pairing, headsets, AirPods, USB devices not recognised.",
+  "remedies": [
+    {
+      "id": "bluetooth-wont-pair",
+      "os": ["windows", "macos"],
+      "title": "Bluetooth device won't pair",
+      "symptoms": ["bluetooth not pairing", "can't connect bluetooth", "bluetooth device not found", "pairing failed", "bluetooth not discovering"],
+      "why": "The device isn't in pairing mode, it's still connected to another phone or computer, or the old pairing got damaged.",
+      "steps": [
+        { "text": "Put the device in pairing mode (often hold the power or Bluetooth button until the light flashes). See its manual." },
+        { "text": "Turn Bluetooth off on your phone and other computers nearby so they don't grab it." },
+        { "text": "Remove the device if it's already listed, then add it fresh: Settings › Bluetooth & devices › Add device.", "os": ["windows"], "open": "ms-settings:bluetooth" },
+        { "text": "Remove the device if it's already listed (ⓘ › Forget This Device), then pair again.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.BluetoothSettings" },
+        { "text": "Charge the device; low battery stops pairing." },
+        { "text": "Restart the computer and try again." }
+      ],
+      "related": ["bluetooth-missing", "bluetooth-headset-bad-sound"]
+    },
+    {
+      "id": "bluetooth-missing",
+      "os": ["windows", "macos"],
+      "title": "Bluetooth is missing or won't turn on",
+      "symptoms": ["no bluetooth", "bluetooth option missing", "bluetooth toggle gone", "bluetooth not available", "bluetooth greyed out"],
+      "why": "Airplane mode, a disabled adapter, a stopped Bluetooth service, or a failed driver.",
+      "steps": [
+        { "text": "Turn off airplane mode.", "os": ["windows"], "open": "ms-settings:network-airplanemode" },
+        { "text": "Device Manager › Bluetooth: if the adapter has a down arrow enable it; with a warning sign uninstall it and restart.", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Services › Bluetooth Support Service › Start (set to Automatic).", "os": ["windows"], "open": "run:services" },
+        { "text": "Shut down fully (Shift + Shut down), wait 30 seconds, start again.", "os": ["windows"] },
+        { "text": "Restart the Mac; if Bluetooth still says \"Not available\", shut down for a minute and start again.", "os": ["macos"] }
+      ],
+      "escalate": "If the adapter isn't in Device Manager / System Information at all, it's a hardware fault.",
+      "related": ["bluetooth-wont-pair"]
+    },
+    {
+      "id": "bluetooth-headset-bad-sound",
+      "os": ["windows", "macos"],
+      "title": "Bluetooth headset sounds bad in calls, or mic doesn't work",
+      "symptoms": ["bluetooth headset sounds bad", "airpods sound bad in calls", "headset mono", "bluetooth mic not working", "hands-free", "headset low quality teams"],
+      "why": "When a Bluetooth headset uses its microphone it switches to a low-quality call mode. That's normal; some headsets and computers handle it better.",
+      "steps": [
+        { "text": "Use the headset's own microphone only when you need it; pick the computer's built-in mic in the meeting app for better music-quality sound." },
+        { "text": "Choose the headset (not \"Hands-Free\") as speaker when only listening.", "os": ["windows"], "open": "ms-settings:sound" },
+        { "text": "In Sound settings pick the headset for both Output and Input together.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sound-Settings.extension" },
+        { "text": "For daily calls, a headset with its own USB dongle gives the best sound." }
+      ],
+      "related": ["meeting-others-cant-hear-me"]
+    },
+    {
+      "id": "bluetooth-keeps-disconnecting",
+      "os": ["windows", "macos"],
+      "title": "Bluetooth mouse, keyboard or headset keeps disconnecting",
+      "symptoms": ["bluetooth disconnects", "bluetooth mouse lag", "bluetooth keyboard drops", "headphones cut out", "bluetooth stutter"],
+      "why": "Low battery, distance or interference (Wi-Fi, USB 3 hubs), or power saving switching the adapter off.",
+      "steps": [
+        { "text": "Charge or replace batteries." },
+        { "text": "Keep USB 3 hubs and drives away from the Bluetooth device and the computer's side." },
+        { "text": "Stop Windows turning the adapter off: Device Manager › Bluetooth › adapter › Properties › Power Management › untick \"Allow the computer to turn off this device\".", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Remove and re-pair the device." }
+      ],
+      "related": ["bluetooth-wont-pair", "mouse-not-working"]
+    },
+    {
+      "id": "usb-not-recognized",
+      "os": ["windows", "macos"],
+      "title": "USB device not recognised",
+      "symptoms": ["usb device not recognized", "usb not working", "usb drive not showing", "usb port not working", "device descriptor request failed"],
+      "why": "A bad cable or port, not enough power through a hub, a missing driver, or a drive with no readable format.",
+      "steps": [
+        { "text": "Try another port directly on the computer (not a hub) and another cable." },
+        { "text": "Try the device on another computer to see if it's the device." },
+        { "text": "Device Manager › look for warnings under Universal Serial Bus controllers or Other devices; uninstall the warning device and replug.", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "A drive that's connected but not showing may need a drive letter: Disk Management.", "os": ["windows"], "open": "run:disk-management" },
+        { "text": "Open Disk Utility to see if the drive is there but not mounted.", "os": ["macos"], "open": "app:Disk Utility" },
+        { "text": "Check the drive in DeskMedic's Disks page.", "os": ["windows"], "page": "disks" }
+      ],
+      "related": ["external-drive-not-showing"]
+    },
+    {
+      "id": "airpods-mac",
+      "os": ["macos", "windows"],
+      "title": "AirPods won't connect or switch to the wrong device",
+      "symptoms": ["airpods not connecting", "airpods switch devices", "airpods keep switching", "airpods windows"],
+      "why": "AirPods follow your Apple ID between devices and switch automatically; on Windows they pair like any Bluetooth headset.",
+      "steps": [
+        { "text": "Put both AirPods in the case, open the lid near the computer, and pick them in Bluetooth settings.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.BluetoothSettings" },
+        { "text": "Stop automatic switching: Bluetooth › AirPods ⓘ › Connect to This Mac › When Last Connected to This Mac.", "os": ["macos"] },
+        { "text": "On Windows: open the case, hold the button on the back until the light flashes white, then Add device › Bluetooth.", "os": ["windows"], "open": "ms-settings:bluetooth" },
+        { "text": "Reset the AirPods: hold the case button 15 seconds until the light flashes amber, then white." }
+      ],
+      "related": ["bluetooth-wont-pair"]
+    }
+  ]
+}

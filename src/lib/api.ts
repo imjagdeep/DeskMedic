@@ -2,6 +2,7 @@
 
 import { invoke } from "@tauri-apps/api/core";
 import type {
+  RemedyLibrary,
   AppInfo,
   CleanupEstimate,
   CleanupReport,
@@ -64,6 +65,8 @@ export const api = {
   resize: (disk: number, partition: number, size: number, confirm: string) =>
     invoke<string>("resize", { disk, partition, size, confirm }),
   fixList: () => invoke<FixRecipe[]>("fix_list"),
+  remedyLibrary: () => invoke<RemedyLibrary>("remedy_library"),
+  remedyOpen: (id: string, step: number) => invoke<void>("remedy_open", { id, step }),
   fixRun: (id: string, restorePoint: boolean) => invoke<FixResult>("fix_run", { id, restorePoint }),
   healthRun: () => invoke<HealthReport>("health_run"),
   networkRun: () => invoke<NetReport>("network_run"),
