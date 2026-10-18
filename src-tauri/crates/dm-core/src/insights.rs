@@ -35,7 +35,13 @@ $events = New-Object System.Collections.Generic.List[object]
 $errors = New-Object System.Collections.Generic.List[string]
 foreach ($q in $queries) {
   $werr = $null
-  $found = @(Get-WinEvent -FilterHashtable @{ LogName = $q.log; ProviderName = @($q.providers); Id = @($q.ids); StartTime = $since } -MaxEvents 2000 -ErrorAction SilentlyContinue -ErrorVariable werr)
+  # Some errors (an unknown provider on this edition) throw outright; note them and go on.
+  try {
+    $found = @(Get-WinEvent -FilterHashtable @{ LogName = $q.log; ProviderName = @($q.providers); Id = @($q.ids); StartTime = $since } -MaxEvents 2000 -ErrorAction SilentlyContinue -ErrorVariable werr)
+  } catch {
+    $errors.Add("$($q.log) ($($q.providers -join ', ')): $($_.Exception.Message)")
+    continue
+  }
   foreach ($w in @($werr)) {
     if ("$($w.FullyQualifiedErrorId)" -notlike 'NoMatching*') { $errors.Add("$($q.log): $($w.Exception.Message)") }
   }
@@ -47,11 +53,17 @@ foreach ($q in $queries) {
 }
 $other = New-Object System.Collections.Generic.List[object]
 foreach ($log in 'System', 'Application') {
-  $all = @(Get-WinEvent -FilterHashtable @{ LogName = $log; Level = 1, 2; StartTime = $since } -MaxEvents 3000 -ErrorAction SilentlyContinue)
+  try {
+    $all = @(Get-WinEvent -FilterHashtable @{ LogName = $log; Level = 1, 2; StartTime = $since } -MaxEvents 3000 -ErrorAction SilentlyContinue)
+  } catch {
+    $errors.Add("$($log): $($_.Exception.Message)")
+    continue
+  }
   foreach ($g in ($all | Group-Object ProviderName, Id)) {
     $newest = $g.Group | Sort-Object TimeCreated -Descending | Select-Object -First 1
     $msg = ''
-    try { $msg = ("$($newest.Message)" -replace '\s+', ' ').Trim() } catch { }
+    # The text needs the provider's message file; without it the entry just has no text.
+    try { $msg = ("$($newest.Message)" -replace '\s+', ' ').Trim() } catch { $msg = '' }
     if ($msg.Length -gt 200) { $msg = $msg.Substring(0, 200) }
     $other.Add([ordered]@{ log = $log; p = $newest.ProviderName; id = $newest.Id; n = $g.Count; last = $newest.TimeCreated.ToUniversalTime().ToString('o'); msg = $msg })
   }
