@@ -605,7 +605,6 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .fix-card { transition: box-shadow 0.15s, transform 0.15s; }
 .fix-card:hover { box-shadow: var(--shadow-sm), 0 6px 16px rgba(0, 0, 0, 0.05); }
 .fix-card.running { box-shadow: 0 0 0 1.5px var(--accent); }
-.fix-meta { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
 
 /* Sidebar: health status dot */
 .nav-dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; flex: none; }
@@ -626,14 +625,20 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .spinner.small { width: 16px; height: 16px; border-width: 2px; }
 
 /* Remedies library */
-.remedy-search { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 18px; }
-.remedy-search input { font-size: 15px; padding: 10px 14px; width: 100%; max-width: 720px; }
+.remedy-search { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 4px 0 18px; }
+.remedy-search input { font-size: 15px; padding: 10px 14px; flex: 1 1 360px; max-width: 720px; }
 .remedy-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 24px; }
 button.remedy-cat { height: auto; white-space: normal; padding: 12px 14px; margin: 0; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
 .remedy-cat:hover { box-shadow: var(--shadow-lg); }
 .remedy-cat-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 .remedy-cat-title { font-size: 18px; display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; }
-.remedy-oneclick-title { margin-top: 8px; }
+/* All / One-click: same height as the search box beside it. */
+.remedy-filter { padding: 3px; border-radius: 10px; }
+.remedy-filter button { height: 32px; border-radius: 7px; padding: 0 14px; }
+.seg-count { margin-left: 6px; font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.fix-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: -2px 0 10px; }
+.fix-tags .badge { margin: 0; }
+.remedy-intro { margin: 0 0 6px; }
 .remedy-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 18px; }
 button.remedy-row { height: auto; white-space: normal; box-shadow: none; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left; padding: 10px 14px; border-radius: var(--radius); background: var(--window); border: 1px solid var(--group-border); cursor: pointer; font: inherit; color: inherit; }
 .remedy-row:hover { border-color: var(--accent); }
