@@ -1,0 +1,115 @@
+{
+  "id": "network",
+  "title": "Network & Wi-Fi",
+  "icon": "wifi",
+  "blurb": "No internet, slow or dropping Wi-Fi, can't see other computers.",
+  "remedies": [
+    {
+      "id": "network-after-vpn-uninstall",
+      "os": ["windows", "macos"],
+      "title": "No internet after removing a VPN or security app",
+      "symptoms": ["no internet after uninstalling vpn", "internet broken after antivirus removal", "network broken after uninstall", "vpn left over"],
+      "why": "VPN and security apps add network filters; a messy uninstall can leave them behind.",
+      "steps": [
+        { "text": "Restart the computer first." },
+        { "text": "Reset the network stack (removes leftover filters; restart needed).", "os": ["windows"], "fix": "reset-network" },
+        { "text": "Remove leftover VPN profiles and network extensions.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.LoginItems-Settings.extension" },
+        { "text": "Check the proxy settings are clear.", "os": ["windows"], "open": "ms-settings:network-proxy" }
+      ],
+      "related": ["proxy-unexpected", "wifi-connected-no-internet"]
+    },
+    {
+      "id": "only-some-devices-online",
+      "os": ["windows", "macos"],
+      "title": "Phone has internet but the computer doesn't (same Wi-Fi)",
+      "symptoms": ["phone works laptop doesn't", "only computer no internet", "other devices work but not pc", "laptop no internet phone fine"],
+      "why": "The problem is on this computer: its network settings, a VPN/proxy, security software or its Wi-Fi driver.",
+      "steps": [
+        { "text": "Run the Network doctor.", "page": "network" },
+        { "text": "Forget the network and rejoin." },
+        { "text": "Turn off VPN, proxy and third-party firewall for a test." },
+        { "text": "Clear the address cache, then reset the network if needed.", "os": ["windows"], "fix": "flush-dns" }
+      ],
+      "related": ["wifi-connected-no-internet", "network-after-vpn-uninstall"]
+    },
+    {
+      "id": "internet-down-everywhere",
+      "os": ["windows", "macos"],
+      "title": "Internet is down for every device at home or in the office",
+      "symptoms": ["internet down", "no internet anywhere", "isp outage", "router no internet light", "all devices offline"],
+      "why": "The router, modem or the provider's line is down.",
+      "steps": [
+        { "text": "Look at the router/modem lights; a red or off \"Internet\" light means the line." },
+        { "text": "Restart the modem and router: unplug 30 seconds, plug the modem in first, wait 2 minutes, then the router." },
+        { "text": "Check the provider's outage page on mobile data." },
+        { "text": "Use a phone hotspot meanwhile." }
+      ],
+      "escalate": "In the office, tell IT; at home, call your provider with the router lights' state.",
+      "related": ["hotspot-not-working"]
+    },
+    {
+      "id": "ping-latency-high",
+      "os": ["windows", "macos"],
+      "title": "Lag in calls and games (high ping), even though speed is fine",
+      "symptoms": ["high ping", "latency", "lag spikes", "jitter", "packet loss"],
+      "why": "Latency and packet loss matter more than speed for calls and games; Wi-Fi and busy uploads cause spikes.",
+      "steps": [
+        { "text": "Use a cable, or the 5 GHz network near the router." },
+        { "text": "Pause big uploads (cloud backup, photo sync) during calls." },
+        { "text": "Routers with QoS / \"Smart Queue\" settings can keep calls smooth." }
+      ],
+      "related": ["meeting-poor-quality", "wifi-slow"]
+    },
+    {
+      "id": "share-internet-from-laptop",
+      "os": ["windows", "macos"],
+      "title": "Share my laptop's internet with another device",
+      "symptoms": ["mobile hotspot windows", "share internet from laptop", "internet sharing mac", "laptop as hotspot"],
+      "why": "The computer can act as a Wi-Fi hotspot.",
+      "steps": [
+        { "text": "Settings › Network & internet › Mobile hotspot.", "os": ["windows"], "open": "ms-settings:network-mobilehotspot" },
+        { "text": "System Settings › General › Sharing › Internet Sharing.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Sharing-Settings.extension" }
+      ],
+      "escalate": "Work networks often forbid sharing; ask IT."
+    },
+    {
+      "id": "ipv6-problems",
+      "os": ["windows", "macos"],
+      "title": "Some sites fail or are slow, others fine (possible IPv6 trouble)",
+      "symptoms": ["ipv6 problem", "some websites slow", "sites timeout randomly", "ipv6 no internet access"],
+      "why": "A broken IPv6 setup at the router or provider makes some sites stall before falling back.",
+      "steps": [
+        { "text": "Restart the router; check for a firmware update." },
+        { "text": "As a test, turn off IPv6 on the adapter (Network Connections › Wi-Fi › Properties › untick IPv6); turn it back on afterwards.", "os": ["windows"], "open": "run:network-connections" },
+        { "text": "Report it to the provider if it fixes things." }
+      ],
+      "escalate": "Leave IPv6 settings to IT on work devices."
+    },
+    {
+      "id": "find-devices-on-network",
+      "os": ["windows", "macos"],
+      "title": "See which devices are on my Wi-Fi",
+      "symptoms": ["who is on my wifi", "devices connected to router", "unknown device on network", "list devices network"],
+      "why": "The router lists connected devices; unknown ones may mean someone has your password.",
+      "steps": [
+        { "text": "Open the router's app or admin page › Connected devices." },
+        { "text": "If you see devices you don't know, change the Wi-Fi password (all devices rejoin)." }
+      ],
+      "related": ["router-admin"]
+    },
+    {
+      "id": "wifi-after-sleep",
+      "os": ["windows", "macos"],
+      "title": "No internet after waking from sleep",
+      "symptoms": ["wifi not working after sleep", "no internet after wake", "reconnect after sleep", "network lost after resume"],
+      "why": "The Wi-Fi adapter doesn't wake properly, often due to power saving.",
+      "steps": [
+        { "text": "Turn Wi-Fi off and on." },
+        { "text": "Stop power saving on the adapter: Device Manager › Network adapters › Wi-Fi › Power Management.", "os": ["windows"], "open": "run:device-manager" },
+        { "text": "Update the Wi-Fi driver.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" },
+        { "text": "Update macOS; restart if it keeps happening.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Software-Update-Settings.extension" }
+      ],
+      "related": ["wifi-drops"]
+    }
+  ]
+}

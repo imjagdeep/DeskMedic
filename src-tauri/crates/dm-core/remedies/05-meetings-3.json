@@ -1,0 +1,70 @@
+{
+  "id": "meetings",
+  "title": "Teams, Zoom & meetings",
+  "icon": "video",
+  "blurb": "Can't hear or be heard, camera off, screen share, Teams won't start.",
+  "remedies": [
+    {
+      "id": "teams-files-wont-open",
+      "os": ["windows", "macos"],
+      "title": "Files in Teams won't open or sync",
+      "symptoms": ["teams files not opening", "teams file error", "open in desktop app teams", "teams files tab"],
+      "why": "Teams files live in SharePoint; the desktop app link or your SharePoint access is failing.",
+      "steps": [
+        { "text": "Choose Open in browser to check access first." },
+        { "text": "Sign in to Office desktop apps with the same work account." },
+        { "text": "Use \"Add shortcut to My files\" to work with them through OneDrive." }
+      ],
+      "related": ["sharepoint-sync-library"]
+    },
+    {
+      "id": "teams-high-memory",
+      "os": ["windows", "macos"],
+      "title": "Teams uses lots of memory or makes the computer slow",
+      "symptoms": ["teams high memory", "teams slow computer", "teams cpu usage", "teams lag"],
+      "why": "Teams is a heavy app, worse with many chats, video effects and GPU problems.",
+      "steps": [
+        { "text": "Update Teams (⋯ › Check for updates)." },
+        { "text": "Turn off video effects and incoming video when not needed." },
+        { "text": "Clear Teams' cache.", "os": ["windows"], "fix": "reset-teams" },
+        { "text": "Quit Teams when not needed and use Teams on the web for quick checks." }
+      ],
+      "related": ["high-memory"]
+    },
+    {
+      "id": "meeting-join-link-wrong-app",
+      "os": ["windows", "macos"],
+      "title": "Meeting links open in the browser instead of the app",
+      "symptoms": ["teams link opens browser", "zoom link wrong app", "open in app", "launch meeting"],
+      "why": "The browser hasn't been allowed to open the app, or the app isn't the default for its links.",
+      "steps": [
+        { "text": "On the join page click Open Microsoft Teams / Launch Meeting and tick \"Always allow\"." },
+        { "text": "Set Teams as the default for msteams links.", "os": ["windows"], "open": "ms-settings:defaultapps" }
+      ]
+    },
+    {
+      "id": "breakout-rooms-host",
+      "os": ["windows", "macos"],
+      "title": "I'm hosting a meeting: muting people, removing someone, breakout rooms",
+      "symptoms": ["mute all teams", "remove participant", "breakout rooms", "host controls", "lobby"],
+      "why": "Organisers have extra controls in the meeting.",
+      "steps": [
+        { "text": "Teams: People › ⋯ › Mute all / Remove; Meeting options › Who can bypass the lobby; Rooms for breakouts." },
+        { "text": "Zoom: Participants › Mute All / Remove; Breakout Rooms button (enable in web settings first)." }
+      ]
+    },
+    {
+      "id": "calls-drop-teams",
+      "os": ["windows", "macos"],
+      "title": "Teams or Zoom calls drop or reconnect",
+      "symptoms": ["call dropped", "teams reconnecting", "zoom reconnecting", "disconnected from meeting"],
+      "why": "Short network outages, a sleeping laptop, or VPN switching.",
+      "steps": [
+        { "text": "Use a cable or stay near the router." },
+        { "text": "Turn off \"Wi-Fi power saving\" (see Wi-Fi keeps dropping)." },
+        { "text": "Join without VPN if your organisation allows it for meetings." }
+      ],
+      "related": ["wifi-drops", "vpn-slow"]
+    }
+  ]
+}
