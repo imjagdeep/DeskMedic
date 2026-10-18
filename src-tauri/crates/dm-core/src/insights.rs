@@ -23,7 +23,7 @@ pub const DAYS: i64 = 30;
 /// Recognised events at or above this score are problems, between the two
 /// warnings, below it minor (listed, collapsed).
 const PROBLEM_SCORE: f64 = 60.0;
-const WARNING_SCORE: f64 = 15.0;
+const WARNING_SCORE: f64 = 20.0;
 /// Unrecognised errors are listed only when they repeat this often.
 const UNKNOWN_MIN: u32 = 5;
 const UNKNOWN_SHOWN: usize = 8;
@@ -51,7 +51,7 @@ foreach ($log in 'System', 'Application') {
   foreach ($g in ($all | Group-Object ProviderName, Id)) {
     $newest = $g.Group | Sort-Object TimeCreated -Descending | Select-Object -First 1
     $msg = ''
-    try { $msg = (("$($newest.Message)" -split "`r?`n")[0]).Trim() } catch { }
+    try { $msg = ("$($newest.Message)" -replace '\s+', ' ').Trim() } catch { }
     if ($msg.Length -gt 200) { $msg = $msg.Substring(0, 200) }
     $other.Add([ordered]@{ log = $log; p = $newest.ProviderName; id = $newest.Id; n = $g.Count; last = $newest.TimeCreated.ToUniversalTime().ToString('o'); msg = $msg })
   }

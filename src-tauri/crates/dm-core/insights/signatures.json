@@ -394,10 +394,11 @@
       "ids": [
         36874,
         36882,
+        36884,
         36887,
         36888
       ],
-      "why": "A secure connection to a website or service was refused; normal."
+      "why": "A secure connection to a website or service was refused, or its certificate didn't match; normal."
     },
     {
       "providers": [
