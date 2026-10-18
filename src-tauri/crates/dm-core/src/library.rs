@@ -125,8 +125,14 @@ fn load() -> Result<Loaded, String> {
     for (name, text) in FILES {
         let file: CategoryFile =
             serde_json::from_str(text).map_err(|e| format!("{name}: {e}"))?;
-        if !cat_ids.insert(file.id.clone()) {
-            return Err(format!("{name}: category id {} used twice", file.id));
+        // A category can span several files (NN-name.json, NN-name-2.json…):
+        // later files must repeat the same title and only add remedies.
+        let first = cat_ids.insert(file.id.clone());
+        if !first {
+            let known = categories.iter().find(|c: &&Category| c.id == file.id);
+            if known.is_none_or(|c| c.title != file.title) {
+                return Err(format!("{name}: category {} has a different title in another file", file.id));
+            }
         }
         for mut r in file.remedies {
             let at = format!("{name} › {}", r.id);
@@ -148,13 +154,15 @@ fn load() -> Result<Loaded, String> {
             r.category = file.id.clone();
             remedies.push(r);
         }
-        categories.push(Category {
-            count: 0,
-            id: file.id,
-            title: file.title,
-            icon: file.icon,
-            blurb: file.blurb,
-        });
+        if first {
+            categories.push(Category {
+                count: 0,
+                id: file.id,
+                title: file.title,
+                icon: file.icon,
+                blurb: file.blurb,
+            });
+        }
     }
     for r in &remedies {
         for rel in &r.related {

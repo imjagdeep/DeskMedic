@@ -1,0 +1,109 @@
+{
+  "id": "display",
+  "title": "Display & monitors",
+  "icon": "monitor",
+  "blurb": "Second monitor, docks, blurry or tiny text, flicker, projectors.",
+  "remedies": [
+    {
+      "id": "monitor-arrangement",
+      "os": ["windows", "macos"],
+      "title": "Mouse goes off the wrong edge between two monitors",
+      "symptoms": ["monitor arrangement", "mouse moves wrong screen", "rearrange displays", "screens in wrong order", "main display"],
+      "why": "The system thinks the screens are placed differently from your desk.",
+      "steps": [
+        { "text": "Settings › Display › Identify, then drag the boxes to match your desk and Apply. Set the main display there too.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Displays › Arrange…: drag the screens to match; drag the menu bar to the main one.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" }
+      ],
+      "related": ["external-monitor-not-detected"]
+    },
+    {
+      "id": "screen-rotated",
+      "os": ["windows", "macos"],
+      "title": "Screen is upside down or sideways",
+      "symptoms": ["screen upside down", "screen rotated", "display sideways", "rotate screen back", "portrait mode"],
+      "why": "Display orientation was changed (often by a shortcut or a rotating monitor).",
+      "steps": [
+        { "text": "Settings › Display › Display orientation › Landscape. (Some PCs: Ctrl+Alt+Up arrow.)", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Displays › the screen › Rotation › Standard.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" }
+      ]
+    },
+    {
+      "id": "screen-colours-wrong",
+      "os": ["windows", "macos"],
+      "title": "Colours look wrong, washed out or inverted",
+      "symptoms": ["colors inverted", "washed out colors", "grayscale screen", "color filter", "screen black and white", "hdr washed out"],
+      "why": "A colour filter, HDR, or a cable/monitor colour setting is on.",
+      "steps": [
+        { "text": "Turn off Color filters (Accessibility › Color filters; shortcut Windows+Ctrl+C).", "os": ["windows"], "open": "ms-settings:easeofaccess-colorfilter" },
+        { "text": "Turn HDR off if a monitor looks washed out: Settings › Display › Use HDR.", "os": ["windows"], "open": "ms-settings:display" },
+        { "text": "Turn off Invert colours and Colour filters in Accessibility › Display.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Accessibility-Settings.extension" },
+        { "text": "Calibrate colours.", "os": ["windows"], "open": "run:color-calibration" },
+        { "text": "Reset the monitor's own picture settings with its buttons." }
+      ]
+    },
+    {
+      "id": "laptop-lid-closed",
+      "os": ["windows", "macos"],
+      "title": "Use a laptop closed with an external monitor",
+      "symptoms": ["laptop closed external monitor", "clamshell mode", "lid closed sleep", "close lid do nothing"],
+      "why": "By default closing the lid sleeps the laptop.",
+      "steps": [
+        { "text": "Power options › Choose what closing the lid does › Plugged in: Do nothing.", "os": ["windows"], "open": "run:power-options" },
+        { "text": "Mac clamshell mode works when it's charging and has an external keyboard/mouse and display connected.", "os": ["macos"] }
+      ],
+      "related": ["dock-not-working"]
+    },
+    {
+      "id": "refresh-rate-high",
+      "os": ["windows", "macos"],
+      "title": "My 120/144 Hz monitor only runs at 60 Hz",
+      "symptoms": ["refresh rate 60hz", "144hz not available", "monitor hz", "set refresh rate", "120hz"],
+      "why": "The cable, port or adapter doesn't carry high refresh rates, or the setting wasn't changed.",
+      "steps": [
+        { "text": "Settings › Display › Advanced display › Choose a refresh rate.", "os": ["windows"], "open": "ms-settings:display-advanced" },
+        { "text": "Displays › the monitor › Refresh rate.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Displays-Settings.extension" },
+        { "text": "Use DisplayPort or a good HDMI 2.0+/USB-C cable; cheap adapters cap at 60 Hz." }
+      ],
+      "related": ["monitor-wrong-resolution"]
+    },
+    {
+      "id": "screen-turns-off-fast",
+      "os": ["windows", "macos"],
+      "title": "Screen turns off or locks too quickly",
+      "symptoms": ["screen turns off quickly", "screen timeout", "lock screen too fast", "display sleep", "screen saver"],
+      "why": "Power saving turns the screen off; your workplace may set a lock time.",
+      "steps": [
+        { "text": "Settings › System › Power & battery › Screen and sleep.", "os": ["windows"], "open": "ms-settings:powersleep" },
+        { "text": "Lock Screen › Turn display off when inactive.", "os": ["macos"], "open": "x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension" }
+      ],
+      "escalate": "Work devices often have a required lock time; IT sets it.",
+      "related": ["sleep-problems"]
+    },
+    {
+      "id": "displaylink-mac",
+      "os": ["macos"],
+      "title": "USB monitor or dock shows nothing on a Mac (DisplayLink)",
+      "symptoms": ["displaylink mac", "usb monitor mac", "dock second screen mac blank", "displaylink manager"],
+      "why": "DisplayLink docks need the DisplayLink Manager app running and permission to capture the screen.",
+      "steps": [
+        { "text": "Install DisplayLink Manager from Synaptics' site and open it." },
+        { "text": "Allow it in Privacy & Security › Screen & System Audio Recording.", "open": "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture" },
+        { "text": "Set it to start at login." }
+      ],
+      "related": ["dock-not-working"]
+    },
+    {
+      "id": "dead-pixels-lines",
+      "os": ["windows", "macos"],
+      "title": "Lines, spots or dead pixels on the screen",
+      "symptoms": ["lines on screen", "dead pixels", "spots on screen", "vertical lines laptop", "screen damage"],
+      "why": "If they show on screenshots too it's software; if not, it's the panel or its cable.",
+      "steps": [
+        { "text": "Take a screenshot: lines in the screenshot = graphics/driver; lines only on the screen = hardware." },
+        { "text": "Connect an external monitor; if it's fine, the laptop panel or its cable is at fault." },
+        { "text": "Update the graphics driver for the software case.", "os": ["windows"], "open": "ms-settings:windowsupdate-optionalupdates" }
+      ],
+      "escalate": "Hardware lines need a repair; tell IT the model and whether it changes when you move the lid."
+    }
+  ]
+}

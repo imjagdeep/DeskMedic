@@ -10,7 +10,7 @@ const fixIds = new Set([...fixes.matchAll(/^\s+id: "([a-z0-9-]+)",$/gm)].map((m)
 const OS = new Set(["windows", "macos"]);
 const errors = [];
 const ids = new Map();
-const cats = new Set();
+const cats = new Map();
 const stats = {};
 
 const safe = (s) => s.length <= 120 && /^[A-Za-z0-9\-._?=&_]*$/.test(s);
@@ -38,9 +38,13 @@ for (const f of files) {
   }
   const keys = Object.keys(file).sort().join();
   if (keys !== "blurb,icon,id,remedies,title") errors.push(`${f}: top-level keys ${keys}`);
-  if (cats.has(file.id)) errors.push(`${f}: category ${file.id} twice`);
-  cats.add(file.id);
-  stats[file.id] = { windows: 0, macos: 0, total: 0 };
+  // A category can span several files; later ones repeat the same title.
+  if (cats.has(file.id)) {
+    if (cats.get(file.id) !== file.title) errors.push(`${f}: category ${file.id} has a different title in another file`);
+  } else {
+    cats.set(file.id, file.title);
+    stats[file.id] = { windows: 0, macos: 0, total: 0 };
+  }
   for (const r of file.remedies ?? []) {
     const at = `${f} › ${r.id}`;
     const extra = Object.keys(r).filter((k) => !["id", "os", "title", "symptoms", "why", "steps", "escalate", "related"].includes(k));
@@ -95,7 +99,7 @@ if (process.argv.includes("--stats")) {
 }
 const win = all.filter((r) => r.os?.includes("windows")).length;
 const mac = all.filter((r) => r.os?.includes("macos")).length;
-console.log(`${all.length} remedies in ${files.length} categories (Windows ${win}, Mac ${mac})`);
+console.log(`${all.length} remedies in ${cats.size} categories (Windows ${win}, Mac ${mac})`);
 if (errors.length) {
   console.error(errors.slice(0, 50).join("\n"));
   console.error(`${errors.length} problem(s)`);
