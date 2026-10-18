@@ -90,7 +90,9 @@ pub fn relaunch_elevated() -> Result<(), String> {
 #[cfg(windows)]
 pub fn wait_for_exit(pid: u32, timeout: std::time::Duration) {
     use windows::Win32::Foundation::CloseHandle;
-    use windows::Win32::System::Threading::{OpenProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE};
+    use windows::Win32::System::Threading::{
+        OpenProcess, WaitForSingleObject, PROCESS_SYNCHRONIZE,
+    };
     // SAFETY: the handle is checked and closed; waiting has a timeout.
     unsafe {
         if let Ok(h) = OpenProcess(PROCESS_SYNCHRONIZE, false, pid) {

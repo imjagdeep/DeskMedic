@@ -250,7 +250,13 @@ pub fn run() -> Result<Report, String> {
 
 /// Impact: how bad the kind of event is, how often, how recently, and
 /// whether it's happening more lately.
-fn score(sev: Severity, count: u32, this_week: u32, last: DateTime<Utc>, now: DateTime<Utc>) -> f64 {
+fn score(
+    sev: Severity,
+    count: u32,
+    this_week: u32,
+    last: DateTime<Utc>,
+    now: DateTime<Utc>,
+) -> f64 {
     let age = now - last;
     let recency = if age <= Duration::days(2) {
         1.0
@@ -260,7 +266,11 @@ fn score(sev: Severity, count: u32, this_week: u32, last: DateTime<Utc>, now: Da
         0.4
     };
     // A quarter of 30 days is about a week: more than half this week is a rise.
-    let rising = if count >= 2 && this_week * 2 > count { 1.25 } else { 1.0 };
+    let rising = if count >= 2 && this_week * 2 > count {
+        1.25
+    } else {
+        1.0
+    };
     sev.weight() * (1.0 + f64::from(count).ln()) * recency * rising
 }
 
@@ -281,10 +291,18 @@ pub fn analyse(f: &Facts, now: DateTime<Utc>) -> Result<Report, String> {
     }
     let mut groups: HashMap<String, Acc> = HashMap::new();
     for e in f.events.iter().flatten() {
-        let Some(sig) = cat.signatures.iter().find(|s| matches(&s.providers, &s.ids, &e.p, e.id)) else {
+        let Some(sig) = cat
+            .signatures
+            .iter()
+            .find(|s| matches(&s.providers, &s.ids, &e.p, e.id))
+        else {
             continue;
         };
-        let name = if sig.group { e.a.trim().to_string() } else { String::new() };
+        let name = if sig.group {
+            e.a.trim().to_string()
+        } else {
+            String::new()
+        };
         let key = if name.is_empty() {
             sig.id.clone()
         } else {
@@ -318,13 +336,20 @@ pub fn analyse(f: &Facts, now: DateTime<Utc>) -> Result<Report, String> {
         } else {
             Level::Warning
         };
-        let remedy = s.remedy.as_ref().and_then(|id| lib.remedies.iter().find(|r| &r.id == id));
+        let remedy = s
+            .remedy
+            .as_ref()
+            .and_then(|id| lib.remedies.iter().find(|r| &r.id == id));
         let fix = s
             .fix
             .clone()
             .or_else(|| remedy.and_then(|r| r.steps.iter().find_map(|st| st.fix.clone())))
             .and_then(|id| recipes.iter().find(|r| r.id == id));
-        let name = if a.name.is_empty() { "An app" } else { a.name.as_str() };
+        let name = if a.name.is_empty() {
+            "An app"
+        } else {
+            a.name.as_str()
+        };
         let out = Finding {
             key,
             signature: s.id.clone(),
@@ -357,10 +382,17 @@ pub fn analyse(f: &Facts, now: DateTime<Utc>) -> Result<Report, String> {
     let mut hidden = 0;
     let mut unknown: Vec<Unknown> = Vec::new();
     for o in f.other.iter().flatten() {
-        if cat.signatures.iter().any(|s| matches(&s.providers, &s.ids, &o.p, o.id)) {
+        if cat
+            .signatures
+            .iter()
+            .any(|s| matches(&s.providers, &s.ids, &o.p, o.id))
+        {
             continue; // already counted above
         }
-        let harmless = cat.harmless.iter().any(|h| matches(&h.providers, &h.ids, &o.p, o.id));
+        let harmless = cat
+            .harmless
+            .iter()
+            .any(|h| matches(&h.providers, &h.ids, &o.p, o.id));
         if harmless || o.n < UNKNOWN_MIN {
             hidden += o.n;
         } else {
@@ -381,8 +413,14 @@ pub fn analyse(f: &Facts, now: DateTime<Utc>) -> Result<Report, String> {
 
     Ok(Report {
         days: DAYS,
-        problems: findings.iter().filter(|x| x.level == Level::Problem).count(),
-        warnings: findings.iter().filter(|x| x.level == Level::Warning).count(),
+        problems: findings
+            .iter()
+            .filter(|x| x.level == Level::Problem)
+            .count(),
+        warnings: findings
+            .iter()
+            .filter(|x| x.level == Level::Warning)
+            .count(),
         findings,
         minor,
         unknown,
@@ -406,7 +444,13 @@ pub fn alerts(seen: &mut Seen, report: &Report, now: DateTime<Utc>) -> Vec<Alert
         let key = format!("{SEEN_PREFIX}{}", x.key);
         let due = seen.shown.get(&key).is_none_or(|s| x.last > s.at);
         if due {
-            seen.shown.insert(key.clone(), Shown { at: now, problem: true });
+            seen.shown.insert(
+                key.clone(),
+                Shown {
+                    at: now,
+                    problem: true,
+                },
+            );
             let mut body = x.what.clone();
             body.push(' ');
             body.push_str(&x.impact);
@@ -446,7 +490,10 @@ pub fn to_text(r: &Report) -> String {
     if !r.unknown.is_empty() {
         s.push_str("\nNot recognised, repeating:\n");
         for u in &r.unknown {
-            s.push_str(&format!("  {} {} ({}x, {}): {}\n", u.provider, u.id, u.count, u.log, u.message));
+            s.push_str(&format!(
+                "  {} {} ({}x, {}): {}\n",
+                u.provider, u.id, u.count, u.log, u.message
+            ));
         }
     }
     for e in &r.errors {
@@ -496,11 +543,27 @@ mod tests {
         for s in &cat.signatures {
             assert!(seen.insert(&s.id), "duplicate signature {}", s.id);
             assert!(!s.providers.is_empty() && !s.ids.is_empty(), "{}", s.id);
-            assert_eq!(s.group, s.title.contains("{name}"), "{}: group and {{name}} go together", s.id);
-            let id = s.remedy.as_ref().unwrap_or_else(|| panic!("{} has no remedy", s.id));
-            assert!(lib.remedies.iter().any(|r| &r.id == id), "{}: no Windows remedy {id}", s.id);
+            assert_eq!(
+                s.group,
+                s.title.contains("{name}"),
+                "{}: group and {{name}} go together",
+                s.id
+            );
+            let id = s
+                .remedy
+                .as_ref()
+                .unwrap_or_else(|| panic!("{} has no remedy", s.id));
+            assert!(
+                lib.remedies.iter().any(|r| &r.id == id),
+                "{}: no Windows remedy {id}",
+                s.id
+            );
             if let Some(f) = &s.fix {
-                assert!(fixes::recipes().iter().any(|r| r.id == f.as_str()), "{}: no fix {f}", s.id);
+                assert!(
+                    fixes::recipes().iter().any(|r| r.id == f.as_str()),
+                    "{}: no fix {f}",
+                    s.id
+                );
             }
         }
         // A harmless entry must never hide a signature.
@@ -508,7 +571,11 @@ mod tests {
             for s in &cat.signatures {
                 for p in &h.providers {
                     for id in &h.ids {
-                        assert!(!matches(&s.providers, &s.ids, p, *id), "{p} {id} is both harmless and {}", s.id);
+                        assert!(
+                            !matches(&s.providers, &s.ids, p, *id),
+                            "{p} {id} is both harmless and {}",
+                            s.id
+                        );
                     }
                 }
             }
@@ -524,7 +591,16 @@ mod tests {
 
     #[test]
     fn recent_blue_screen_is_a_problem_with_a_fix() {
-        let r = analyse(&facts(vec![ev("Microsoft-Windows-WER-SystemErrorReporting", 1001, 1, "")]), now()).unwrap();
+        let r = analyse(
+            &facts(vec![ev(
+                "Microsoft-Windows-WER-SystemErrorReporting",
+                1001,
+                1,
+                "",
+            )]),
+            now(),
+        )
+        .unwrap();
         let x = find(&r, "blue-screen");
         assert_eq!(x.level, Level::Problem);
         assert_eq!(x.remedy.as_deref(), Some("blue-screen"));
@@ -536,16 +612,33 @@ mod tests {
 
     #[test]
     fn old_single_blue_screen_is_only_a_warning() {
-        let r = analyse(&facts(vec![ev("Microsoft-Windows-WER-SystemErrorReporting", 1001, 25, "")]), now()).unwrap();
+        let r = analyse(
+            &facts(vec![ev(
+                "Microsoft-Windows-WER-SystemErrorReporting",
+                1001,
+                25,
+                "",
+            )]),
+            now(),
+        )
+        .unwrap();
         assert_eq!(find(&r, "blue-screen").level, Level::Warning);
     }
 
     #[test]
     fn shutdowns_one_warns_three_is_a_problem() {
-        let one = analyse(&facts(vec![ev("Microsoft-Windows-Kernel-Power", 41, 1, "")]), now()).unwrap();
+        let one = analyse(
+            &facts(vec![ev("Microsoft-Windows-Kernel-Power", 41, 1, "")]),
+            now(),
+        )
+        .unwrap();
         assert_eq!(find(&one, "unexpected-shutdown").level, Level::Warning);
         let three = analyse(
-            &facts((1..=3).map(|d| ev("Microsoft-Windows-Kernel-Power", 41, d, "")).collect()),
+            &facts(
+                (1..=3)
+                    .map(|d| ev("Microsoft-Windows-Kernel-Power", 41, d, ""))
+                    .collect(),
+            ),
             now(),
         )
         .unwrap();
@@ -556,7 +649,9 @@ mod tests {
 
     #[test]
     fn app_crashes_are_grouped_per_app_and_need_three() {
-        let mut e: Vec<Event> = (0..4).map(|d| ev("Application Error", 1000, d, "OUTLOOK.EXE")).collect();
+        let mut e: Vec<Event> = (0..4)
+            .map(|d| ev("Application Error", 1000, d, "OUTLOOK.EXE"))
+            .collect();
         e.push(ev("Application Error", 1000, 2, "notepad.exe"));
         let r = analyse(&facts(e), now()).unwrap();
         let o = find(&r, "app-crash:outlook.exe");
@@ -570,7 +665,10 @@ mod tests {
     #[test]
     fn group_policy_offers_gpupdate() {
         let r = analyse(
-            &facts(vec![ev("Microsoft-Windows-GroupPolicy", 1129, 0, ""), ev("Microsoft-Windows-GroupPolicy", 1055, 1, "")]),
+            &facts(vec![
+                ev("Microsoft-Windows-GroupPolicy", 1129, 0, ""),
+                ev("Microsoft-Windows-GroupPolicy", 1055, 1, ""),
+            ]),
             now(),
         )
         .unwrap();
@@ -579,9 +677,25 @@ mod tests {
 
     #[test]
     fn dns_timeouts_need_many() {
-        let few = analyse(&facts((0..5).map(|d| ev("Microsoft-Windows-DNS-Client", 1014, d, "")).collect()), now()).unwrap();
+        let few = analyse(
+            &facts(
+                (0..5)
+                    .map(|d| ev("Microsoft-Windows-DNS-Client", 1014, d, ""))
+                    .collect(),
+            ),
+            now(),
+        )
+        .unwrap();
         assert_eq!(find(&few, "dns-timeouts").level, Level::Minor);
-        let many = analyse(&facts((0..40).map(|i| ev("Microsoft-Windows-DNS-Client", 1014, i % 6, "")).collect()), now()).unwrap();
+        let many = analyse(
+            &facts(
+                (0..40)
+                    .map(|i| ev("Microsoft-Windows-DNS-Client", 1014, i % 6, ""))
+                    .collect(),
+            ),
+            now(),
+        )
+        .unwrap();
         assert_ne!(find(&many, "dns-timeouts").level, Level::Minor);
     }
 
@@ -616,12 +730,22 @@ mod tests {
         let r = analyse(&f, now()).unwrap();
         assert_eq!(r.hidden, 402);
         assert_eq!(r.unknown.len(), 1);
-        assert_eq!((r.unknown[0].provider.as_str(), r.unknown[0].count), ("Some-Vendor-Service", 12));
+        assert_eq!(
+            (r.unknown[0].provider.as_str(), r.unknown[0].count),
+            ("Some-Vendor-Service", 12)
+        );
     }
 
     #[test]
     fn popups_only_for_new_problems_and_repeats() {
-        let bsod = |days_ago| facts(vec![ev("Microsoft-Windows-WER-SystemErrorReporting", 1001, days_ago, "")]);
+        let bsod = |days_ago| {
+            facts(vec![ev(
+                "Microsoft-Windows-WER-SystemErrorReporting",
+                1001,
+                days_ago,
+                "",
+            )])
+        };
         let mut seen = Seen::default();
         let r = analyse(&bsod(1), now()).unwrap();
         assert_eq!(alerts(&mut seen, &r, now()).len(), 1);
@@ -641,11 +765,25 @@ mod tests {
         assert_eq!(alerts(&mut seen, &r2, now() + Duration::hours(3)).len(), 1);
         // Warnings never pop up.
         let mut quiet = Seen::default();
-        let w = analyse(&facts(vec![ev("Microsoft-Windows-Kernel-Power", 41, 1, "")]), now()).unwrap();
+        let w = analyse(
+            &facts(vec![ev("Microsoft-Windows-Kernel-Power", 41, 1, "")]),
+            now(),
+        )
+        .unwrap();
         assert!(alerts(&mut quiet, &w, now()).is_empty());
         // Gone: forgotten, other memory kept.
-        seen.shown.insert("disk-space".into(), Shown { at: now(), problem: true });
-        alerts(&mut seen, &analyse(&Facts::default(), now()).unwrap(), now());
+        seen.shown.insert(
+            "disk-space".into(),
+            Shown {
+                at: now(),
+                problem: true,
+            },
+        );
+        alerts(
+            &mut seen,
+            &analyse(&Facts::default(), now()).unwrap(),
+            now(),
+        );
         assert!(seen.shown.keys().all(|k| !k.starts_with(SEEN_PREFIX)));
         assert!(seen.shown.contains_key("disk-space"));
     }
@@ -655,7 +793,8 @@ mod tests {
         let json = r#"{"events":[{"p":"Microsoft-Windows-Kernel-Power","id":41,"t":"2026-10-17T08:15:02.1234567Z","a":"0"}],"other":[{"log":"System","p":"Foo","id":7,"n":6,"last":"2026-10-18T01:00:00.0000000Z","msg":"Foo failed"}],"errors":[]}"#;
         let f: Facts = serde_json::from_str(json).unwrap();
         assert_eq!(f.events.unwrap().len(), 1);
-        let empty: Facts = serde_json::from_str(r#"{"events":null,"other":null,"errors":null}"#).unwrap();
+        let empty: Facts =
+            serde_json::from_str(r#"{"events":null,"other":null,"errors":null}"#).unwrap();
         assert!(empty.events.is_none());
     }
 

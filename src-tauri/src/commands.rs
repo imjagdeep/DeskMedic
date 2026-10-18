@@ -756,12 +756,7 @@ pub async fn insights_run(app: AppHandle) -> CmdResult<dm_core::insights::Report
                     .collect(),
             ),
         ),
-        Err(e) => g.record(&LogEntry::new(
-            Area::Health,
-            "Assistant",
-            false,
-            e.clone(),
-        )),
+        Err(e) => g.record(&LogEntry::new(Area::Health, "Assistant", false, e.clone())),
     }
     result
 }

@@ -25,10 +25,13 @@ pub fn start(app: AppHandle) {
                 (
                     g.settings.assistant,
                     g.settings.check_every_min,
-                    g.settings.temp_reminder.then_some(g.settings.temp_reminder_gb),
+                    g.settings
+                        .temp_reminder
+                        .then_some(g.settings.temp_reminder_gb),
                 )
             };
-            let due = last.is_none_or(|t| t.elapsed() >= Duration::from_secs(u64::from(every) * 60));
+            let due =
+                last.is_none_or(|t| t.elapsed() >= Duration::from_secs(u64::from(every) * 60));
             if on && due {
                 last = Some(Instant::now());
                 match dm_core::health::run() {
@@ -97,8 +100,7 @@ fn after_insights(app: &AppHandle, r: &dm_core::insights::Report) {
 /// when it passes the limit. Same measurement as the Cleanup page.
 fn check_temp(app: &AppHandle, limit_gb: u32) {
     let ctx = dm_core::cleanup::Ctx::detect(false);
-    let estimates =
-        dm_core::cleanup::preview(&ctx, &std::sync::atomic::AtomicBool::new(false));
+    let estimates = dm_core::cleanup::preview(&ctx, &std::sync::atomic::AtomicBool::new(false));
     let bytes = monitor::temp_bytes(&estimates);
     let alert = {
         let s = app.state::<AppState>();
@@ -117,13 +119,7 @@ fn check_temp(app: &AppHandle, limit_gb: u32) {
 }
 
 pub fn notify(app: &AppHandle, title: &str, body: &str) {
-    if let Err(e) = app
-        .notification()
-        .builder()
-        .title(title)
-        .body(body)
-        .show()
-    {
+    if let Err(e) = app.notification().builder().title(title).body(body).show() {
         tracing::warn!("notification failed: {e}");
     }
 }
