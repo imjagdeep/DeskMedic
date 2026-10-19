@@ -116,9 +116,9 @@ export function SettingsPage() {
       <div className="card">
         <h2>Medic assistant</h2>
         <p className="muted small">
-          DeskMedic sits in the tray next to the clock, runs the read-only health check in the background and pops up
-          when something new looks wrong: low disk space, virus protection off, updates stuck, crashes or a failing
-          drive. It never changes anything by itself and never goes online.
+          DeskMedic sits in the tray next to the clock, runs the read-only checkup in the background (this PC now, and
+          Windows' event logs) and pops up only when something new goes wrong: low disk space, virus protection off,
+          updates failing, blue screens, a failing drive. It never changes anything by itself and never goes online.
         </p>
         <label className="check-row">
           <input type="checkbox" checked={s.assistant} onChange={(e) => update({ ...s, assistant: e.target.checked })} />

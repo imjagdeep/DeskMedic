@@ -10,7 +10,7 @@ struct TrayStatus(MenuItem<Wry>);
 
 pub fn build(app: &AppHandle) -> tauri::Result<()> {
     let status = MenuItem::with_id(app, "status", "Not checked yet", false, None::<&str>)?;
-    let health = MenuItem::with_id(app, "health", "Run a health check", true, None::<&str>)?;
+    let health = MenuItem::with_id(app, "health", "Check this PC", true, None::<&str>)?;
     let network = MenuItem::with_id(app, "network", "Network doctor", true, None::<&str>)?;
     let cleanup = MenuItem::with_id(
         app,

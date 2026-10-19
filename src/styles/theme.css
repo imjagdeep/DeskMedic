@@ -229,6 +229,12 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .page { max-width: 900px; padding: 26px 34px 48px; }
 .page-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; min-height: 34px; }
 .page-actions { display: flex; gap: 8px; }
+/* Storage hosts Space, Clean up and Drives as tabs: their own page box goes flat. */
+.storage-tabs { margin: 6px 0 4px; }
+.storage-tabs button { height: 30px; padding: 0 18px; }
+.storage-body > .page { max-width: none; padding: 0; animation: none; }
+.page-header.embedded { min-height: 0; margin-top: 10px; }
+.page-header.embedded .page-title:empty { display: none; }
 
 /* ---------- text helpers ---------- */
 .muted { color: var(--text-2); }
@@ -544,6 +550,13 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .insight-unknown { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .insight-unknown-row { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--group-border); }
 .insight-foot { margin-top: 18px; }
+
+/* Checkup: what's fine, and drives that open Storage. */
+.checkup-summary { margin-top: 12px; }
+.checkup-fine { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.checkup-fine-row { display: grid; grid-template-columns: 10px 160px 1fr; align-items: center; gap: 12px; padding: 6px 4px; }
+button.drive-link { height: auto; width: 100%; white-space: normal; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+button.drive-link:hover { box-shadow: var(--shadow-lg); }
 
 /* Network doctor: the links drawn as a chain */
 .net-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; }

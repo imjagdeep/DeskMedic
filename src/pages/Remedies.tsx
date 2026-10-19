@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AdminNotice, PageHeader } from "../components/Common";
 import { AppsIcon, CategoryIcon, GlobeIcon, LockIcon, PrinterIcon, ShieldIcon, WindowIcon } from "../components/Icons";
-import { PAGES, type Page } from "../components/Sidebar";
+import { destLabel, type Dest } from "../components/Sidebar";
 import { api } from "../lib/api";
 import { clearFixResult, runFix, useFixJob } from "../lib/jobs";
 import { index, search, words } from "../lib/remedySearch";
@@ -22,7 +22,7 @@ const GROUPS: Group[] = [
 /** All = the guided library (categories, search, step-by-step guides); One-click = the fixes DeskMedic runs itself. */
 type Show = "all" | "oneclick";
 
-/** `ask`: a one-click remedy to open straight away (from the Health check). */
+/** `ask`: a one-click remedy to open straight away (from a Checkup card). */
 export function Remedies({
   ask,
   onAsked,
@@ -30,7 +30,7 @@ export function Remedies({
 }: {
   ask?: string | null;
   onAsked?: () => void;
-  onNavigate?: (p: Page) => void;
+  onNavigate?: (d: Dest) => void;
 }) {
   const info = useAppInfo();
   const [recipes, setRecipes] = useState<FixRecipe[]>([]);
@@ -103,7 +103,7 @@ export function Remedies({
 
   return (
     <div className="page wide" ref={top}>
-      <PageHeader title="Remedies" />
+      <PageHeader title="Fixes" />
       <div className="remedy-search">
         <input
           type="search"
@@ -140,7 +140,7 @@ export function Remedies({
           onBack={() => openRemedy(null)}
           onShow={openRemedy}
           onFix={askFix}
-          onPage={(p) => onNavigate?.(p as Page)}
+          onPage={(p) => onNavigate?.(p as Dest)}
         />
       ) : show === "oneclick" ? (
         <section>
@@ -367,7 +367,7 @@ function RemedyView({
                 </button>
               )}
               {s.open && <button onClick={() => openStep(i)}>Open</button>}
-              {s.page && <button onClick={() => onPage(s.page as string)}>Go to {PAGES.find((p) => p.page === s.page)?.label ?? s.page}</button>}
+              {s.page && <button onClick={() => onPage(s.page as string)}>Go to {destLabel(s.page as Dest)}</button>}
             </li>
           );
         })}

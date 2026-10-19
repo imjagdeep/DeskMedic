@@ -51,10 +51,8 @@ export function SendToIt() {
                 version, drives, IP addresses.
               </li>
               <li>
-                <strong>Health check</strong>, run fresh now.
-              </li>
-              <li>
-                <strong>Assistant</strong>: problems found in Windows' event logs over the last 30 days, read fresh now.
+                <strong>Checkup</strong>, run fresh now: how this PC is right now, and problems found in Windows' event
+                logs over the last 30 days.
               </li>
               {network && (
                 <li>

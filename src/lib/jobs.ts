@@ -145,3 +145,8 @@ export async function runInsights() {
     toastError(e);
   }
 }
+
+/** Checkup: the health check (now) and the event logs (30 days), side by side. */
+export async function runCheckup() {
+  await Promise.all([runHealthCheck(), runInsights()]);
+}

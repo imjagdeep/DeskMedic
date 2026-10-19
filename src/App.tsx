@@ -5,38 +5,40 @@ import { useAppMenus } from "./appMenu";
 import logo from "./assets/logo.png";
 import { Toasts } from "./components/Common";
 import { UpdateBanner } from "./components/UpdateBanner";
-import { PAGES, Sidebar, type Page } from "./components/Sidebar";
+import { PAGES, resolve, Sidebar, type Dest, type Page, type StorageTab } from "./components/Sidebar";
 import { api } from "./lib/api";
-import { runHealthCheck, startJobs } from "./lib/jobs";
+import { runCheckup, startJobs } from "./lib/jobs";
 import { refreshAppInfo, toastError, useAppInfo } from "./lib/store";
 import { checkAndDownload, dailyCheckDue } from "./lib/updates";
-import { Assistant } from "./pages/Assistant";
-import { Cleanup } from "./pages/Cleanup";
-import { DiskMap } from "./pages/DiskMap";
-import { Health } from "./pages/Health";
-import { Disks } from "./pages/Disks";
+import { Checkup } from "./pages/Checkup";
 import { Log } from "./pages/Log";
 import { Network } from "./pages/Network";
-import { Overview } from "./pages/Overview";
 import { Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
+import { Storage } from "./pages/Storage";
 import type { HealthAction } from "./lib/types";
 import { ShellDialogs } from "./shell/Dialogs";
 import { TopBar } from "./shell/TopBar";
 import { applySavedZoom } from "./shell/shell";
 
 export default function App() {
-  const [page, setPageRaw] = useState<Page>("overview");
-  const setPage = useCallback((p: Page) => setPageRaw(p), []);
-  const menus = useAppMenus(setPage);
-  // A remedy the Health check asked to open on the Remedies page.
+  const [page, setPageRaw] = useState<Page>("checkup");
+  const [storageTab, setStorageTab] = useState<StorageTab>("diskmap");
+  // Every link goes through here, so older names ("health", "cleanup") still land right.
+  const go = useCallback((d: Dest) => {
+    const { page, tab } = resolve(d);
+    if (tab) setStorageTab(tab);
+    setPageRaw(page);
+  }, []);
+  const menus = useAppMenus(go);
+  // A one-click fix a Checkup card asked to open on the Fixes page.
   const [askRemedy, setAskRemedy] = useState<string | null>(null);
   const clearAsk = useCallback(() => setAskRemedy(null), []);
   const onHealthAction = (a: HealthAction) => {
     if (a.type === "remedy") {
       setAskRemedy(a.id);
-      setPage("remedies");
-    } else setPage(a.type === "open_cleanup" ? "cleanup" : "network");
+      go("remedies");
+    } else go(a.type === "open_cleanup" ? "cleanup" : "network");
   };
   const content = useRef<HTMLElement>(null);
 
@@ -70,13 +72,13 @@ export default function App() {
   useEffect(() => {
     void refreshAppInfo();
     startJobs();
-    // Tray menu: "Run a health check", "Network doctor".
+    // Tray menu: "Check this PC", "Network doctor", "Clean up temporary files".
     const un = listen<string>("navigate", (e) => {
       if (e.payload === "health-run") {
-        setPage("health");
-        void runHealthCheck();
-      } else if (e.payload === "network") setPage("network");
-      else if (e.payload === "cleanup") setPage("cleanup");
+        go("checkup");
+        void runCheckup();
+      } else if (e.payload === "network") go("network");
+      else if (e.payload === "cleanup") go("cleanup");
     });
     return () => {
       void un.then((f) => f());
@@ -93,7 +95,7 @@ export default function App() {
     const where = PAGES.find((p) => p.page === page)?.label ?? "";
     const name = elevated ? "DeskMedic (Administrator)" : "DeskMedic";
     void getCurrentWindow()
-      .setTitle(page === "overview" ? name : `${where} — ${name}`)
+      .setTitle(page === "checkup" ? name : `${where} — ${name}`)
       .catch(() => undefined);
   }, [page, elevated]);
 
@@ -107,16 +109,12 @@ export default function App() {
     <div className="app-frame">
       <TopBar appName="DeskMedic" logo={logo} title={PAGES.find((p) => p.page === page)?.label} menus={menus} onError={toastError} />
       <div className="app">
-        <Sidebar page={page} onNavigate={setPage} />
+        <Sidebar page={page} onNavigate={go} />
         <main className="content" ref={content}>
-          {page === "overview" && <Overview onNavigate={setPage} />}
-          {page === "assistant" && <Assistant onAction={onHealthAction} onNavigate={setPage} />}
-          {page === "health" && <Health onAction={onHealthAction} onAssistant={() => setPage("assistant")} />}
+          {page === "checkup" && <Checkup onAction={onHealthAction} onNavigate={go} />}
           {page === "network" && <Network onAction={onHealthAction} />}
-          {page === "diskmap" && <DiskMap />}
-          {page === "cleanup" && <Cleanup />}
-          {page === "disks" && <Disks onOpenCleanup={() => setPage("cleanup")} />}
-          {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} onNavigate={setPage} />}
+          {page === "storage" && <Storage tab={storageTab} onTab={setStorageTab} />}
+          {page === "remedies" && <Remedies ask={askRemedy} onAsked={clearAsk} onNavigate={go} />}
           {page === "log" && <Log />}
           {page === "settings" && <SettingsPage />}
         </main>
@@ -128,7 +126,7 @@ export default function App() {
           name: "DeskMedic",
           logo,
           version: info?.version ?? "",
-          tagline: "A first-aid kit for Windows PCs: health check, disk map, safe cleanup, network doctor and one-click remedies.",
+          tagline: "A first-aid kit for Windows PCs: a checkup that reads Windows' own logs, network doctor, storage and safe cleanup, and one-click fixes.",
           links: [
             { label: "Website", open: () => void api.openLink("site").catch(toastError) },
             { label: "Source code", open: () => void api.openLink("repo").catch(toastError) },
