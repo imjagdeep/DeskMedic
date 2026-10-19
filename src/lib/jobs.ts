@@ -5,7 +5,7 @@ import { listen } from "@tauri-apps/api/event";
 import { useSyncExternalStore } from "react";
 import { api } from "./api";
 import { createStore, toastError } from "./store";
-import type { CleanupReport, FixResult, HealthReport, NetReport, ScanProgress, ScanSummary } from "./types";
+import type { CleanupReport, FixResult, HealthReport, InsightsReport, NetReport, ScanProgress, ScanSummary } from "./types";
 
 export interface ScanJob {
   root: string;
@@ -28,6 +28,11 @@ const healthStore = createStore<{ running: boolean; report: HealthReport | null;
   at: null,
 });
 
+const insightsStore = createStore<{ running: boolean; report: InsightsReport | null; at: number | null }>({
+  running: false,
+  report: null,
+  at: null,
+});
 const networkStore = createStore<{ running: boolean; report: NetReport | null; at: number | null }>({
   running: false,
   report: null,
@@ -40,6 +45,7 @@ export const useCleanupJob = () => useSyncExternalStore(cleanupStore.subscribe, 
 export const useFixJob = () => useSyncExternalStore(fixStore.subscribe, fixStore.get);
 export const useHealthJob = () => useSyncExternalStore(healthStore.subscribe, healthStore.get);
 export const useNetworkJob = () => useSyncExternalStore(networkStore.subscribe, networkStore.get);
+export const useInsightsJob = () => useSyncExternalStore(insightsStore.subscribe, insightsStore.get);
 
 let started = false;
 /** Follow backend job events for the whole session. Call once at start. */
@@ -61,6 +67,10 @@ export function startJobs() {
   // Background checks by the Medic assistant (and checks run from the tray).
   void listen<HealthReport>("health-updated", (e) => {
     healthStore.set({ running: healthStore.get().running, report: e.payload, at: Date.now() });
+  });
+  // The Medic assistant's background read of the event logs.
+  void listen<InsightsReport>("insights-updated", (e) => {
+    insightsStore.set({ running: insightsStore.get().running, report: e.payload, at: Date.now() });
   });
   // A scan started before the window reloaded.
   api
@@ -123,4 +133,20 @@ export async function runNetworkDoctor() {
     networkStore.set({ ...networkStore.get(), running: false });
     toastError(e);
   }
+}
+
+export async function runInsights() {
+  if (insightsStore.get().running) return;
+  insightsStore.set({ ...insightsStore.get(), running: true });
+  try {
+    insightsStore.set({ running: false, report: await api.insightsRun(), at: Date.now() });
+  } catch (e) {
+    insightsStore.set({ ...insightsStore.get(), running: false });
+    toastError(e);
+  }
+}
+
+/** Checkup: the health check (now) and the event logs (30 days), side by side. */
+export async function runCheckup() {
+  await Promise.all([runHealthCheck(), runInsights()]);
 }

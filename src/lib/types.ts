@@ -278,6 +278,48 @@ export interface HealthReport {
   warnings: number;
 }
 
+/** Assistant: what Windows' event logs say (see dm-core insights.rs). */
+export type InsightLevel = "problem" | "warning" | "minor";
+
+export interface Insight {
+  key: string;
+  signature: string;
+  title: string;
+  what: string;
+  impact: string;
+  level: InsightLevel;
+  severity: "critical" | "high" | "medium" | "low";
+  count: number;
+  this_week: number;
+  first: string;
+  last: string;
+  score: number;
+  remedy: string | null;
+  remedy_title: string | null;
+  fix: string | null;
+  fix_name: string | null;
+}
+
+export interface UnknownEvent {
+  log: string;
+  provider: string;
+  id: number;
+  count: number;
+  last: string;
+  message: string;
+}
+
+export interface InsightsReport {
+  days: number;
+  findings: Insight[];
+  minor: Insight[];
+  unknown: UnknownEvent[];
+  hidden: number;
+  problems: number;
+  warnings: number;
+  errors: string[];
+}
+
 export interface NetLink {
   id: string;
   title: string;

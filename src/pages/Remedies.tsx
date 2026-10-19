@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AdminNotice, PageHeader } from "../components/Common";
 import { AppsIcon, CategoryIcon, GlobeIcon, LockIcon, PrinterIcon, ShieldIcon, WindowIcon } from "../components/Icons";
-import { PAGES, type Page } from "../components/Sidebar";
+import { destLabel, type Dest } from "../components/Sidebar";
 import { api } from "../lib/api";
 import { clearFixResult, runFix, useFixJob } from "../lib/jobs";
-import { index, search } from "../lib/remedySearch";
+import { index, search, words } from "../lib/remedySearch";
 import { toastError, useAppInfo } from "../lib/store";
 import type { FixRecipe, Remedy, RemedyLibrary } from "../lib/types";
 
 type Group = { title: string; Icon: (p: { size?: number }) => React.ReactElement; ids: string[] };
 
-// Remedy ids by topic; anything new and unlisted lands in "More".
+// One-click remedy ids by topic; anything new and unlisted lands in "More".
 const GROUPS: Group[] = [
   { title: "Internet and network", Icon: GlobeIcon, ids: ["flush-dns", "reset-network"] },
   { title: "Windows", Icon: WindowIcon, ids: ["restart-explorer", "rebuild-icon-cache", "rebuild-search", "time-sync", "gpupdate"] },
@@ -19,7 +19,10 @@ const GROUPS: Group[] = [
   { title: "System repair", Icon: ShieldIcon, ids: ["repair-windows-update", "sfc", "dism-restore"] },
 ];
 
-/** `ask`: a one-click remedy to open straight away (from the Health check). */
+/** All = the guided library (categories, search, step-by-step guides); One-click = the fixes DeskMedic runs itself. */
+type Show = "all" | "oneclick";
+
+/** `ask`: a one-click remedy to open straight away (from a Checkup card). */
 export function Remedies({
   ask,
   onAsked,
@@ -27,11 +30,12 @@ export function Remedies({
 }: {
   ask?: string | null;
   onAsked?: () => void;
-  onNavigate?: (p: Page) => void;
+  onNavigate?: (d: Dest) => void;
 }) {
   const info = useAppInfo();
   const [recipes, setRecipes] = useState<FixRecipe[]>([]);
   const [lib, setLib] = useState<RemedyLibrary | null>(null);
+  const [show, setShow] = useState<Show>("all");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [open, setOpen] = useState<Remedy | null>(null);
@@ -49,7 +53,7 @@ export function Remedies({
     api.remedyLibrary().then(setLib).catch(toastError);
   }, []);
 
-  const show = (r: Remedy | null) => {
+  const openRemedy = (r: Remedy | null) => {
     setOpen(r);
     top.current?.scrollIntoView({ block: "start" });
   };
@@ -60,8 +64,22 @@ export function Remedies({
     setAsking(r);
   };
   const byId = (id: string) => lib?.remedies.find((r) => r.id === id);
+  const hasFix = (r: Remedy) => r.steps.some((s) => s.fix);
   const inCategory = lib && category ? lib.remedies.filter((r) => r.category === category) : [];
   const cat = lib?.categories.find((c) => c.id === category);
+  const q = query.trim();
+
+  // One-click fixes matching the search: by their own words, or used by a matching guide
+  // ("printer offline" finds Clear print queue through the Printer offline guide).
+  const fixHits = useMemo(() => {
+    if (!q) return recipes;
+    const want = words(q);
+    const viaGuides = new Set(found.flatMap((r) => r.steps.map((s) => s.fix).filter((f): f is string => !!f)));
+    return recipes.filter((r) => {
+      const text = ` ${words(`${r.name} ${r.when} ${r.does}`).join(" ")} `;
+      return viaGuides.has(r.id) || (want.length > 0 && want.every((w) => text.includes(` ${w}`)));
+    });
+  }, [q, recipes, found]);
 
   useEffect(() => {
     if (!ask || recipes.length === 0) return;
@@ -77,15 +95,24 @@ export function Remedies({
     setAsking(null);
     void runFix(r.id, r.restore_point && restorePoint);
   };
+  const switchTo = (s: Show) => {
+    setShow(s);
+    setCategory(null);
+    setOpen(null);
+  };
 
   return (
     <div className="page wide" ref={top}>
-      <PageHeader title="Remedies" />
+      <PageHeader title="Fixes" />
       <div className="remedy-search">
         <input
           type="search"
           value={query}
-          placeholder={`Describe the problem: "printer offline", "no sound in Teams", "Wi-Fi drops"…`}
+          placeholder={
+            show === "all"
+              ? `Describe the problem: "printer offline", "no sound in Teams", "Wi-Fi drops"…`
+              : `Find a one-click fix: "printer", "Teams", "search"…`
+          }
           aria-label="Search remedies"
           autoFocus
           onChange={(e) => {
@@ -93,11 +120,14 @@ export function Remedies({
             setOpen(null);
           }}
         />
-        {lib && (
-          <span className="muted small">
-            {lib.remedies.length} remedies in {lib.categories.length} categories
-          </span>
-        )}
+        <div className="remedy-filter segmented" role="group" aria-label="Show">
+          <button className={show === "all" ? "active" : ""} aria-pressed={show === "all"} onClick={() => switchTo("all")}>
+            All <span className="seg-count">{lib?.remedies.length ?? ""}</span>
+          </button>
+          <button className={show === "oneclick" ? "active" : ""} aria-pressed={show === "oneclick"} onClick={() => switchTo("oneclick")}>
+            One-click <span className="seg-count">{recipes.length || ""}</span>
+          </button>
+        </div>
       </div>
 
       {open ? (
@@ -107,16 +137,44 @@ export function Remedies({
           elevated={!!info?.elevated}
           running={running}
           related={open.related.map(byId).filter((x): x is Remedy => !!x)}
-          onBack={() => show(null)}
-          onShow={show}
+          onBack={() => openRemedy(null)}
+          onShow={openRemedy}
           onFix={askFix}
-          onPage={(p) => onNavigate?.(p as Page)}
+          onPage={(p) => onNavigate?.(p as Dest)}
         />
-      ) : query.trim() ? (
+      ) : show === "oneclick" ? (
         <section>
-          <h3 className="fix-group-title">{found.length ? `Best matches for "${query.trim()}"` : `Nothing found for "${query.trim()}"`}</h3>
+          <p className="muted remedy-intro">DeskMedic runs these for you. Each one shows exactly what it does first, and every run goes in the Log.</p>
+          <AdminNotice need="Many one-click remedies change system settings and need administrator rights." />
+          {q && fixHits.length === 0 && (
+            <p className="muted">
+              No one-click fix for "{q}". <button className="link" onClick={() => switchTo("all")}>Search all remedies</button>
+            </p>
+          )}
+          {[...GROUPS, { title: "More", Icon: AppsIcon, ids: recipes.map((r) => r.id).filter((id) => !GROUPS.some((g) => g.ids.includes(id))) }]
+            .map((g) => ({ ...g, items: g.ids.map((id) => fixHits.find((r) => r.id === id)).filter((r): r is FixRecipe => !!r) }))
+            .filter((g) => g.items.length > 0)
+            .map(({ title, Icon, items }) => (
+              <section key={title} className="fix-group">
+                <h3 className="fix-group-title">
+                  <span className="fix-group-icon">
+                    <Icon size={15} />
+                  </span>
+                  {title}
+                </h3>
+                <div className="fix-grid">
+                  {items.map((r) => (
+                    <FixCard key={r.id} r={r} elevated={!!info?.elevated} running={running} onRun={() => askFix(r.id)} />
+                  ))}
+                </div>
+              </section>
+            ))}
+        </section>
+      ) : q ? (
+        <section>
+          <h3 className="fix-group-title">{found.length ? `Best matches for "${q}"` : `Nothing found for "${q}"`}</h3>
           {found.length === 0 && <p className="muted">Try fewer or different words (what you see, like "offline" or "no sound"), or pick a category below.</p>}
-          <RemedyList items={found} onShow={show} />
+          <RemedyList items={found} hasFix={hasFix} onShow={openRemedy} />
           {found.length === 0 && lib && <CategoryGrid lib={lib} onPick={(c) => { setQuery(""); setCategory(c); }} />}
         </section>
       ) : category && cat ? (
@@ -126,60 +184,11 @@ export function Remedies({
             <CategoryIcon name={cat.icon} size={20} /> {cat.title}
           </h2>
           <p className="muted">{cat.blurb}</p>
-          <RemedyList items={inCategory} onShow={show} />
+          <RemedyList items={inCategory} hasFix={hasFix} onShow={openRemedy} />
         </section>
       ) : (
-        <>
-          {lib && <CategoryGrid lib={lib} onPick={setCategory} />}
-          <h3 className="fix-group-title remedy-oneclick-title">One-click remedies</h3>
-          <p className="muted">Each shows exactly what it runs first, and every run goes in the Log.</p>
-          <AdminNotice need="Many one-click remedies change system settings and need administrator rights." />
-        </>
+        lib && <CategoryGrid lib={lib} onPick={setCategory} />
       )}
-      {!open && !query.trim() && !category && [...GROUPS, { title: "More", Icon: AppsIcon, ids: recipes.map((r) => r.id).filter((id) => !GROUPS.some((g) => g.ids.includes(id))) }]
-        .map((g) => ({ ...g, items: g.ids.map((id) => recipes.find((r) => r.id === id)).filter((r): r is FixRecipe => !!r) }))
-        .filter((g) => g.items.length > 0)
-        .map(({ title, Icon, items }) => (
-          <section key={title} className="fix-group">
-            <h3 className="fix-group-title">
-              <span className="fix-group-icon">
-                <Icon size={15} />
-              </span>
-              {title}
-            </h3>
-            <div className="fix-grid">
-              {items.map((r) => {
-                const blocked = r.admin && !info?.elevated;
-                return (
-                  <div className={running === r.id ? "card fix-card running" : "card fix-card"} key={r.id}>
-                    <h2>{r.name}</h2>
-                    <p className="small">{r.when}</p>
-                    <p className="muted small fix-does">{r.does}</p>
-                    <div className="fix-foot">
-                      <span className="muted small fix-meta">
-                        {r.takes}
-                        {r.restart && <span className="badge warn">restart</span>}
-                        {r.restore_point && <span className="badge">restore point</span>}
-                      </span>
-                      <button
-                        className={blocked ? "with-icon" : "primary"}
-                        disabled={blocked || running !== null}
-                        title={blocked ? "Restart DeskMedic as administrator to run this" : undefined}
-                        onClick={() => {
-                          setRestorePoint(true);
-                          setAsking(r);
-                        }}
-                      >
-                        {blocked && <LockIcon size={13} />}
-                        {running === r.id ? "Running…" : blocked ? "Needs admin" : "Run…"}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        ))}
 
       {running && (
         <div className="running-bar">
@@ -247,6 +256,35 @@ export function Remedies({
   );
 }
 
+function FixCard({ r, elevated, running, onRun }: { r: FixRecipe; elevated: boolean; running: string | null; onRun: () => void }) {
+  const blocked = r.admin && !elevated;
+  return (
+    <div className={running === r.id ? "card fix-card running" : "card fix-card"}>
+      <h2>{r.name}</h2>
+      <p className="small">{r.when}</p>
+      <p className="muted small fix-does">{r.does}</p>
+      {(r.restart || r.restore_point) && (
+        <div className="fix-tags">
+          {r.restart && <span className="badge warn">restart</span>}
+          {r.restore_point && <span className="badge">restore point</span>}
+        </div>
+      )}
+      <div className="fix-foot">
+        <span className="muted small">{r.takes}</span>
+        <button
+          className={blocked ? "with-icon" : "primary"}
+          disabled={blocked || running !== null}
+          title={blocked ? "Restart DeskMedic as administrator to run this" : undefined}
+          onClick={onRun}
+        >
+          {blocked && <LockIcon size={13} />}
+          {running === r.id ? "Running…" : blocked ? "Needs admin" : "Run…"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function CategoryGrid({ lib, onPick }: { lib: RemedyLibrary; onPick: (id: string) => void }) {
   return (
     <div className="remedy-cats">
@@ -266,14 +304,14 @@ function CategoryGrid({ lib, onPick }: { lib: RemedyLibrary; onPick: (id: string
   );
 }
 
-function RemedyList({ items, onShow }: { items: Remedy[]; onShow: (r: Remedy) => void }) {
+function RemedyList({ items, hasFix, onShow }: { items: Remedy[]; hasFix: (r: Remedy) => boolean; onShow: (r: Remedy) => void }) {
   return (
     <div className="remedy-list">
       {items.map((r) => (
         <button key={r.id} className="remedy-row" onClick={() => onShow(r)}>
           <strong>{r.title}</strong>
           <span className="muted small">{r.why}</span>
-          {r.steps.some((s) => s.fix) && <span className="badge ok">one-click fix</span>}
+          {hasFix(r) && <span className="badge ok">One-click</span>}
         </button>
       ))}
     </div>
@@ -329,7 +367,7 @@ function RemedyView({
                 </button>
               )}
               {s.open && <button onClick={() => openStep(i)}>Open</button>}
-              {s.page && <button onClick={() => onPage(s.page as string)}>Go to {PAGES.find((p) => p.page === s.page)?.label ?? s.page}</button>}
+              {s.page && <button onClick={() => onPage(s.page as string)}>Go to {destLabel(s.page as Dest)}</button>}
             </li>
           );
         })}

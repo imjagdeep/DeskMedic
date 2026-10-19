@@ -19,7 +19,13 @@ pub const FILE_NAME: &str = "monitor.json";
 
 /// Warnings worth interrupting someone for. The rest (restart overdue,
 /// memory in use right now, startup apps) wait for the Health check page.
-const ALERT_WARNINGS: &[&str] = &["disk-space", "antivirus", "updates", "crashes", "disk-health"];
+const ALERT_WARNINGS: &[&str] = &[
+    "disk-space",
+    "antivirus",
+    "updates",
+    "crashes",
+    "disk-health",
+];
 
 const REPEAT_AFTER_HOURS: i64 = 24;
 
@@ -87,7 +93,8 @@ pub fn alerts(seen: &mut Seen, report: &Report, now: DateTime<Utc>) -> Vec<Alert
             Some(s) => problem && now - s.at >= Duration::hours(REPEAT_AFTER_HOURS),
         };
         if due {
-            seen.shown.insert(c.id.to_string(), Shown { at: now, problem });
+            seen.shown
+                .insert(c.id.to_string(), Shown { at: now, problem });
             let mut body = c.summary.clone();
             if let Some(a) = &c.advice {
                 body.push(' ');
@@ -229,7 +236,10 @@ mod tests {
     #[test]
     fn quiet_warnings_never_pop_up() {
         let mut seen = Seen::default();
-        let r = report(vec![check("restart", Status::Warning), check("memory", Status::Warning)]);
+        let r = report(vec![
+            check("restart", Status::Warning),
+            check("memory", Status::Warning),
+        ]);
         assert!(alerts(&mut seen, &r, t(0)).is_empty());
         assert_eq!(seen.last_warnings, 2);
     }
@@ -299,7 +309,11 @@ mod tests {
     fn health_checks_dont_clear_the_temp_reminder() {
         let mut seen = Seen::default();
         temp_alert(&mut seen, 9_000_000_000, 5, t(0)).unwrap();
-        alerts(&mut seen, &report(vec![check("disk-space", Status::Good)]), t(1));
+        alerts(
+            &mut seen,
+            &report(vec![check("disk-space", Status::Good)]),
+            t(1),
+        );
         assert!(seen.shown.contains_key(TEMP_ID));
     }
 

@@ -22,25 +22,10 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-export const OverviewIcon = (p: IconProps) => (
-  <Svg {...p}>
-    <path d="M3.5 10.5 12 3.8l8.5 6.7" />
-    <path d="M5.5 9v10.2a.8.8 0 0 0 .8.8H10v-5.5h4V20h3.7a.8.8 0 0 0 .8-.8V9" />
-  </Svg>
-);
-
 export const MapIcon = (p: IconProps) => (
   <Svg {...p}>
     <rect x="3.5" y="4" width="17" height="16" rx="2" />
     <path d="M11 4v16M11 12h9.5M16 12v8" />
-  </Svg>
-);
-
-export const BroomIcon = (p: IconProps) => (
-  <Svg {...p}>
-    <path d="M19.5 4.5 12 12" />
-    <path d="M12.8 11.2 9 9.5c-1.6 1.2-4 4.6-5 8.5l1.6 1.6c3.9-1 7.3-3.4 8.5-5Z" />
-    <path d="m7 15 2 2" />
   </Svg>
 );
 

@@ -2,9 +2,9 @@
 
 import { exit } from "@tauri-apps/plugin-process";
 import { useEffect, useMemo, useState } from "react";
-import { PAGES, type Page } from "./components/Sidebar";
+import { PAGES, type Dest } from "./components/Sidebar";
 import { api, type LabTool } from "./lib/api";
-import { runHealthCheck } from "./lib/jobs";
+import { runCheckup } from "./lib/jobs";
 import { refreshAppInfo, toastError, useAppInfo } from "./lib/store";
 import type { Theme } from "./lib/types";
 import { checkAndDownload } from "./lib/updates";
@@ -25,7 +25,7 @@ import {
 
 const LAB_NAMES: Record<string, string> = { deskzero: "DeskZero", deskfolio: "DeskFolio" };
 
-export function useAppMenus(go: (p: Page) => void): MenuDef[] {
+export function useAppMenus(go: (d: Dest) => void): MenuDef[] {
   const info = useAppInfo();
   const compact = useCompactSidebar();
   const [lab, setLab] = useState<LabTool[]>([]);
@@ -50,8 +50,8 @@ export function useAppMenus(go: (p: Page) => void): MenuDef[] {
     const file: MenuDef = {
       label: "File",
       items: [
-        // Export report lives on the Overview page; this opens its explanation there.
-        { id: "send-to-it", label: "Export report…", run: () => (go("overview"), setTimeout(() => window.dispatchEvent(new Event("send-to-it")), 60)) },
+        // Export report lives on the Checkup page; this opens its explanation there.
+        { id: "send-to-it", label: "Export report…", run: () => (go("checkup"), setTimeout(() => window.dispatchEvent(new Event("send-to-it")), 60)) },
         { id: "export-log", label: "Export log for a ticket…", run: exportLogFile },
         { id: "data-folder", label: "Open data folder", run: () => api.openDataFolder() },
         "-",
@@ -93,7 +93,7 @@ export function useAppMenus(go: (p: Page) => void): MenuDef[] {
     const tools: MenuDef = {
       label: "Tools",
       items: [
-        { id: "run-health", label: "Run a health check", accel: "Mod+R", run: () => (go("health"), void runHealthCheck()) },
+        { id: "run-health", label: "Check this PC", accel: "Mod+R", run: () => (go("checkup"), void runCheckup()) },
         "-",
         ...PAGES.filter((p) => p.page !== "settings").map((p, i) => ({
           id: `go-${p.page}`,

@@ -229,6 +229,12 @@ input[type="checkbox"]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft);
 .page { max-width: 900px; padding: 26px 34px 48px; }
 .page-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; min-height: 34px; }
 .page-actions { display: flex; gap: 8px; }
+/* Storage hosts Space, Clean up and Drives as tabs: their own page box goes flat. */
+.storage-tabs { margin: 6px 0 4px; }
+.storage-tabs button { height: 30px; padding: 0 18px; }
+.storage-body > .page { max-width: none; padding: 0; animation: none; }
+.page-header.embedded { min-height: 0; margin-top: 10px; }
+.page-header.embedded .page-title:empty { display: none; }
 
 /* ---------- text helpers ---------- */
 .muted { color: var(--text-2); }
@@ -528,6 +534,30 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .health-tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 9px; color: var(--c, var(--text)); background: color-mix(in srgb, var(--c, var(--text)) 12%, transparent); }
 .health-row > button { flex: none; }
 
+/* Assistant: findings from the event logs, styled like health rows. */
+.insight-list { display: flex; flex-direction: column; gap: 10px; }
+.insight { margin: 0; display: flex; align-items: flex-start; gap: 14px; }
+.insight > .health-dot { margin-top: 6px; }
+.insight h2 { margin: 0; }
+.insight p { margin: 4px 0 0; }
+.insight-facts { font-variant-numeric: tabular-nums; }
+.insight-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.insight-guide { margin-top: 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--group); box-shadow: inset 0 0 0 0.5px var(--group-border); }
+.insight-guide .remedy-steps { margin: 8px 0 4px; }
+.insight-more { margin-top: 18px; }
+.insight-more > summary { cursor: pointer; font-weight: 500; padding: 6px 0; }
+.insight-more > .insight-list { margin-top: 8px; }
+.insight-unknown { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.insight-unknown-row { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--group-border); }
+.insight-foot { margin-top: 18px; }
+
+/* Checkup: what's fine, and drives that open Storage. */
+.checkup-summary { margin-top: 12px; }
+.checkup-fine { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.checkup-fine-row { display: grid; grid-template-columns: 10px 160px 1fr; align-items: center; gap: 12px; padding: 6px 4px; }
+button.drive-link { height: auto; width: 100%; white-space: normal; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+button.drive-link:hover { box-shadow: var(--shadow-lg); }
+
 /* Network doctor: the links drawn as a chain */
 .net-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; }
 .net-link { margin: 0; display: flex; align-items: center; gap: 14px; position: relative; }
@@ -588,7 +618,6 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .fix-card { transition: box-shadow 0.15s, transform 0.15s; }
 .fix-card:hover { box-shadow: var(--shadow-sm), 0 6px 16px rgba(0, 0, 0, 0.05); }
 .fix-card.running { box-shadow: 0 0 0 1.5px var(--accent); }
-.fix-meta { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
 
 /* Sidebar: health status dot */
 .nav-dot { margin-left: auto; width: 8px; height: 8px; border-radius: 50%; flex: none; }
@@ -609,14 +638,20 @@ button.link:active:not(:disabled), .nav-item:active:not(:disabled) { transform: 
 .spinner.small { width: 16px; height: 16px; border-width: 2px; }
 
 /* Remedies library */
-.remedy-search { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 18px; }
-.remedy-search input { font-size: 15px; padding: 10px 14px; width: 100%; max-width: 720px; }
+.remedy-search { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 4px 0 18px; }
+.remedy-search input { font-size: 15px; padding: 10px 14px; flex: 1 1 360px; max-width: 720px; }
 .remedy-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 24px; }
 button.remedy-cat { height: auto; white-space: normal; padding: 12px 14px; margin: 0; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
 .remedy-cat:hover { box-shadow: var(--shadow-lg); }
 .remedy-cat-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 .remedy-cat-title { font-size: 18px; display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; }
-.remedy-oneclick-title { margin-top: 8px; }
+/* All / One-click: same height as the search box beside it. */
+.remedy-filter { padding: 3px; border-radius: 10px; }
+.remedy-filter button { height: 32px; border-radius: 7px; padding: 0 14px; }
+.seg-count { margin-left: 6px; font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.fix-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: -2px 0 10px; }
+.fix-tags .badge { margin: 0; }
+.remedy-intro { margin: 0 0 6px; }
 .remedy-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 18px; }
 button.remedy-row { height: auto; white-space: normal; box-shadow: none; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; text-align: left; padding: 10px 14px; border-radius: var(--radius); background: var(--window); border: 1px solid var(--group-border); cursor: pointer; font: inherit; color: inherit; }
 .remedy-row:hover { border-color: var(--accent); }

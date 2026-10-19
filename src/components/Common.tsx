@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import { api } from "../lib/api";
 import { toastError, useAppInfo, useToasts } from "../lib/store";
 import { ShieldIcon } from "./Icons";
@@ -13,11 +14,15 @@ export function Toasts() {
   );
 }
 
+/** Set by a page that hosts others as tabs (Storage): their headers drop the title. */
+export const Embedded = createContext(false);
+
 export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: string; children?: React.ReactNode }) {
+  const embedded = useContext(Embedded);
   return (
-    <header className="page-header">
+    <header className={embedded ? "page-header embedded" : "page-header"}>
       <div className="page-title">
-        <h1>{title}</h1>
+        {!embedded && <h1>{title}</h1>}
         {subtitle && <div className="page-subtitle">{subtitle}</div>}
       </div>
       <div className="page-actions">{children}</div>

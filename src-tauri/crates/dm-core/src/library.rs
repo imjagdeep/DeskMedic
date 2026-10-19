@@ -123,15 +123,17 @@ fn load() -> Result<Loaded, String> {
     let mut ids = HashSet::new();
     let mut cat_ids = HashSet::new();
     for (name, text) in FILES {
-        let file: CategoryFile =
-            serde_json::from_str(text).map_err(|e| format!("{name}: {e}"))?;
+        let file: CategoryFile = serde_json::from_str(text).map_err(|e| format!("{name}: {e}"))?;
         // A category can span several files (NN-name.json, NN-name-2.json…):
         // later files must repeat the same title and only add remedies.
         let first = cat_ids.insert(file.id.clone());
         if !first {
             let known = categories.iter().find(|c: &&Category| c.id == file.id);
             if known.is_none_or(|c| c.title != file.title) {
-                return Err(format!("{name}: category {} has a different title in another file", file.id));
+                return Err(format!(
+                    "{name}: category {} has a different title in another file",
+                    file.id
+                ));
             }
         }
         for mut r in file.remedies {
@@ -149,7 +151,8 @@ fn load() -> Result<Loaded, String> {
                 return Err(format!("{at}: needs symptoms and steps"));
             }
             for (i, s) in r.steps.iter().enumerate() {
-                check_step(s, &r.os, &targets, &fix_ids).map_err(|e| format!("{at} step {}: {e}", i + 1))?;
+                check_step(s, &r.os, &targets, &fix_ids)
+                    .map_err(|e| format!("{at} step {}: {e}", i + 1))?;
             }
             r.category = file.id.clone();
             remedies.push(r);
@@ -221,7 +224,9 @@ fn check_step(
     if let Some(o) = &s.open {
         let target_os = open_os(o, targets).ok_or_else(|| format!("unknown open target {o}"))?;
         if os != [target_os] {
-            return Err(format!("{o} only exists on {target_os:?}: set the step's os"));
+            return Err(format!(
+                "{o} only exists on {target_os:?}: set the step's os"
+            ));
         }
     }
     Ok(())
@@ -246,8 +251,7 @@ fn open_os(target: &str, targets: &Targets) -> Option<Os> {
 
 fn safe_uri_part(s: &str) -> bool {
     s.len() <= 120
-        && s
-            .bytes()
+        && s.bytes()
             .all(|b| b.is_ascii_alphanumeric() || b"-._?=&_".contains(&b))
 }
 
@@ -272,7 +276,8 @@ pub fn library(os: Os) -> Result<Library, String> {
         .filter(|r| r.os.contains(&os))
         .map(|r| {
             let mut r = r.clone();
-            r.steps.retain(|s| s.os.as_ref().is_none_or(|o| o.contains(&os)));
+            r.steps
+                .retain(|s| s.os.as_ref().is_none_or(|o| o.contains(&os)));
             r.related.retain(|x| here.contains(x.as_str()));
             r
         })
@@ -362,7 +367,11 @@ fn shell_execute(file: &str, args: &str) -> Result<(), String> {
     use windows::core::{w, PCWSTR};
     use windows::Win32::UI::Shell::ShellExecuteW;
     use windows::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL;
-    let wide = |s: &str| s.encode_utf16().chain(std::iter::once(0)).collect::<Vec<u16>>();
+    let wide = |s: &str| {
+        s.encode_utf16()
+            .chain(std::iter::once(0))
+            .collect::<Vec<u16>>()
+    };
     let file_w = wide(file);
     let args_w = wide(args);
     // SAFETY: both buffers are NUL-terminated and outlive the call.
@@ -384,7 +393,10 @@ fn shell_execute(file: &str, args: &str) -> Result<(), String> {
     if result.0 as usize > 32 {
         Ok(())
     } else {
-        Err(format!("Windows couldn't open it (code {})", result.0 as usize))
+        Err(format!(
+            "Windows couldn't open it (code {})",
+            result.0 as usize
+        ))
     }
 }
 
@@ -412,7 +424,10 @@ mod tests {
         assert_eq!(open_os("ms-settings:a b", &t), None);
         assert_eq!(open_os("ms-settings:x\"&calc", &t), None);
         assert_eq!(
-            open_os("x-apple.systempreferences:com.apple.Network-Settings.extension", &t),
+            open_os(
+                "x-apple.systempreferences:com.apple.Network-Settings.extension",
+                &t
+            ),
             Some(Os::Macos)
         );
         assert_eq!(open_os("run:device-manager", &t), Some(Os::Windows));
@@ -436,7 +451,12 @@ mod tests {
         let (r, i) = lib
             .remedies
             .iter()
-            .find_map(|r| r.steps.iter().position(|s| s.open.is_some()).map(|i| (r, i)))
+            .find_map(|r| {
+                r.steps
+                    .iter()
+                    .position(|s| s.open.is_some())
+                    .map(|i| (r, i))
+            })
             .expect("a Windows remedy that opens something");
         assert!(open_target(&r.id, i, Os::Windows).is_ok());
         assert!(open_target(&r.id, 999, Os::Windows).is_err());

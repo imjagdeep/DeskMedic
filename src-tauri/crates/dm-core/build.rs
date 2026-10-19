@@ -15,9 +15,15 @@ fn main() {
     let mut out = String::from("pub const FILES: &[(&str, &str)] = &[\n");
     for f in &files {
         let path = dir.join(f);
-        writeln!(out, "    ({f:?}, include_str!({:?})),", path.to_string_lossy()).unwrap();
+        writeln!(
+            out,
+            "    ({f:?}, include_str!({:?})),",
+            path.to_string_lossy()
+        )
+        .unwrap();
     }
     out.push_str("];\n");
-    let dest = std::path::Path::new(&std::env::var("OUT_DIR").expect("OUT_DIR")).join("remedy_files.rs");
+    let dest =
+        std::path::Path::new(&std::env::var("OUT_DIR").expect("OUT_DIR")).join("remedy_files.rs");
     std::fs::write(dest, out).expect("write remedy_files.rs");
 }
