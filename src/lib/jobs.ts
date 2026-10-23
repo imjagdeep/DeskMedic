@@ -3,8 +3,8 @@
 
 import { listen } from "@tauri-apps/api/event";
 import { useSyncExternalStore } from "react";
-import { api } from "./api";
-import { createStore, toastError } from "./store";
+import { api, errorText } from "./api";
+import { createStore, toast, toastError } from "./store";
 import type { CleanupReport, FixResult, HealthReport, InsightsReport, NetReport, ScanProgress, ScanSummary } from "./types";
 
 export interface ScanJob {
@@ -101,17 +101,90 @@ export async function runCleanup(ids: string[], allUsers: boolean) {
 
 export const clearCleanupReport = () => cleanupStore.set({ running: false, report: null });
 
-export async function runFix(id: string, restorePoint: boolean) {
-  fixStore.set({ running: id, result: null });
-  try {
-    fixStore.set({ running: null, result: await api.fixRun(id, restorePoint) });
-  } catch (e) {
-    fixStore.set({ running: null, result: null });
-    toastError(e);
-  }
+// ---------- one-click fixes: a queue, one at a time (the backend refuses two at once) ----------
+
+export type FixState = "queued" | "running" | "done" | "failed";
+
+export interface FixRun {
+  /** Unique per run, so the same fix can appear twice in the history. */
+  seq: number;
+  id: string;
+  name: string;
+  restorePoint: boolean;
+  state: FixState;
+  queuedAt: number;
+  startedAt?: number;
+  endedAt?: number;
+  result?: FixResult;
+  /** Why it couldn't run at all (the backend refused or crashed). */
+  error?: string;
 }
 
-export const clearFixResult = () => fixStore.set({ running: fixStore.get().running, result: null });
+/** This session's runs, oldest first. */
+const runsStore = createStore<FixRun[]>([]);
+/** The run whose details are open, by seq. */
+const detailsStore = createStore<number | null>(null);
+export const useFixRuns = () => useSyncExternalStore(runsStore.subscribe, runsStore.get);
+export const useFixDetails = () => useSyncExternalStore(detailsStore.subscribe, detailsStore.get);
+export const showFixDetails = (seq: number | null) => detailsStore.set(seq);
+
+let fixSeq = 0;
+const patch = (seq: number, p: Partial<FixRun>) => runsStore.set(runsStore.get().map((r) => (r.seq === seq ? { ...r, ...p } : r)));
+
+/** The latest run of a fix, for its card ("Running…", "Done 10:42", "Failed"). */
+export function latestRun(runs: FixRun[], id: string): FixRun | undefined {
+  for (let i = runs.length - 1; i >= 0; i--) if (runs[i].id === id) return runs[i];
+  return undefined;
+}
+
+/**
+ * Add a fix to the queue. Returns "running" if it starts now, "queued" if it waits
+ * behind another, or "already" if that fix is already running or waiting.
+ */
+export function queueFix(id: string, name: string, restorePoint: boolean): "running" | "queued" | "already" {
+  const runs = runsStore.get();
+  if (runs.some((r) => r.id === id && (r.state === "queued" || r.state === "running"))) return "already";
+  const busy = runs.some((r) => r.state === "running" || r.state === "queued");
+  runsStore.set([...runs, { seq: ++fixSeq, id, name, restorePoint, state: "queued", queuedAt: Date.now() }]);
+  void pumpFixes();
+  return busy ? "queued" : "running";
+}
+
+/** Take a waiting fix out of the queue. */
+export function cancelFix(seq: number) {
+  runsStore.set(runsStore.get().filter((r) => !(r.seq === seq && r.state === "queued")));
+}
+
+/** Forget finished runs (their details stay in the Log). */
+export function clearFinishedFixes() {
+  runsStore.set(runsStore.get().filter((r) => r.state === "queued" || r.state === "running"));
+  detailsStore.set(null);
+}
+
+let pumping = false;
+async function pumpFixes() {
+  if (pumping) return;
+  pumping = true;
+  try {
+    for (;;) {
+      const next = runsStore.get().find((r) => r.state === "queued");
+      if (!next) break;
+      patch(next.seq, { state: "running", startedAt: Date.now() });
+      fixStore.set({ running: next.id, result: null });
+      try {
+        const result = await api.fixRun(next.id, next.restorePoint);
+        patch(next.seq, { state: result.ok ? "done" : "failed", endedAt: Date.now(), result });
+        toast(result.ok ? `${next.name}: done${result.restart ? ". Restart the PC to finish." : "."}` : `${next.name} failed. Open it in Fixes to see why.`, !result.ok);
+      } catch (e) {
+        patch(next.seq, { state: "failed", endedAt: Date.now(), error: errorText(e) });
+        toast(`${next.name} couldn't run: ${errorText(e)}`, true);
+      }
+      fixStore.set({ running: null, result: null });
+    }
+  } finally {
+    pumping = false;
+  }
+}
 
 export async function runHealthCheck() {
   if (healthStore.get().running) return;

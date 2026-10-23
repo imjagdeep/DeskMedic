@@ -13,7 +13,7 @@ import { checkAndDownload, dailyCheckDue } from "./lib/updates";
 import { Checkup } from "./pages/Checkup";
 import { Log } from "./pages/Log";
 import { Network } from "./pages/Network";
-import { Remedies } from "./pages/Remedies";
+import { PENDING_FIX, Remedies } from "./pages/Remedies";
 import { SettingsPage } from "./pages/Settings";
 import { Storage } from "./pages/Storage";
 import type { HealthAction } from "./lib/types";
@@ -41,12 +41,29 @@ export default function App() {
     } else go(a.type === "open_cleanup" ? "cleanup" : "network");
   };
   const content = useRef<HTMLElement>(null);
+  const info = useAppInfo();
+
+  // A fix asked for from Checkup that needed administrator rights: DeskMedic restarted
+  // elevated, so open that fix now (only within a few minutes of asking).
+  useEffect(() => {
+    if (!info?.elevated) return;
+    let pending: { id?: unknown; at?: unknown } | null = null;
+    try {
+      pending = JSON.parse(localStorage.getItem(PENDING_FIX) ?? "null");
+      localStorage.removeItem(PENDING_FIX);
+    } catch {
+      pending = null;
+    }
+    if (pending && typeof pending.id === "string" && typeof pending.at === "number" && Date.now() - pending.at < 10 * 60_000) {
+      setAskRemedy(pending.id);
+      go("remedies");
+    }
+  }, [info?.elevated, go]);
 
   // Each page opens at the top, not where the last one was scrolled to.
   useEffect(() => {
     content.current?.scrollTo(0, 0);
   }, [page]);
-  const info = useAppInfo();
   const theme = info?.settings.theme ?? "system";
   const autoUpdate = !!info?.installed && !!info?.settings.auto_update;
 

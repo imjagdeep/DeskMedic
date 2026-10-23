@@ -3,9 +3,9 @@ import { AdminNotice, PageHeader } from "../components/Common";
 import { AppsIcon, CategoryIcon, GlobeIcon, LockIcon, PrinterIcon, ShieldIcon, WindowIcon } from "../components/Icons";
 import { destLabel, type Dest } from "../components/Sidebar";
 import { api } from "../lib/api";
-import { clearFixResult, runFix, useFixJob } from "../lib/jobs";
+import { cancelFix, clearFinishedFixes, latestRun, queueFix, showFixDetails, useFixDetails, useFixRuns, type FixRun } from "../lib/jobs";
 import { index, search, words } from "../lib/remedySearch";
-import { toastError, useAppInfo } from "../lib/store";
+import { toast, toastError, useAppInfo } from "../lib/store";
 import type { FixRecipe, Remedy, RemedyLibrary } from "../lib/types";
 
 type Group = { title: string; Icon: (p: { size?: number }) => React.ReactElement; ids: string[] };
@@ -21,6 +21,9 @@ const GROUPS: Group[] = [
 
 /** All = the guided library (categories, search, step-by-step guides); One-click = the fixes DeskMedic runs itself. */
 type Show = "all" | "oneclick";
+
+/** Where a fix asked for from Checkup waits while DeskMedic restarts as administrator. */
+export const PENDING_FIX = "deskmedic-pending-fix";
 
 /** `ask`: a one-click remedy to open straight away (from a Checkup card). */
 export function Remedies({
@@ -43,10 +46,15 @@ export function Remedies({
   const idx = useMemo(() => index(lib?.remedies ?? []), [lib]);
   const found = useMemo(() => search(idx, query), [idx, query]);
   const [asking, setAsking] = useState<FixRecipe | null>(null);
+  // A fix from Checkup that needs administrator rights DeskMedic doesn't have yet.
+  const [needsAdmin, setNeedsAdmin] = useState<FixRecipe | null>(null);
+  // The fix a Checkup card pointed at: its card is scrolled to and highlighted.
+  const [focus, setFocus] = useState<string | null>(null);
   // Restore point first, for remedies that offer one. On by default.
   const [restorePoint, setRestorePoint] = useState(true);
   // Kept outside the page so leaving it mid-fix loses nothing.
-  const { running, result } = useFixJob();
+  const runs = useFixRuns();
+  const running = runs.find((r) => r.state === "running")?.id ?? null;
 
   useEffect(() => {
     api.fixList().then(setRecipes).catch(toastError);
@@ -81,19 +89,59 @@ export function Remedies({
     });
   }, [q, recipes, found]);
 
+  // From a Checkup card: show that fix in the one-click list, highlighted, and ask to run it
+  // (or explain that it needs administrator rights first, or that it's already on its way).
   useEffect(() => {
-    if (!ask || recipes.length === 0) return;
+    if (!ask || recipes.length === 0 || !info) return;
     const r = recipes.find((x) => x.id === ask);
-    if (r && !(r.admin && !info?.elevated)) {
+    onAsked?.();
+    if (!r) return;
+    setShow("oneclick");
+    setQuery("");
+    setCategory(null);
+    setOpen(null);
+    setFocus(r.id);
+    const last = latestRun(runs, r.id);
+    if (last && (last.state === "running" || last.state === "queued")) {
+      toast(last.state === "running" ? `${r.name} is already running.` : `${r.name} is already waiting its turn.`);
+    } else if (r.admin && !info.elevated) {
+      setNeedsAdmin(r);
+    } else {
       setRestorePoint(true);
       setAsking(r);
     }
-    onAsked?.();
-  }, [ask, recipes, info, onAsked]);
+  }, [ask, recipes, info, onAsked, runs]);
+
+  // Bring the highlighted card into view once it's on screen.
+  useEffect(() => {
+    if (!focus) return;
+    const t = setTimeout(() => document.getElementById(`fix-${focus}`)?.scrollIntoView({ block: "center", behavior: "smooth" }), 80);
+    const off = setTimeout(() => setFocus(null), 6000);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(off);
+    };
+  }, [focus, show]);
 
   const run = (r: FixRecipe) => {
     setAsking(null);
-    void runFix(r.id, r.restore_point && restorePoint);
+    // Queued fixes say so on their card and in Fix activity; no pop-up for each.
+    if (queueFix(r.id, r.name, r.restore_point && restorePoint) === "already") toast(`${r.name} is already running or waiting.`);
+  };
+  const restartForFix = (r: FixRecipe) => {
+    try {
+      localStorage.setItem(PENDING_FIX, JSON.stringify({ id: r.id, at: Date.now() }));
+    } catch {
+      // Not remembered: after the restart, open Fixes by hand.
+    }
+    api.restartAsAdmin().catch((e) => {
+      try {
+        localStorage.removeItem(PENDING_FIX);
+      } catch {
+        // nothing to undo
+      }
+      toastError(e);
+    });
   };
   const switchTo = (s: Show) => {
     setShow(s);
@@ -130,12 +178,14 @@ export function Remedies({
         </div>
       </div>
 
+      <FixActivity runs={runs} />
+
       {open ? (
         <RemedyView
           r={open}
           recipes={recipes}
           elevated={!!info?.elevated}
-          running={running}
+          runs={runs}
           related={open.related.map(byId).filter((x): x is Remedy => !!x)}
           onBack={() => openRemedy(null)}
           onShow={openRemedy}
@@ -164,7 +214,7 @@ export function Remedies({
                 </h3>
                 <div className="fix-grid">
                   {items.map((r) => (
-                    <FixCard key={r.id} r={r} elevated={!!info?.elevated} running={running} onRun={() => askFix(r.id)} />
+                    <FixCard key={r.id} r={r} elevated={!!info?.elevated} last={latestRun(runs, r.id)} focused={focus === r.id} onRun={() => askFix(r.id)} />
                   ))}
                 </div>
               </section>
@@ -190,14 +240,6 @@ export function Remedies({
         lib && <CategoryGrid lib={lib} onPick={setCategory} />
       )}
 
-      {running && (
-        <div className="running-bar">
-          <div className="spinner" aria-hidden="true" />
-          <span>
-            Running {recipes.find((r) => r.id === running)?.name}… ({recipes.find((r) => r.id === running)?.takes})
-          </span>
-        </div>
-      )}
 
       {asking && (
         <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="fix-h">
@@ -223,43 +265,196 @@ export function Remedies({
                 </span>
               </label>
             )}
+            {running && running !== asking.id && (
+              <p className="muted small">
+                {recipes.find((r) => r.id === running)?.name ?? "Another fix"} is running now; this one waits its turn and starts by itself.
+              </p>
+            )}
             <div className="modal-actions">
               <button onClick={() => setAsking(null)}>Cancel</button>
               <button className="primary" autoFocus onClick={() => run(asking)}>
-                Run it
+                {running && running !== asking.id ? "Add to queue" : "Run it"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {result && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="fix-result-h">
+      {needsAdmin && (
+        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="fix-admin-h">
           <div className="modal">
-            <h2 id="fix-result-h">
-              <span className={result.ok ? "status ok" : "status fail"}>{result.ok ? "Done" : "Failed"}</span> {result.name}
+            <h2 id="fix-admin-h">
+              <LockIcon size={15} /> {needsAdmin.name}
             </h2>
-            {result.steps.map((s) => (
-              <div key={s.label} className="fix-step">
-                <strong>{s.label}</strong>
-                {s.output && <pre className="details">{s.output}</pre>}
-              </div>
-            ))}
-            {result.restart && <p className="notice-text">Restart the PC to finish.</p>}
+            <p>{needsAdmin.does}</p>
+            <p className="notice-text">
+              This fix changes system settings, so it needs administrator rights. DeskMedic restarts as administrator (Windows asks you first) and
+              comes straight back to this fix.
+            </p>
             <div className="modal-actions">
-              <button className="primary" onClick={clearFixResult}>Close</button>
+              <button onClick={() => setNeedsAdmin(null)}>Not now</button>
+              <button className="primary" autoFocus onClick={() => restartForFix(needsAdmin)}>
+                Restart as administrator
+              </button>
             </div>
           </div>
         </div>
       )}
+
+      <FixDetails runs={runs} onRunAgain={askFix} />
+      <FixBar runs={runs} />
     </div>
   );
 }
 
-function FixCard({ r, elevated, running, onRun }: { r: FixRecipe; elevated: boolean; running: string | null; onRun: () => void }) {
-  const blocked = r.admin && !elevated;
+/** "Running · 0:42", "Waiting", "Done 10:42", "Failed 10:43": a run's state in words. */
+function stateText(run: FixRun, now: number): string {
+  const at = (t?: number) => (t ? new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "");
+  const secs = Math.max(0, Math.round((now - (run.startedAt ?? now)) / 1000));
+  if (run.state === "running") return `Running · ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
+  if (run.state === "queued") return "Waiting its turn";
+  if (run.state === "done") return `Done at ${at(run.endedAt)}${run.result?.restart ? " · restart the PC to finish" : ""}`;
+  return `Failed at ${at(run.endedAt)}`;
+}
+
+/** Re-render every second while something runs (for the timer). */
+function useTick(active: boolean): number {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    if (!active) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [active]);
+  return now;
+}
+
+const STATE_ICON: Record<FixRun["state"], string> = { queued: "…", running: "", done: "✓", failed: "!" };
+
+/** This session's fixes: what's running, what waits, what finished or failed. */
+function FixActivity({ runs }: { runs: FixRun[] }) {
+  const active = runs.some((r) => r.state === "running" || r.state === "queued");
+  const now = useTick(active);
+  if (runs.length === 0) return null;
+  const waiting = runs.filter((r) => r.state === "queued");
+  const finished = runs.filter((r) => r.state === "done" || r.state === "failed");
+  // Newest first: running, then the queue in order, then finished ones.
+  const ordered = [...runs.filter((r) => r.state === "running"), ...waiting, ...[...finished].reverse()];
   return (
-    <div className={running === r.id ? "card fix-card running" : "card fix-card"}>
+    <section className="card fix-activity" aria-label="Fix activity" aria-live="polite">
+      <div className="fix-activity-head">
+        <h3>Fix activity</h3>
+        <span className="muted small">
+          {active
+            ? `${runs.some((r) => r.state === "running") ? "1 running" : ""}${waiting.length ? `${runs.some((r) => r.state === "running") ? " · " : ""}${waiting.length} waiting` : ""}`
+            : "Nothing running"}
+        </span>
+        {finished.length > 0 && (
+          <button className="link" onClick={clearFinishedFixes}>
+            Clear finished
+          </button>
+        )}
+      </div>
+      <ul className="fix-activity-list">
+        {ordered.map((run) => (
+          <li key={run.seq} className={`fix-run ${run.state}`}>
+            <span className={`fix-run-icon ${run.state}`} aria-hidden="true">
+              {run.state === "running" ? <span className="spinner small" /> : STATE_ICON[run.state]}
+            </span>
+            <strong>{run.name}</strong>
+            <span className="muted small">
+              {stateText(run, now)}
+              {run.state === "queued" && waiting.length > 1 && ` (#${waiting.indexOf(run) + 1} in line)`}
+            </span>
+            <span className="fix-run-actions">
+              {run.state === "queued" && (
+                <button className="link" onClick={() => cancelFix(run.seq)}>
+                  Cancel
+                </button>
+              )}
+              {(run.state === "done" || run.state === "failed") && (
+                <button className="link" onClick={() => showFixDetails(run.seq)}>
+                  {run.state === "failed" ? "Why it failed" : "Details"}
+                </button>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Pinned to the bottom while fixes run, so the queue stays in sight anywhere on the page. */
+function FixBar({ runs }: { runs: FixRun[] }) {
+  const current = runs.find((r) => r.state === "running");
+  const waiting = runs.filter((r) => r.state === "queued").length;
+  const now = useTick(!!current);
+  if (!current) return null;
+  return (
+    <div className="running-bar fix-bar">
+      <div className="spinner" aria-hidden="true" />
+      <span className="grow">
+        Running <strong>{current.name}</strong> · {stateText(current, now).replace("Running · ", "")}
+        {waiting > 0 && <span className="muted"> · {waiting} waiting</span>}
+      </span>
+      <button className="link" onClick={() => document.querySelector(".fix-activity")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+        Show
+      </button>
+    </div>
+  );
+}
+
+/** The steps and output of one finished run. */
+function FixDetails({ runs, onRunAgain }: { runs: FixRun[]; onRunAgain: (id: string) => void }) {
+  const seq = useFixDetails();
+  const run = runs.find((r) => r.seq === seq);
+  if (!run) return null;
+  const close = () => showFixDetails(null);
+  const ok = run.state === "done";
+  return (
+    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="fix-result-h">
+      <div className="modal">
+        <h2 id="fix-result-h">
+          <span className={ok ? "status ok" : "status fail"}>{ok ? "Done" : "Failed"}</span> {run.name}
+        </h2>
+        {run.error && <p className="error-text">{run.error}</p>}
+        {run.result?.steps.map((s) => (
+          <div key={s.label} className="fix-step">
+            <strong>
+              <span className={s.ok ? "step-ok" : "step-fail"} aria-label={s.ok ? "worked" : "failed"}>
+                {s.ok ? "✓" : "✗"}
+              </span>{" "}
+              {s.label}
+            </strong>
+            {s.output && <pre className="details">{s.output}</pre>}
+          </div>
+        ))}
+        {run.result?.restart && ok && <p className="notice-text">Restart the PC to finish.</p>}
+        <div className="modal-actions">
+          {!ok && (
+            <button
+              onClick={() => {
+                close();
+                onRunAgain(run.id);
+              }}
+            >
+              Run again…
+            </button>
+          )}
+          <button className="primary" onClick={close}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FixCard({ r, elevated, last, focused, onRun }: { r: FixRecipe; elevated: boolean; last?: FixRun; focused: boolean; onRun: () => void }) {
+  const blocked = r.admin && !elevated;
+  const busy = last?.state === "running" || last?.state === "queued";
+  return (
+    <div id={`fix-${r.id}`} className={`card fix-card${last?.state === "running" ? " running" : ""}${focused ? " focused" : ""}`}>
       <h2>{r.name}</h2>
       <p className="small">{r.when}</p>
       <p className="muted small fix-does">{r.does}</p>
@@ -269,16 +464,27 @@ function FixCard({ r, elevated, running, onRun }: { r: FixRecipe; elevated: bool
           {r.restore_point && <span className="badge">restore point</span>}
         </div>
       )}
+      {last && (
+        <div className={`fix-last ${last.state}`}>
+          {last.state === "running" && <span className="spinner small" aria-hidden="true" />}
+          {last.state === "queued" ? "Waiting its turn" : last.state === "running" ? "Running now" : last.state === "done" ? "Done this session" : "Failed this session"}
+          {(last.state === "done" || last.state === "failed") && (
+            <button className="link" onClick={() => showFixDetails(last.seq)}>
+              {last.state === "failed" ? "Why?" : "Details"}
+            </button>
+          )}
+        </div>
+      )}
       <div className="fix-foot">
         <span className="muted small">{r.takes}</span>
         <button
           className={blocked ? "with-icon" : "primary"}
-          disabled={blocked || running !== null}
+          disabled={blocked || busy}
           title={blocked ? "Restart DeskMedic as administrator to run this" : undefined}
           onClick={onRun}
         >
           {blocked && <LockIcon size={13} />}
-          {running === r.id ? "Running…" : blocked ? "Needs admin" : "Run…"}
+          {last?.state === "running" ? "Running…" : last?.state === "queued" ? "Queued" : blocked ? "Needs admin" : last?.state === "failed" ? "Try again…" : "Run…"}
         </button>
       </div>
     </div>
@@ -322,7 +528,7 @@ function RemedyView({
   r,
   recipes,
   elevated,
-  running,
+  runs,
   related,
   onBack,
   onShow,
@@ -332,7 +538,7 @@ function RemedyView({
   r: Remedy;
   recipes: FixRecipe[];
   elevated: boolean;
-  running: string | null;
+  runs: FixRun[];
   related: Remedy[];
   onBack: () => void;
   onShow: (r: Remedy) => void;
@@ -352,18 +558,20 @@ function RemedyView({
         {r.steps.map((s, i) => {
           const recipe = s.fix ? recipes.find((x) => x.id === s.fix) : undefined;
           const blocked = !!recipe?.admin && !elevated;
+          const last = recipe ? latestRun(runs, recipe.id) : undefined;
+          const busy = last?.state === "running" || last?.state === "queued";
           return (
             <li key={i}>
               <span>{s.text}</span>
               {recipe && (
                 <button
                   className={blocked ? "with-icon" : "primary"}
-                  disabled={blocked || running !== null}
+                  disabled={blocked || busy}
                   title={blocked ? "Restart DeskMedic as administrator to run this" : recipe.does}
                   onClick={() => onFix(recipe.id)}
                 >
                   {blocked && <LockIcon size={13} />}
-                  {running === recipe.id ? "Running…" : blocked ? "Needs admin" : `Run: ${recipe.name}…`}
+                  {last?.state === "running" ? "Running…" : last?.state === "queued" ? "Queued" : blocked ? "Needs admin" : `Run: ${recipe.name}…`}
                 </button>
               )}
               {s.open && <button onClick={() => openStep(i)}>Open</button>}

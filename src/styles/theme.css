@@ -666,3 +666,29 @@ button.remedy-row { height: auto; white-space: normal; box-shadow: none; display
 .remedy-steps li > button { margin-top: 6px; }
 .remedy-escalate { margin: 18px 0; }
 .remedy-escalate p { margin: 4px 0 0; }
+
+/* ---------- Fixes: activity (running, waiting, done, failed) ---------- */
+.fix-activity { margin: 12px 0 16px; padding: 12px 14px; }
+.fix-activity-head { display: flex; align-items: baseline; gap: 10px; }
+.fix-activity-head h3 { margin: 0; font-size: 13px; }
+.fix-activity-head .link { margin-left: auto; }
+.fix-activity-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
+.fix-run { display: grid; grid-template-columns: 22px minmax(140px, max-content) 1fr auto; align-items: center; gap: 10px; padding: 6px 4px; border-radius: 6px; }
+.fix-run.running { background: var(--accent-soft); }
+.fix-run.failed strong { color: var(--red); }
+.fix-run-icon { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 700; }
+.fix-run-icon.queued { color: var(--text-2); background: color-mix(in srgb, var(--text-2) 14%, transparent); }
+.fix-run-icon.done { color: var(--green); background: var(--green-soft); }
+.fix-run-icon.failed { color: #fff; background: var(--red); }
+.fix-run-actions { display: flex; gap: 12px; justify-content: flex-end; }
+.fix-last { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; padding: 5px 9px; border-radius: 6px; font-size: 12px; }
+.fix-last.running, .fix-last.queued { background: var(--accent-soft); }
+.fix-last.done { background: var(--green-soft); color: var(--green); }
+.fix-last.failed { background: color-mix(in srgb, var(--red) 12%, transparent); color: var(--red); }
+.fix-last .link { margin-left: auto; }
+.fix-card.focused { box-shadow: 0 0 0 2px var(--accent), var(--shadow-lg); }
+.fix-step .step-ok { color: var(--green); }
+.fix-step .step-fail { color: var(--red); }
+.nav-dot.busy { background: var(--accent); animation: navpulse 1.2s ease-in-out infinite; }
+@keyframes navpulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .nav-dot.busy { animation: none; } }
