@@ -1,5 +1,5 @@
 import logo from "../assets/logo.png";
-import { useHealthJob, useInsightsJob } from "../lib/jobs";
+import { useFixRuns, useHealthJob, useInsightsJob } from "../lib/jobs";
 import { useAppInfo } from "../lib/store";
 import { SideNav, type NavGroup } from "../shell/SideNav";
 import { DiskIcon, GlobeIcon, LogIcon, PulseIcon, SettingsIcon, WrenchIcon } from "./Icons";
@@ -72,11 +72,20 @@ export function Sidebar({ page, onNavigate }: { page: Page; onNavigate: (p: Page
   const problems = (health?.problems ?? 0) + (events?.problems ?? 0);
   const warnings = (health?.warnings ?? 0) + (events?.warnings ?? 0);
   const tone = !health && !events ? null : problems ? "problem" : warnings ? "warning" : "good";
+  // Fixes: a blue dot while one runs or waits, red if the last one to finish failed.
+  const runs = useFixRuns();
+  const lastDone = [...runs].reverse().find((r) => r.state === "done" || r.state === "failed");
+  const fixTone = runs.some((r) => r.state === "running" || r.state === "queued") ? "busy" : lastDone?.state === "failed" ? "problem" : null;
   const groups: NavGroup<Page>[] = [];
   for (const p of PAGES) {
     let g = groups.find((x) => x.title === p.group);
     if (!g) groups.push((g = { title: p.group, items: [] }));
-    const badge = p.page === "checkup" && tone ? <span className={`nav-dot ${tone}`} aria-label={`Checkup: ${tone}`} /> : undefined;
+    const badge =
+      p.page === "checkup" && tone ? (
+        <span className={`nav-dot ${tone}`} aria-label={`Checkup: ${tone}`} />
+      ) : p.page === "remedies" && fixTone ? (
+        <span className={`nav-dot ${fixTone}`} aria-label={fixTone === "busy" ? "A fix is running" : "A fix failed"} />
+      ) : undefined;
     g.items.push({ page: p.page, label: p.label, Icon: ICONS[p.page], badge });
   }
   const who = info ? (info.elevated ? "Administrator" : "Standard user") : "…";
